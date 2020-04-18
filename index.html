@@ -238,6 +238,7 @@ function play(delta) {
   let recoverSpeed = 1*speedMultiplier;
   let dangerSpeed = 1*speedMultiplier;
   let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
+  //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
   // evolution
   switch (mode) {
