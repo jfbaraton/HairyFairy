@@ -35,20 +35,24 @@ loader
   .add("images/nice_hair.png")
   .add("images/comb_short.png")
   .add("images/knot_1.png")
+  .add("images/knot_2.png")
+  .add("images/Warning-yellow.png")
+  .add("images/Warning-orange.png")
+  .add("images/Warning-red.png")
   .add("images/cat.png")
   .load(setup);
 
 //Define any variables that are used in more than one function
-let cat, comb_short, back, box, message, state, tilingSprite, knot_1;
+let mode, cat, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red;
 
 // create a texture from an image path
-const texture = PIXI.Texture.from('images/messy_hair.png');
+const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
 
 
 let count = 0;
 
 function setup() {
-
+  mode = 'normal';
   //Create the box
   box = new PIXI.Graphics();
   box.beginFill(0xCCFF99);
@@ -73,14 +77,14 @@ function setup() {
   messy_hair.vx = 0;
   messy_hair.vy = 0;
   //app.stage.addChild(messy_hair);
-  tilingSprite = new PIXI.TilingSprite(
-    texture,
+  tilingSpriteMessyHair = new PIXI.TilingSprite(
+    textureMessyHair,
     971,
-    1080-370,
+    1080,
 );
-tilingSprite.x=540;
-tilingSprite.y=370;
-  app.stage.addChild(tilingSprite);
+  tilingSpriteMessyHair.x=540;
+  tilingSpriteMessyHair.y=370;
+  app.stage.addChild(tilingSpriteMessyHair);
 
   //Create the `nice_hair` sprite
   nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
@@ -113,6 +117,38 @@ tilingSprite.y=370;
   knot_1.vx = 0;
   knot_1.vy = 0;
   app.stage.addChild(knot_1);
+
+  //Create the `knot_2` sprite
+  knot_2 = new Sprite(resources["images/knot_2.png"].texture);
+  knot_2.x = 850;
+  knot_2.y = 1280;
+  knot_2.vx = 0;
+  knot_2.vy = 0;
+  app.stage.addChild(knot_2);
+
+  //Create the `Warning_yellow` sprite
+  Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
+  Warning_yellow.x = 480;
+  Warning_yellow.y = 1080;
+  Warning_yellow.vx = 0;
+  Warning_yellow.vy = 0;
+  app.stage.addChild(Warning_yellow);
+
+  //Create the `Warning_orange` sprite
+  Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
+  Warning_orange.x = 480;
+  Warning_orange.y = 1080;
+  Warning_orange.vx = 0;
+  Warning_orange.vy = 0;
+  app.stage.addChild(Warning_orange);
+
+  //Create the `Warning_red` sprite
+  Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
+  Warning_red.x = 480;
+  Warning_red.y = 1080;
+  Warning_red.vx = 0;
+  Warning_red.vy = 0;
+  app.stage.addChild(Warning_red);
 
   //Capture the keyboard arrow keys
   let left = keyboard(37),
@@ -197,15 +233,83 @@ function gameLoop(delta){
 }
 
 function play(delta) {
-    let moveSpeed = 1;
+  let speedMultiplier = 1;
+  let normalSpeed = 5*speedMultiplier;
+  let recoverSpeed = 1*speedMultiplier;
+  let dangerSpeed = 1*speedMultiplier;
+  let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
+
+  // evolution
+  switch (mode) {
+        case 'normal':
+        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+            mode = 'danger';
+        }
+        break;
+        case 'danger':
+        if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y) {
+            mode = 'recover';
+        }
+        break;
+        case 'recover':
+        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+            mode = 'danger';
+        }
+        if(370 <= tilingSpriteMessyHair.y) {
+            mode = 'normal';
+            tilingSpriteMessyHair.y = 370;
+            nice_hair.y = 370-1080;
+            comb_short.y=176;
+        }
+        break;
+  }
+
+  // action
+  switch (mode) {
+        case 'normal':
+        tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
+        tilingSpriteMessyHair.vy = 0;
+        comb_short.vy=0;
+        Warning_yellow.y = 1080;
+        Warning_orange.y = 1080;
+        Warning_red.y = 1080;
+        break;
+        case 'danger':
+        tilingSpriteMessyHair.tilePosition.vy = 0;
+        tilingSpriteMessyHair.vy = -moveSpeed;
+        Warning_yellow.y = 0;
+        Warning_orange.y = Warning_yellow.y == 0  ? 1080-Warning_orange.y : 1080;
+        Warning_red.y = Warning_orange.y == 0  ? 1080-Warning_red.y : 1080;
+        break;
+        case 'recover':
+        tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
+        tilingSpriteMessyHair.vy = recoverSpeed;
+        Warning_yellow.y = 1080;
+        Warning_orange.y = 1080;
+        Warning_red.y = 1080;
+
+        break;
+  }
+
+
+  if(knot_1.y <= 10) {
+    knot_1.y = 2580;
+  }
+
+
+  if(knot_2.y <= 10) {
+    knot_2.y = 2780;
+  }
+
   //use the cat's velocity to make it move
   cat.x += cat.vx;
   cat.y += cat.vy;
-  tilingSprite.tilePosition.y -= moveSpeed;
+  tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
+  tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
+  comb_short.y += tilingSpriteMessyHair.vy;
+  nice_hair.y += tilingSpriteMessyHair.vy;
   knot_1.y -= moveSpeed;
-  if(knot_1.y <= 370) {
-    knot_1.y = 1080;
-  }
+  knot_2.y -= moveSpeed;
 
   //check for a collision between the cat and the box
   if (hitTestRectangle(cat, box)) {
