@@ -34,11 +34,18 @@ loader
   .add("images/messy_hair.png")
   .add("images/nice_hair.png")
   .add("images/comb_short.png")
+  .add("images/knot_1.png")
   .add("images/cat.png")
   .load(setup);
 
 //Define any variables that are used in more than one function
-let cat, comb_short, back, box, message, state;
+let cat, comb_short, back, box, message, state, tilingSprite, knot_1;
+
+// create a texture from an image path
+const texture = PIXI.Texture.from('images/messy_hair.png');
+
+
+let count = 0;
 
 function setup() {
 
@@ -65,7 +72,15 @@ function setup() {
   messy_hair.y = 370;
   messy_hair.vx = 0;
   messy_hair.vy = 0;
-  app.stage.addChild(messy_hair);
+  //app.stage.addChild(messy_hair);
+  tilingSprite = new PIXI.TilingSprite(
+    texture,
+    971,
+    1080-370,
+);
+tilingSprite.x=540;
+tilingSprite.y=370;
+  app.stage.addChild(tilingSprite);
 
   //Create the `nice_hair` sprite
   nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
@@ -90,6 +105,14 @@ function setup() {
   cat.vx = 0;
   cat.vy = 0;
   app.stage.addChild(cat);
+
+  //Create the `knot_1` sprite
+  knot_1 = new Sprite(resources["images/knot_1.png"].texture);
+  knot_1.x = 700;
+  knot_1.y = 1080;
+  knot_1.vx = 0;
+  knot_1.vy = 0;
+  app.stage.addChild(knot_1);
 
   //Capture the keyboard arrow keys
   let left = keyboard(37),
@@ -174,10 +197,15 @@ function gameLoop(delta){
 }
 
 function play(delta) {
-
+    let moveSpeed = 1;
   //use the cat's velocity to make it move
   cat.x += cat.vx;
   cat.y += cat.vy;
+  tilingSprite.tilePosition.y -= moveSpeed;
+  knot_1.y -= moveSpeed;
+  if(knot_1.y <= 370) {
+    knot_1.y = 1080;
+  }
 
   //check for a collision between the cat and the box
   if (hitTestRectangle(cat, box)) {
