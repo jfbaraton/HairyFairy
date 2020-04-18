@@ -44,7 +44,7 @@ loader
   .load(setup);
 
 //Define any variables that are used in more than one function
-let mode, tool, cat, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red;
+let mode, tool, cat, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
 // create a texture from an image path
 const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -120,6 +120,7 @@ function setup() {
   cat.vx = 0;
   cat.vy = 0;
   cat.tool = 'gum';
+  cat.toolIcon = defaultIcon;
     cat.interactive = true;
   cat.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
@@ -135,6 +136,7 @@ function setup() {
   blob.vx = 0;
   blob.vy = 0;
   blob.tool = 'knot';
+  blob.toolIcon = hoverIcon;
     blob.interactive = true;
   blob.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
@@ -196,6 +198,30 @@ function setup() {
   Warning_red.vx = 0;
   Warning_red.vy = 0;
   app.stage.addChild(Warning_red);
+
+  //Create the `Warning_yellow2` sprite
+  Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
+  Warning_yellow2.x = 1460;
+  Warning_yellow2.y = 1080;
+  Warning_yellow2.vx = 0;
+  Warning_yellow2.vy = 0;
+  app.stage.addChild(Warning_yellow2);
+
+  //Create the `Warning_orange2` sprite
+  Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
+  Warning_orange2.x = 480;
+  Warning_orange2.y = 1080;
+  Warning_orange2.vx = 0;
+  Warning_orange2.vy = 0;
+  app.stage.addChild(Warning_orange2);
+
+  //Create the `Warning_red2` sprite
+  Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
+  Warning_red2.x = 480;
+  Warning_red2.y = 1080;
+  Warning_red2.vx = 0;
+  Warning_red2.vy = 0;
+  app.stage.addChild(Warning_red2);
 
   //Capture the keyboard arrow keys
   let left = keyboard(37),
@@ -287,6 +313,8 @@ function onButtonDown() {
     if(this.tool){
         tool = this.tool;
         my_string += ' NEW tool!';
+
+        app.renderer.plugins.interaction.cursorStyles.default = this.toolIcon;
     }
     this.alpha = 1;
 
@@ -375,6 +403,9 @@ function play(delta) {
         Warning_yellow.y = 1080;
         Warning_orange.y = 1080;
         Warning_red.y = 1080;
+        Warning_yellow2.y = 1080;
+        Warning_orange2.y = 1080;
+        Warning_red2.y = 1080;
         break;
         case 'danger':
         tilingSpriteMessyHair.tilePosition.vy = 0;
@@ -382,6 +413,9 @@ function play(delta) {
         Warning_yellow.y = 0;
         Warning_orange.y = Warning_yellow.y == 0  ? 1080-Warning_orange.y : 1080;
         Warning_red.y = Warning_orange.y == 0  ? 1080-Warning_red.y : 1080;
+        Warning_yellow2.y = 0;
+        Warning_orange2.y = Warning_yellow2.y == 0  ? 1080-Warning_orange2.y : 1080;
+        Warning_red2.y = Warning_orange2.y == 0  ? 1080-Warning_red2.y : 1080;
         break;
         case 'recover':
         tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
@@ -389,6 +423,9 @@ function play(delta) {
         Warning_yellow.y = 1080;
         Warning_orange.y = 1080;
         Warning_red.y = 1080;
+        Warning_yellow2.y = 1080;
+        Warning_orange2.y = 1080;
+        Warning_red2.y = 1080;
 
         break;
   }
@@ -410,8 +447,8 @@ function play(delta) {
   tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
   comb_short.y += tilingSpriteMessyHair.vy;
   nice_hair.y += tilingSpriteMessyHair.vy;
-  knot_1.y -= moveSpeed;
-  knot_2.y -= moveSpeed;
+  knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+  knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
   //check for a collision between the cat and the box
   if (hitTestRectangle(cat, box)) {
