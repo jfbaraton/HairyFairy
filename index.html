@@ -34,6 +34,7 @@ loader
   .add("images/messy_hair.png")
   .add("images/nice_hair.png")
   .add("images/comb_short.png")
+  .add("images/blob.png")
   .add("images/knot_1.png")
   .add("images/knot_2.png")
   .add("images/Warning-yellow.png")
@@ -43,16 +44,26 @@ loader
   .load(setup);
 
 //Define any variables that are used in more than one function
-let mode, cat, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red;
+let mode, tool, cat, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red;
 
 // create a texture from an image path
 const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
+
+
+// Css style for icons
+const defaultIcon = "url('images/blob.png'),auto";
+const hoverIcon = "url('images/cat.png'),auto";
+
+// Add custom cursor styles
+app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
+app.renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
 
 
 let count = 0;
 
 function setup() {
   mode = 'normal';
+  tool = 'knot';
   //Create the box
   box = new PIXI.Graphics();
   box.beginFill(0xCCFF99);
@@ -79,8 +90,8 @@ function setup() {
   //app.stage.addChild(messy_hair);
   tilingSpriteMessyHair = new PIXI.TilingSprite(
     textureMessyHair,
-    971,
-    1080,
+    961,
+    2160,
 );
   tilingSpriteMessyHair.x=540;
   tilingSpriteMessyHair.y=370;
@@ -108,7 +119,29 @@ function setup() {
   cat.y = 96;
   cat.vx = 0;
   cat.vy = 0;
+  cat.tool = 'gum';
+    cat.interactive = true;
+  cat.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
   app.stage.addChild(cat);
+
+  //Create the `blob` sprite
+  blob = new Sprite(resources["images/blob.png"].texture);
+  blob.x = 16;
+  blob.y = 396;
+  blob.vx = 0;
+  blob.vy = 0;
+  blob.tool = 'knot';
+    blob.interactive = true;
+  blob.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+  app.stage.addChild(blob);
 
   //Create the `knot_1` sprite
   knot_1 = new Sprite(resources["images/knot_1.png"].texture);
@@ -116,6 +149,13 @@ function setup() {
   knot_1.y = 1080;
   knot_1.vx = 0;
   knot_1.vy = 0;
+  knot_1.killedby = 'knot';
+    knot_1.interactive = true;
+  knot_1.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
   app.stage.addChild(knot_1);
 
   //Create the `knot_2` sprite
@@ -124,6 +164,13 @@ function setup() {
   knot_2.y = 1280;
   knot_2.vx = 0;
   knot_2.vy = 0;
+  knot_2.killedby = 'gum';
+    knot_2.interactive = true;
+  knot_2.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
   app.stage.addChild(knot_2);
 
   //Create the `Warning_yellow` sprite
@@ -226,6 +273,60 @@ function setup() {
 }
 
 
+function onButtonDown() {
+    let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
+    this.isdown = true;
+    if(this.textureButtonDown){
+        this.texture = textureButtonDown;
+    }
+    if(this.killedby && this.killedby === tool){
+        this.y = 1500;
+        my_string += ' killed!';
+    }
+
+    if(this.tool){
+        tool = this.tool;
+        my_string += ' NEW tool!';
+    }
+    this.alpha = 1;
+
+    message.text = my_string;
+}
+
+function onButtonUp() {
+    this.isdown = false;
+    if (this.isOver) {
+        if(this.textureButtonOver){
+            this.texture = textureButtonOver;
+        }
+    } else {
+        if(this.textureButton){
+            this.texture = textureButton;
+        }
+    }
+}
+
+function onButtonOver() {
+    this.isOver = true;
+    if (this.isdown) {
+        return;
+    }
+    if(this.textureButtonOver){
+        this.texture = textureButtonOver;
+    }
+}
+
+function onButtonOut() {
+    this.isOver = false;
+    if (this.isdown) {
+        return;
+    }
+    if(this.textureButton){
+        this.texture = textureButton;
+    }
+}
+
+
 function gameLoop(delta){
 
   //Update the current game state:
@@ -323,7 +424,7 @@ function play(delta) {
 
     //if there's no collision, reset the message
     //text and the box's color
-    message.text = "No collision...("+cat.x+", "+cat.y+")";
+    //message.text = "No collision...("+cat.x+", "+cat.y+")";
     box.tint = 0xccff99;
   }
 }
