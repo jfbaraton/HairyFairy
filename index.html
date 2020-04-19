@@ -35,23 +35,38 @@ loader
   .add("images/nice_hair.png")
   .add("images/comb_short.png")
   .add("images/blob.png")
+  .add("images/wand.png")
   .add("images/knot_1.png")
   .add("images/knot_2.png")
   .add("images/Warning-yellow.png")
   .add("images/Warning-orange.png")
   .add("images/Warning-red.png")
+  .add("images/goo_fairy.png")
+  .add("images/goo_fairy_selected.png")
+  .add("images/sailor_fairy.png")
+  .add("images/sailor_fairy_selected.png")
+  .add("images/sax_fairy.png")
+  .add("images/sax_fairy_selected.png")
   .add("images/cat.png")
+  .add("sounds/oh_no.mp4")
+  .add("sounds/tool_select.mp4")
   .load(setup);
 
 //Define any variables that are used in more than one function
-let mode, tool, cat, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
+let mode, tool, music, sound, musicSprite, cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
 // create a texture from an image path
 const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
+const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
+const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
+const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
+const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
+const sax_fairy_txt = PIXI.Texture.from('images/sax_fairy.png');
+const sax_fairy_selected_txt = PIXI.Texture.from('images/sax_fairy_selected.png');
 
 
 // Css style for icons
-const defaultIcon = "url('images/blob.png'),auto";
+const defaultIcon = "url('images/wand.png'),auto";
 const hoverIcon = "url('images/cat.png'),auto";
 
 // Add custom cursor styles
@@ -64,6 +79,8 @@ let count = 0;
 function setup() {
   mode = 'normal';
   tool = 'knot';
+  music = false;
+  sound = false;
   //Create the box
   box = new PIXI.Graphics();
   box.beginFill(0xCCFF99);
@@ -119,7 +136,6 @@ function setup() {
   cat.y = 96;
   cat.vx = 0;
   cat.vy = 0;
-  cat.tool = 'gum';
   cat.toolIcon = defaultIcon;
     cat.interactive = true;
   cat.on('pointerdown', onButtonDown)
@@ -129,6 +145,63 @@ function setup() {
         .on('pointerout', onButtonOut);
   app.stage.addChild(cat);
 
+  //Create the `goo_fairy` sprite
+  goo_fairy = new Sprite(goo_fairy_txt);
+  goo_fairy.x = 50;
+  goo_fairy.y = 50;
+  goo_fairy.vx = 0;
+  goo_fairy.vy = 0;
+  goo_fairy.tool = 'gum';
+  goo_fairy.toolIcon = defaultIcon;
+  goo_fairy.sel_txt = goo_fairy_selected_txt;
+  goo_fairy.unsel_txt = goo_fairy_txt;
+  goo_fairy.interactive = true;
+  goo_fairy.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+  app.stage.addChild(goo_fairy);
+
+
+  //Create the `sailor_fairy` sprite
+  sailor_fairy = new Sprite(sailor_fairy_txt);
+  sailor_fairy.x = 50;
+  sailor_fairy.y = 400;
+  sailor_fairy.vx = 0;
+  sailor_fairy.vy = 0;
+  sailor_fairy.tool = 'knot';
+  sailor_fairy.toolIcon = defaultIcon;
+  sailor_fairy.sel_txt = sailor_fairy_selected_txt;
+  sailor_fairy.unsel_txt = sailor_fairy_txt;
+  sailor_fairy.interactive = true;
+  sailor_fairy.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+  app.stage.addChild(sailor_fairy);
+
+
+  //Create the `sax_fairy` sprite
+  sax_fairy = new Sprite(sax_fairy_txt);
+  sax_fairy.x = 50;
+  sax_fairy.y = 750;
+  sax_fairy.vx = 0;
+  sax_fairy.vy = 0;
+  sax_fairy.tool = 'sax';
+  sax_fairy.toolIcon = defaultIcon;
+  sax_fairy.sel_txt = sax_fairy_selected_txt;
+  sax_fairy.unsel_txt = sax_fairy_txt;
+  sax_fairy.interactive = true;
+  sax_fairy.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+  app.stage.addChild(sax_fairy);
+
+/*
   //Create the `blob` sprite
   blob = new Sprite(resources["images/blob.png"].texture);
   blob.x = 16;
@@ -143,7 +216,7 @@ function setup() {
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(blob);
+  app.stage.addChild(blob);*/
 
   //Create the `knot_1` sprite
   knot_1 = new Sprite(resources["images/knot_1.png"].texture);
@@ -222,6 +295,18 @@ function setup() {
   Warning_red2.vx = 0;
   Warning_red2.vy = 0;
   app.stage.addChild(Warning_red2);
+
+
+  const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
+    musicSprite = new PIXI.Sprite(sound_init_texture);
+
+    // out of screen
+    musicSprite.x = app.screen.width+200;
+    musicSprite.y = app.screen.height+200;
+    musicSprite.width = 1;
+    musicSprite.height = 1;
+
+    app.stage.addChild(musicSprite);
 
   //Capture the keyboard arrow keys
   let left = keyboard(37),
@@ -312,13 +397,21 @@ function onButtonDown() {
 
     if(this.tool){
         tool = this.tool;
-        my_string += ' NEW tool!';
-
-        app.renderer.plugins.interaction.cursorStyles.default = this.toolIcon;
+        onPlayVideo('tool_select');
+        updateToolTxt(goo_fairy);
+        updateToolTxt(sailor_fairy);
+        updateToolTxt(sax_fairy);
     }
     this.alpha = 1;
 
-    message.text = my_string;
+}
+
+function updateToolTxt(fairy) {
+    if(tool === fairy.tool){
+        fairy.texture = fairy.sel_txt;
+    } else {
+        fairy.texture = fairy.unsel_txt;
+    }
 }
 
 function onButtonUp() {
@@ -353,6 +446,28 @@ function onButtonOut() {
         this.texture = textureButton;
     }
 }
+function onPlayVideo(sound_name, is_music) {
+
+    if((!is_music && sound) || (is_music && music)) {
+        // create a video texture from a path
+        const texture = PIXI.Texture.from('sounds/'+sound_name+'.mp4');
+
+        if(!is_music) {
+            // create a new Sprite using the video texture (yes it's that easy)
+            const videoSprite = new PIXI.Sprite(texture);
+
+            // Stetch the fullscreen
+            videoSprite.x = app.screen.width+200;
+            videoSprite.y = app.screen.height+200;
+            videoSprite.width = 1;
+            videoSprite.height = 1;
+
+            app.stage.addChild(videoSprite);
+        } else {
+            musicSprite.texture = texture;
+        }
+    }
+}
 
 
 function gameLoop(delta){
@@ -373,6 +488,7 @@ function play(delta) {
   switch (mode) {
         case 'normal':
         if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+            onPlayVideo('oh_no');
             mode = 'danger';
         }
         break;
@@ -383,6 +499,7 @@ function play(delta) {
         break;
         case 'recover':
         if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+            onPlayVideo('oh_no');
             mode = 'danger';
         }
         if(370 <= tilingSpriteMessyHair.y) {
