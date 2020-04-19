@@ -31,6 +31,7 @@
 
     loader
     .add("images/BG_empty.png")
+    .add("images/BG_win.png")
     .add("images/messy_hair.png")
     .add("images/nice_hair.png")
     .add("images/comb_short.png")
@@ -524,7 +525,7 @@
 
 
     //Create the `BG_win` sprite
-    BG_win = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_win = new Sprite(resources["images/BG_win.png"].texture);
     BG_win.x = 0;
     BG_win.y = 1080;
     BG_win.vx = 0;
@@ -547,6 +548,7 @@
     message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
     message.position.set(8, 508);
     message.interactive = true;
+    message.on('pointerdown', () => onWinGame())
     app.stage.addChild(message);
 
 
@@ -560,7 +562,7 @@
     butt_music.position.set(8, 8);
     butt_music.interactive = true;
     butt_music.on('pointerdown', () => music = !music)
-    app.stage.addChild(butt_music);
+    //app.stage.addChild(butt_music);
 
 
     //Create the text sprite
@@ -577,12 +579,12 @@
 
     //Create the text sprite
     let style4 = new TextStyle({
-    fontFamily: "sans-serif",
+    fontFamily: "Bodoni MT", // "chalkduster"
     fontSize: 70,
-    fill: "yellow",
+    fill: "green",
     });
-    msg_status = new Text("Click To Start", style4);
-    msg_status.position.set(700, 200);
+    msg_status = new Text("Click here to Start", style4);
+    msg_status.position.set(1300, 700);
     msg_status.interactive = true;
     msg_status.on('pointerdown', onStartGame)
     app.stage.addChild(msg_status);
@@ -653,6 +655,7 @@
     }
 
     function onStartGame() {
+        resetJammers();
         msg_status.y = 1080;
         BG_start.y = 1080;
         BG_win.y = 1080;
@@ -665,10 +668,12 @@
     }
 
     function onWinGame() {
-        msg_status.text = 'WIN!    Click here to restart';
-        msg_status.y = 350;
-        msg_status.x = 150;
+        resetJammers();
+        msg_status.text = 'Click here to restart';
+        msg_status.y = 700;
+        msg_status.x = 1300;
         BG_start.y = 1080;
+        chibi.y=1080;
         BG_win.y = 0;
         BG_lose.y = 1080;
         onPlayVideo('ending', true);
@@ -676,9 +681,10 @@
     }
 
     function onLoseGame() {
-        msg_status.text = 'Lose!    Click here to restart';
-        msg_status.y = 350;
-        msg_status.x = 150;
+        resetJammers();
+        msg_status.text = 'Click here to restart';
+        msg_status.y = 700;
+        msg_status.x = 1300;
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 0;
@@ -693,7 +699,8 @@
             this.texture = textureButtonDown;
         }
         if(this.killedby && this.killedby === tool){
-            this.y = 1500;
+            this.x = 580+randomInt(0,900);
+            this.y = 1080+randomInt(50,1600);
             my_string += ' killed!';
         }
 
@@ -803,6 +810,34 @@
             }
         }
         return false;
+    }
+
+    function isJammersTouchingTop() {
+        for (var i = 0; i < jammers.length; i++) {
+            if(jammers[i].y <= 10){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    function resetJammers(){
+        for (var i = 0; i < jammers.length; i++) {
+            jammers[i].x = 580+randomInt(0,900);
+            jammers[i].y = 1080+randomInt(50,1600);
+            jammers[i].vy = 0;
+        }
+    }
+
+    function moveJammers(speed){
+        var difficulty = 4; // 0 easy to 9 hardcore
+        for (var i = 0; i < jammers.length; i++) {
+            if(i<=3+difficulty){
+                jammers[i].y -= speed;
+                jammers[i].vy = 0;
+                }
+        }
     }
 
     function play(delta) {
@@ -940,11 +975,14 @@
              default:
                 moveSpeed =0;
                 recoverSpeed =0;
+                tilingSpriteMessyHair.vy = 0;
                 tilingSpriteMessyHair.tilePosition.vy = 0;
+                comb_short.vy=0;
+                /*tilingSpriteMessyHair.tilePosition.vy = 0;
                 tilingSpriteMessyHair.tilePosition.y = 0;
                 tilingSpriteMessyHair.y = 370;
                 nice_hair.y = 370-1080;
-                comb_short.y=176;
+                comb_short.y=176;*/
                 Warning_yellow.y = 1080;
                 Warning_orange.y = 1080;
                 Warning_red.y = 1080;
@@ -956,19 +994,10 @@
 
         progress_comb.y = 174+(progress/10);
 
-        if(knot_1.y <= 10) {
+        if(isJammersTouchingTop()) {
             onLoseGame();
-            knot_1.y = 2580;
         }
 
-        if(knot_2.y <= 10) {
-            //onWinGame();
-            knot_2.y = 2780;
-        }
-
-        if(knot_3.y <= 10) {
-            knot_3.y = 2980;
-        }
 
         //use the cat's velocity to make it move
         cat.x += cat.vx;
@@ -977,9 +1006,8 @@
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         comb_short.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
-        knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-        knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-        knot_3.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+
+        moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
 
         //check for a collision between the cat and the box
         if (hitTestRectangle(cat, box)) {
