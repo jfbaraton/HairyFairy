@@ -57,7 +57,7 @@
     //Define any variables that are used in more than one function
     let mode, tool, music, sound, musicSprite;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected;
-    let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3;
+    let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
     // create a texture from an image path
@@ -134,6 +134,22 @@
     comb_short.vx = 0;
     comb_short.vy = 0;
     app.stage.addChild(comb_short);
+
+    //Create the `progress_dirty` sprite
+    progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
+    progress_dirty.x = 1500;
+    progress_dirty.y = 176;
+    progress_dirty.vx = 0;
+    progress_dirty.vy = 0;
+    app.stage.addChild(progress_dirty);
+
+    //Create the `progress_comb` sprite
+    progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
+    progress_comb.x = 1500;
+    progress_comb.y = 176;
+    progress_comb.vx = 0;
+    progress_comb.vy = 0;
+    app.stage.addChild(progress_comb);
 
     //Create the `cat` sprite
     cat = new Sprite(resources["images/cat.png"].texture);
