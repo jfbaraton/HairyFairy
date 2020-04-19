@@ -55,7 +55,10 @@
     .load(setup);
 
     //Define any variables that are used in more than one function
-    let mode, tool, music, sound, musicSprite;
+    let mode, tool, music, sound, musicSprite, progress;
+    let butt_start, butt_restart, butt_music, butt_sound;
+    let BG_start, BG_win, BG_loose;
+    let msg_status;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected;
     let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
@@ -86,6 +89,7 @@
     tool = 'knot';
     music = false;
     sound = false;
+    progress = 0;
     //Create the box
     box = new PIXI.Graphics();
     box.beginFill(0xCCFF99);
@@ -137,7 +141,7 @@
 
     //Create the `progress_dirty` sprite
     progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
-    progress_dirty.x = 1500;
+    progress_dirty.x = 1600;
     progress_dirty.y = 176;
     progress_dirty.vx = 0;
     progress_dirty.vy = 0;
@@ -145,7 +149,7 @@
 
     //Create the `progress_comb` sprite
     progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
-    progress_comb.x = 1500;
+    progress_comb.x = 1600;
     progress_comb.y = 176;
     progress_comb.vx = 0;
     progress_comb.vy = 0;
@@ -318,7 +322,7 @@
 
     //Create the `Warning_orange2` sprite
     Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
-    Warning_orange2.x = 480;
+    Warning_orange2.x = 1460;
     Warning_orange2.y = 1080;
     Warning_orange2.vx = 0;
     Warning_orange2.vy = 0;
@@ -326,7 +330,7 @@
 
     //Create the `Warning_red2` sprite
     Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
-    Warning_red2.x = 480;
+    Warning_red2.x = 1460;
     Warning_red2.y = 1080;
     Warning_red2.vx = 0;
     Warning_red2.vy = 0;
@@ -513,166 +517,191 @@
     }
 
     function play(delta) {
-    let speedMultiplier = 1;
-    let normalSpeed = 5*speedMultiplier;
-    let recoverSpeed = 1*speedMultiplier;
-    let dangerSpeed = 1*speedMultiplier;
-    let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
-    //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+        let speedMultiplier = 1;
+        let normalSpeed = 5*speedMultiplier;
+        let recoverSpeed = 1*speedMultiplier;
+        let dangerSpeed = 1*speedMultiplier;
+        let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
+        //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
-    // evolution
-    switch (mode) {
-        case 'normal':
-        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
-            onPlayVideo('oh_no');
-            mode = 'danger';
+        // evolution
+        switch (mode) {
+            case 'normal':
+                if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
+                    onPlayVideo('oh_no');
+                    mode = 'danger';
+                }
+                break;
+            case 'danger':
+                if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y && knot_3.y > tilingSpriteMessyHair.y) {
+                    mode = 'recover';
+                }
+                break;
+            case 'recover':
+                if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
+                    onPlayVideo('oh_no');
+                    mode = 'danger';
+                }
+                if(370 <= tilingSpriteMessyHair.y) {
+                    mode = 'normal';
+                    tilingSpriteMessyHair.y = 370;
+                    nice_hair.y = 370-1080;
+                    comb_short.y=176;
+                }
+                if (progress_comb.y >= 660){
+                    progress_comb.y = 174;
+
+                    mode = 'win';
+                }
+                break;
         }
-        break;
-        case 'danger':
-        if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y && knot_3.y > tilingSpriteMessyHair.y) {
-            mode = 'recover';
+
+        // action
+        switch (mode) {
+            case 'normal':
+                tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
+                tilingSpriteMessyHair.vy = 0;
+                comb_short.vy=0;
+                Warning_yellow.y = 1080;
+                Warning_orange.y = 1080;
+                Warning_red.y = 1080;
+                Warning_yellow2.y = 1080;
+                Warning_orange2.y = 1080;
+                Warning_red2.y = 1080;
+                progress++;
+                break;
+            case 'danger':
+                tilingSpriteMessyHair.tilePosition.vy = 0;
+                tilingSpriteMessyHair.vy = -moveSpeed;
+                Warning_yellow.y = 0;
+                Warning_orange.y = Warning_yellow.y == 0  ? 1080-Warning_orange.y : 1080;
+                Warning_red.y = Warning_orange.y == 0  ? 1080-Warning_red.y : 1080;
+                Warning_yellow2.y = 0;
+                Warning_orange2.y = Warning_yellow2.y == 0  ? 1080-Warning_orange2.y : 1080;
+                Warning_red2.y = Warning_orange2.y == 0  ? 1080-Warning_red2.y : 1080;
+                break;
+
+            case 'recover':
+                tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
+                tilingSpriteMessyHair.vy = recoverSpeed;
+                Warning_yellow.y = 1080;
+                Warning_orange.y = 1080;
+                Warning_red.y = 1080;
+                Warning_yellow2.y = 1080;
+                Warning_orange2.y = 1080;
+                Warning_red2.y = 1080;
+                progress++;
+
+                break;
+
+             default:
+                moveSpeed =0;
+                recoverSpeed =0;
+                tilingSpriteMessyHair.tilePosition.vy = 0;
+                tilingSpriteMessyHair.tilePosition.y = 0;
+                tilingSpriteMessyHair.y = 370;
+                nice_hair.y = 370-1080;
+                comb_short.y=176;
+                Warning_yellow.y = 1080;
+                Warning_orange.y = 1080;
+                Warning_red.y = 1080;
+                Warning_yellow2.y = 1080;
+                Warning_orange2.y = 1080;
+                Warning_red2.y = 1080;
+
         }
-        break;
-        case 'recover':
-        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
-            onPlayVideo('oh_no');
-            mode = 'danger';
+
+        progress_comb.y = 174+(progress/10);
+
+        if(knot_1.y <= 10) {
+            knot_1.y = 2580;
         }
-        if(370 <= tilingSpriteMessyHair.y) {
-            mode = 'normal';
-            tilingSpriteMessyHair.y = 370;
-            nice_hair.y = 370-1080;
-            comb_short.y=176;
+
+        if(knot_2.y <= 10) {
+            knot_2.y = 2780;
         }
-        break;
-    }
 
-    // action
-    switch (mode) {
-        case 'normal':
-        tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
-        tilingSpriteMessyHair.vy = 0;
-        comb_short.vy=0;
-        Warning_yellow.y = 1080;
-        Warning_orange.y = 1080;
-        Warning_red.y = 1080;
-        Warning_yellow2.y = 1080;
-        Warning_orange2.y = 1080;
-        Warning_red2.y = 1080;
-        break;
-        case 'danger':
-        tilingSpriteMessyHair.tilePosition.vy = 0;
-        tilingSpriteMessyHair.vy = -moveSpeed;
-        Warning_yellow.y = 0;
-        Warning_orange.y = Warning_yellow.y == 0  ? 1080-Warning_orange.y : 1080;
-        Warning_red.y = Warning_orange.y == 0  ? 1080-Warning_red.y : 1080;
-        Warning_yellow2.y = 0;
-        Warning_orange2.y = Warning_yellow2.y == 0  ? 1080-Warning_orange2.y : 1080;
-        Warning_red2.y = Warning_orange2.y == 0  ? 1080-Warning_red2.y : 1080;
-        break;
-        case 'recover':
-        tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
-        tilingSpriteMessyHair.vy = recoverSpeed;
-        Warning_yellow.y = 1080;
-        Warning_orange.y = 1080;
-        Warning_red.y = 1080;
-        Warning_yellow2.y = 1080;
-        Warning_orange2.y = 1080;
-        Warning_red2.y = 1080;
+        if(knot_3.y <= 10) {
+            knot_3.y = 2980;
+        }
 
-        break;
-    }
+        //use the cat's velocity to make it move
+        cat.x += cat.vx;
+        cat.y += cat.vy;
+        tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
+        tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
+        comb_short.y += tilingSpriteMessyHair.vy;
+        nice_hair.y += tilingSpriteMessyHair.vy;
+        knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+        knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+        knot_3.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
+        //check for a collision between the cat and the box
+        if (hitTestRectangle(cat, box)) {
 
-    if(knot_1.y <= 10) {
-        knot_1.y = 2580;
-    }
+            //if there's a collision, change the message text
+            //and tint the box red
+            message.text = "hit!";
+            box.tint = 0xff3300;
+        } else {
 
-    if(knot_2.y <= 10) {
-        knot_2.y = 2780;
-    }
-
-    if(knot_3.y <= 10) {
-        knot_3.y = 2980;
-    }
-
-    //use the cat's velocity to make it move
-    cat.x += cat.vx;
-    cat.y += cat.vy;
-    tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
-    tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
-    comb_short.y += tilingSpriteMessyHair.vy;
-    nice_hair.y += tilingSpriteMessyHair.vy;
-    knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-    knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-    knot_3.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-
-    //check for a collision between the cat and the box
-    if (hitTestRectangle(cat, box)) {
-
-    //if there's a collision, change the message text
-    //and tint the box red
-    message.text = "hit!";
-    box.tint = 0xff3300;
-    } else {
-
-    //if there's no collision, reset the message
-    //text and the box's color
-    //message.text = "No collision...("+cat.x+", "+cat.y+")";
-    box.tint = 0xccff99;
-    }
+            //if there's no collision, reset the message
+            //text and the box's color
+            //message.text = "No collision...("+cat.x+", "+cat.y+")";
+            box.tint = 0xccff99;
+        }
     }
 
     //The `hitTestRectangle` function
     function hitTestRectangle(r1, r2) {
 
-    //Define the variables we'll need to calculate
-    let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+        //Define the variables we'll need to calculate
+        let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
 
-    //hit will determine whether there's a collision
-    hit = false;
+        //hit will determine whether there's a collision
+        hit = false;
 
-    //Find the center points of each sprite
-    r1.centerX = r1.x + r1.width / 2;
-    r1.centerY = r1.y + r1.height / 2;
-    r2.centerX = r2.x + r2.width / 2;
-    r2.centerY = r2.y + r2.height / 2;
+        //Find the center points of each sprite
+        r1.centerX = r1.x + r1.width / 2;
+        r1.centerY = r1.y + r1.height / 2;
+        r2.centerX = r2.x + r2.width / 2;
+        r2.centerY = r2.y + r2.height / 2;
 
-    //Find the half-widths and half-heights of each sprite
-    r1.halfWidth = r1.width / 2;
-    r1.halfHeight = r1.height / 2;
-    r2.halfWidth = r2.width / 2;
-    r2.halfHeight = r2.height / 2;
+        //Find the half-widths and half-heights of each sprite
+        r1.halfWidth = r1.width / 2;
+        r1.halfHeight = r1.height / 2;
+        r2.halfWidth = r2.width / 2;
+        r2.halfHeight = r2.height / 2;
 
-    //Calculate the distance vector between the sprites
-    vx = r1.centerX - r2.centerX;
-    vy = r1.centerY - r2.centerY;
+        //Calculate the distance vector between the sprites
+        vx = r1.centerX - r2.centerX;
+        vy = r1.centerY - r2.centerY;
 
-    //Figure out the combined half-widths and half-heights
-    combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-    combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+        //Figure out the combined half-widths and half-heights
+        combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+        combinedHalfHeights = r1.halfHeight + r2.halfHeight;
 
-    //Check for a collision on the x axis
-    if (Math.abs(vx) < combinedHalfWidths) {
+        //Check for a collision on the x axis
+        if (Math.abs(vx) < combinedHalfWidths) {
 
-    //A collision might be occurring. Check for a collision on the y axis
-    if (Math.abs(vy) < combinedHalfHeights) {
+        //A collision might be occurring. Check for a collision on the y axis
+        if (Math.abs(vy) < combinedHalfHeights) {
 
-      //There's definitely a collision happening
-      hit = true;
-    } else {
+          //There's definitely a collision happening
+          hit = true;
+        } else {
 
-      //There's no collision on the y axis
-      hit = false;
-    }
-    } else {
+          //There's no collision on the y axis
+          hit = false;
+        }
+        } else {
 
-    //There's no collision on the x axis
-    hit = false;
-    }
+        //There's no collision on the x axis
+        hit = false;
+        }
 
-    //`hit` will be either `true` or `false`
-    return hit;
+        //`hit` will be either `true` or `false`
+        return hit;
     };
 
 
