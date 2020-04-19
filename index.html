@@ -348,6 +348,80 @@
 
     app.stage.addChild(musicSprite);
 
+    //Create the `BG_start` sprite
+    BG_start = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_start.x = 0;
+    BG_start.y = 0;
+    BG_start.vx = 0;
+    BG_start.vy = 0;
+    app.stage.addChild(BG_start);
+
+    //Create the `BG_win` sprite
+    BG_win = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_win.x = 0;
+    BG_win.y = 1080;
+    BG_win.vx = 0;
+    BG_win.vy = 0;
+    app.stage.addChild(BG_win);
+
+    //Create the `BG_loose` sprite
+    BG_loose = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_loose.x = 0;
+    BG_loose.y = 1080;
+    BG_loose.vx = 0;
+    BG_loose.vy = 0;
+    app.stage.addChild(BG_loose);
+
+
+    //Create the text sprite
+    let style = new TextStyle({
+    fontFamily: "sans-serif",
+    fontSize: 18,
+    fill: "white",
+    });
+    message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
+    message.position.set(8, 508);
+    message.interactive = true;
+    app.stage.addChild(message);
+
+
+    //Create the text sprite
+    let style2 = new TextStyle({
+    fontFamily: "sans-serif",
+    fontSize: 18,
+    fill: "white",
+    });
+    butt_music = new Text("Music", style2);
+    butt_music.position.set(8, 8);
+    butt_music.interactive = true;
+    butt_music.on('pointerdown', () => music = !music)
+    app.stage.addChild(butt_music);
+
+
+    //Create the text sprite
+    let style3 = new TextStyle({
+    fontFamily: "sans-serif",
+    fontSize: 18,
+    fill: "white",
+    });
+    butt_sound = new Text("Sounds", style3);
+    butt_sound.position.set(208, 8);
+    butt_sound.interactive = true;
+    butt_sound.on('pointerdown', () => sound = !sound)
+    app.stage.addChild(butt_sound);
+
+    //Create the text sprite
+    let style4 = new TextStyle({
+    fontFamily: "sans-serif",
+    fontSize: 98,
+    fill: "yellow",
+    });
+    msg_status = new Text("Click To Start", style4);
+    msg_status.position.set(700, 350);
+    msg_status.interactive = true;
+    msg_status.on('pointerdown', onStartGame)
+    app.stage.addChild(msg_status);
+
     //Capture the keyboard arrow keys
     let left = keyboard(37),
       up = keyboard(38),
@@ -406,16 +480,6 @@
     }
     };
 
-    //Create the text sprite
-    let style = new TextStyle({
-    fontFamily: "sans-serif",
-    fontSize: 18,
-    fill: "white",
-    });
-    message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
-    message.position.set(8, 8);
-    app.stage.addChild(message);
-
     //Set the game state
     state = play;
 
@@ -423,35 +487,66 @@
     app.ticker.add(delta => gameLoop(delta));
     }
 
+    function onStartGame() {
+        msg_status.y = 1080;
+        BG_start.y = 1080;
+        BG_win.y = 1080;
+        BG_loose.y = 1080;
+        progress = 0;
+        onPlayVideo('oh_no', true);
+        mode = 'normal';
+    }
+
+    function onWinGame() {
+        msg_status.text = 'WIN!    Click here to restart';
+        msg_status.y = 350;
+        msg_status.x = 150;
+        BG_start.y = 1080;
+        BG_win.y = 0;
+        BG_loose.y = 1080;
+        onPlayVideo('oh_no', true);
+        mode = 'win';
+    }
+
+    function onLooseGame() {
+        msg_status.text = 'LOOSE!    Click here to restart';
+        msg_status.y = 350;
+        msg_status.x = 150;
+        BG_start.y = 1080;
+        BG_win.y = 1080;
+        BG_loose.y = 0;
+        onPlayVideo('oh_no', true);
+        mode = 'loose';
+    }
 
     function onButtonDown() {
-    let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
-    this.isdown = true;
-    if(this.textureButtonDown){
-        this.texture = textureButtonDown;
-    }
-    if(this.killedby && this.killedby === tool){
-        this.y = 1500;
-        my_string += ' killed!';
-    }
+        let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
+        this.isdown = true;
+        if(this.textureButtonDown){
+            this.texture = textureButtonDown;
+        }
+        if(this.killedby && this.killedby === tool){
+            this.y = 1500;
+            my_string += ' killed!';
+        }
 
-    if(this.tool){
-        tool = this.tool;
-        onPlayVideo('tool_select');
-        updateToolTxt(goo_fairy);
-        updateToolTxt(sailor_fairy);
-        updateToolTxt(sax_fairy);
-    }
-    this.alpha = 1;
+        if(this.tool){
+            tool = this.tool;
+            onPlayVideo('tool_select');
+            updateToolTxt(goo_fairy);
+            updateToolTxt(sailor_fairy);
+            updateToolTxt(sax_fairy);
+        }
+        this.alpha = 1;
 
-    }
+        }
 
-    function updateToolTxt(fairy) {
-    if(tool === fairy.tool){
-        fairy.texture = fairy.sel_txt;
-    } else {
-        fairy.texture = fairy.unsel_txt;
-    }
+        function updateToolTxt(fairy) {
+        if(tool === fairy.tool){
+            fairy.texture = fairy.sel_txt;
+        } else {
+            fairy.texture = fairy.unsel_txt;
+        }
     }
 
     function onButtonUp() {
@@ -614,10 +709,12 @@
         progress_comb.y = 174+(progress/10);
 
         if(knot_1.y <= 10) {
+            onLooseGame();
             knot_1.y = 2580;
         }
 
         if(knot_2.y <= 10) {
+            onWinGame();
             knot_2.y = 2780;
         }
 
