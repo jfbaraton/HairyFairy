@@ -38,6 +38,8 @@
     .add("images/wand.png")
     .add("images/knot.png")
     .add("images/chibi_cry1.png")
+    .add("images/chibi_happy1.png")
+    .add("images/chibi_oups1.png")
     .add("images/knot_1.png")
     .add("images/knot_2.png")
     .add("images/gum1.png")
@@ -45,15 +47,18 @@
     .add("images/Warning-yellow.png")
     .add("images/Warning-orange.png")
     .add("images/Warning-red.png")
+    .add("images/Warning-orange2.png")
+    .add("images/Warning-red2.png")
     .add("images/goo_fairy.png")
     .add("images/goo_fairy_selected.png")
     .add("images/sailor_fairy.png")
     .add("images/sailor_fairy_selected.png")
-    .add("images/sax_fairy.png")
-    .add("images/sax_fairy_selected.png")
+    .add("images/split_fairy.png")
+    .add("images/split_fairy_selected.png")
     .add("images/cat.png")
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
+    .add("images/welcome_princess.png")
     .add("sounds/oh_no.mp4")
     .add("sounds/ending.mp4")
     .add("sounds/tool_select.mp4")
@@ -64,8 +69,9 @@
     let butt_start, butt_restart, butt_music, butt_sound;
     let BG_start, BG_win, BG_lose;
     let msg_status;
-    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi;
-    let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3, progress_comb, progress_dirty;
+    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
+    let blob, comb_short, back, box, message, state, tilingSprite, jammers;
+    let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
     // create a texture from an image path
@@ -74,9 +80,17 @@
     const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
     const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
-    const sax_fairy_txt = PIXI.Texture.from('images/sax_fairy.png');
-    const sax_fairy_selected_txt = PIXI.Texture.from('images/sax_fairy_selected.png');
+    const sax_fairy_txt = PIXI.Texture.from('images/split_fairy.png');
+    const sax_fairy_selected_txt = PIXI.Texture.from('images/split_fairy_selected.png');
     const chibi_cry_txt = PIXI.Texture.from('images/chibi_cry1.png');
+    const chibi_happy_txt = PIXI.Texture.from('images/chibi_happy1.png');
+    const chibi_oups_txt = PIXI.Texture.from('images/chibi_oups1.png');
+    const warning_yellow1_txt = PIXI.Texture.from('images/Warning-yellow.png');
+    const warning_yellow2_txt = PIXI.Texture.from('images/Warning-yellow.png');
+    const warning_orange1_txt = PIXI.Texture.from('images/Warning-orange.png');
+    const warning_orange2_txt = PIXI.Texture.from('images/Warning-orange2.png');
+    const warning_red1_txt = PIXI.Texture.from('images/Warning-red.png');
+    const warning_red2_txt = PIXI.Texture.from('images/Warning-red2.png');
 
 
     // Css style for icons
@@ -91,7 +105,7 @@
     let count = 0;
 
     function setup() {
-    mode = 'normal';
+    mode = 'start';
     tool = 'knot';
     music = false;
     sound = false;
@@ -232,30 +246,7 @@
         .on('pointerout', onButtonOut);
     app.stage.addChild(sax_fairy);
 
-
-    //Create the `chibi` sprite
-    chibi = new Sprite(chibi_cry_txt);
-    chibi.x = 1350;
-    chibi.y = 1080-771;
-    app.stage.addChild(chibi);
-
-    /*
-    //Create the `blob` sprite
-    blob = new Sprite(resources["images/blob.png"].texture);
-    blob.x = 16;
-    blob.y = 396;
-    blob.vx = 0;
-    blob.vy = 0;
-    blob.tool = 'knot';
-    blob.toolIcon = hoverIcon;
-    blob.interactive = true;
-    blob.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(blob);*/
-
+    jammers = [];
     //Create the `knot_1` sprite
     knot_1 = new Sprite(resources["images/knot.png"].texture);
     knot_1.x = 700;
@@ -270,6 +261,7 @@
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
     app.stage.addChild(knot_1);
+    jammers.push(knot_1);
 
     //Create the `knot_2` sprite
     knot_2 = new Sprite(resources["images/gum1.png"].texture);
@@ -285,6 +277,7 @@
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
     app.stage.addChild(knot_2);
+    jammers.push(knot_2);
 
     //Create the `knot_3` sprite
     knot_3 = new Sprite(resources["images/knot_1.png"].texture);
@@ -300,6 +293,148 @@
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
     app.stage.addChild(knot_3);
+    jammers.push(knot_3);
+    //Create the `knot_1` sprite
+    knot_11 = new Sprite(resources["images/knot.png"].texture);
+    knot_11.x = 700;
+    knot_11.y = 1080;
+    knot_11.vx = 0;
+    knot_11.vy = 0;
+    knot_11.killedby = 'knot';
+    knot_11.interactive = true;
+    knot_11.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_11);
+    jammers.push(knot_11);
+
+    //Create the `knot_2` sprite
+    knot_21 = new Sprite(resources["images/gum2.png"].texture);
+    knot_21.x = 850;
+    knot_21.y = 1280;
+    knot_21.vx = 0;
+    knot_21.vy = 0;
+    knot_21.killedby = 'gum';
+    knot_21.interactive = true;
+    knot_21.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_21);
+    jammers.push(knot_21);
+
+    //Create the `knot_31` sprite
+    knot_31 = new Sprite(resources["images/knot_1.png"].texture);
+    knot_31.x = 950;
+    knot_31.y = 1280;
+    knot_31.vx = 0;
+    knot_31.vy = 0;
+    knot_31.killedby = 'sax';
+    knot_31.interactive = true;
+    knot_31.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_31);
+    jammers.push(knot_31);
+    //Create the `knot_12` sprite
+    knot_12 = new Sprite(resources["images/knot.png"].texture);
+    knot_12.x = 700;
+    knot_12.y = 1080;
+    knot_12.vx = 0;
+    knot_12.vy = 0;
+    knot_12.killedby = 'knot';
+    knot_12.interactive = true;
+    knot_12.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_12);
+    jammers.push(knot_12);
+
+    //Create the `knot_22` sprite
+    knot_22 = new Sprite(resources["images/gum1.png"].texture);
+    knot_22.x = 850;
+    knot_22.y = 1280;
+    knot_22.vx = 0;
+    knot_22.vy = 0;
+    knot_22.killedby = 'gum';
+    knot_22.interactive = true;
+    knot_22.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_22);
+    jammers.push(knot_22);
+
+    //Create the `knot_32` sprite
+    knot_32 = new Sprite(resources["images/knot_1.png"].texture);
+    knot_32.x = 950;
+    knot_32.y = 1280;
+    knot_32.vx = 0;
+    knot_32.vy = 0;
+    knot_32.killedby = 'sax';
+    knot_32.interactive = true;
+    knot_32.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_32);
+    jammers.push(knot_32);
+    //Create the `knot_13` sprite
+    knot_13 = new Sprite(resources["images/knot.png"].texture);
+    knot_13.x = 700;
+    knot_13.y = 1080;
+    knot_13.vx = 0;
+    knot_13.vy = 0;
+    knot_13.killedby = 'knot';
+    knot_13.interactive = true;
+    knot_13.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_13);
+    jammers.push(knot_13);
+
+    //Create the `knot_2` sprite
+    knot_23 = new Sprite(resources["images/gum2.png"].texture);
+    knot_23.x = 850;
+    knot_23.y = 1280;
+    knot_23.vx = 0;
+    knot_23.vy = 0;
+    knot_23.killedby = 'gum';
+    knot_23.interactive = true;
+    knot_23.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_23);
+    jammers.push(knot_23);
+
+    //Create the `knot_3` sprite
+    knot_33 = new Sprite(resources["images/knot_1.png"].texture);
+    knot_33.x = 950;
+    knot_33.y = 1280;
+    knot_33.vx = 0;
+    knot_33.vy = 0;
+    knot_33.killedby = 'sax';
+    knot_33.interactive = true;
+    knot_33.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_33);
+    jammers.push(knot_33);
 
     //Create the `Warning_yellow` sprite
     Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
@@ -369,13 +504,14 @@
     BG_start.vy = 0;
     app.stage.addChild(BG_start);
 
-    //Create the `BG_win` sprite
-    BG_win = new Sprite(resources["images/BG_empty.png"].texture);
-    BG_win.x = 0;
-    BG_win.y = 1080;
-    BG_win.vx = 0;
-    BG_win.vy = 0;
-    app.stage.addChild(BG_win);
+    //Create the `welcome_princess` sprite
+    welcome_princess = new Sprite(resources["images/welcome_princess.png"].texture);
+    welcome_princess.x = 0;
+    welcome_princess.y = 0;
+    welcome_princess.vx = 0;
+    welcome_princess.vy = 0;
+    app.stage.addChild(welcome_princess);
+
 
     //Create the `BG_lose` sprite
     BG_lose = new Sprite(resources["images/BG_empty.png"].texture);
@@ -384,6 +520,22 @@
     BG_lose.vx = 0;
     BG_lose.vy = 0;
     app.stage.addChild(BG_lose);
+
+
+
+    //Create the `BG_win` sprite
+    BG_win = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_win.x = 0;
+    BG_win.y = 1080;
+    BG_win.vx = 0;
+    BG_win.vy = 0;
+    app.stage.addChild(BG_win);
+
+    //Create the `chibi` sprite
+    chibi = new Sprite(chibi_happy_txt);
+    chibi.x = 1350;
+    chibi.y = 1080;
+    app.stage.addChild(chibi);
 
 
     //Create the text sprite
@@ -401,8 +553,8 @@
     //Create the text sprite
     let style2 = new TextStyle({
     fontFamily: "sans-serif",
-    fontSize: 18,
-    fill: "white",
+    fontSize: 35,
+    fill: "black",
     });
     butt_music = new Text("Music", style2);
     butt_music.position.set(8, 8);
@@ -414,11 +566,11 @@
     //Create the text sprite
     let style3 = new TextStyle({
     fontFamily: "sans-serif",
-    fontSize: 18,
-    fill: "white",
+    fontSize: 35,
+    fill: "black",
     });
     butt_sound = new Text("Sounds", style3);
-    butt_sound.position.set(208, 8);
+    butt_sound.position.set(128, 8);
     butt_sound.interactive = true;
     butt_sound.on('pointerdown', () => sound = !sound)
     app.stage.addChild(butt_sound);
@@ -426,11 +578,11 @@
     //Create the text sprite
     let style4 = new TextStyle({
     fontFamily: "sans-serif",
-    fontSize: 98,
+    fontSize: 70,
     fill: "yellow",
     });
     msg_status = new Text("Click To Start", style4);
-    msg_status.position.set(700, 350);
+    msg_status.position.set(700, 200);
     msg_status.interactive = true;
     msg_status.on('pointerdown', onStartGame)
     app.stage.addChild(msg_status);
@@ -484,20 +636,20 @@
 
     //Down
     down.press = function() {
-    cat.vy = 5;
-    cat.vx = 0;
-    };
-    down.release = function() {
-    if (!up.isDown && cat.vx === 0) {
-      cat.vy = 0;
-    }
-    };
+        cat.vy = 5;
+        cat.vx = 0;
+        };
+        down.release = function() {
+        if (!up.isDown && cat.vx === 0) {
+          cat.vy = 0;
+        }
+        };
 
-    //Set the game state
-    state = play;
+        //Set the game state
+        state = play;
 
-    //Start the game loop
-    app.ticker.add(delta => gameLoop(delta));
+        //Start the game loop
+        app.ticker.add(delta => gameLoop(delta));
     }
 
     function onStartGame() {
@@ -506,6 +658,8 @@
         BG_win.y = 1080;
         BG_lose.y = 1080;
         progress = 0;
+        welcome_princess.y = 1080;
+        chibi.y = 1080-771;
         onPlayVideo('ending', true);
         mode = 'normal';
     }
@@ -596,38 +750,59 @@
     }
     function onPlayVideo(sound_name, is_music) {
 
-    if((!is_music && sound) || (is_music && music)) {
-        // create a video texture from a path
-        const texture = PIXI.Texture.from('sounds/'+sound_name+'.mp4');
+        if((!is_music && sound) || (is_music && music)) {
+            // create a video texture from a path
+            const texture = PIXI.Texture.from('sounds/'+sound_name+'.mp4');
 
-        if(!is_music) {
-            // create a new Sprite using the video texture (yes it's that easy)
-            const videoSprite = new PIXI.Sprite(texture);
+            if(!is_music) {
+                // create a new Sprite using the video texture (yes it's that easy)
+                const videoSprite = new PIXI.Sprite(texture);
 
-            // Stetch the fullscreen
-            videoSprite.x = app.screen.width+200;
-            videoSprite.y = app.screen.height+200;
-            videoSprite.width = 1;
-            videoSprite.height = 1;
+                // Stetch the fullscreen
+                videoSprite.x = app.screen.width+200;
+                videoSprite.y = app.screen.height+200;
+                videoSprite.width = 1;
+                videoSprite.height = 1;
 
-            app.stage.addChild(videoSprite);
-        } else {
-            // need to be able to interrupt music when muted or screen changes. so for now no music :(
-            /*app.stage.removeChild(musicSprite);
-            musicSprite.texture.source.pause();
-            musicSprite.texture.dispose();
-            musicSprite.texture = texture;
+                app.stage.addChild(videoSprite);
+            } else {
+                // need to be able to interrupt music when muted or screen changes. so for now no music :(
+                /*app.stage.removeChild(musicSprite);
+                musicSprite.texture.source.pause();
+                musicSprite.texture.dispose();
+                musicSprite.texture = texture;
 
-            app.stage.addChild(musicSprite);*/
+                app.stage.addChild(musicSprite);*/
+            }
         }
     }
-    }
 
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     function gameLoop(delta){
 
     //Update the current game state:
     state(delta);
+    }
+
+    function isJammersTouchingComb() {
+        for(jammer in jammers){
+            if(jammer.y <= tilingSpriteMessyHair.y){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function isJammersTouchingComb() {
+        for (var i = 0; i < jammers.length; i++) {
+            if(jammers[i].y <= tilingSpriteMessyHair.y){
+                return true;
+            }
+        }
+        return false;
     }
 
     function play(delta) {
@@ -641,23 +816,27 @@
         // evolution
         switch (mode) {
             case 'normal':
-                if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
+                if(isJammersTouchingComb()) {
                     onPlayVideo('oh_no');
+                    chibi.texture = chibi_oups_txt;
                     mode = 'danger';
                 }
                 break;
             case 'danger':
-                if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y && knot_3.y > tilingSpriteMessyHair.y) {
+                if(!isJammersTouchingComb()) {
                     mode = 'recover';
+                    chibi.texture = chibi_oups_txt;
                 }
                 break;
             case 'recover':
-                if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
+                if(isJammersTouchingComb()) {
                     onPlayVideo('oh_no');
+                    chibi.texture = chibi_oups_txt;
                     mode = 'danger';
                 }
                 if(370 <= tilingSpriteMessyHair.y) {
                     mode = 'normal';
+                    chibi.texture = chibi_happy_txt;
                     tilingSpriteMessyHair.y = 370;
                     nice_hair.y = 370-1080;
                     comb_short.y=176;
@@ -688,11 +867,61 @@
                 tilingSpriteMessyHair.tilePosition.vy = 0;
                 tilingSpriteMessyHair.vy = -moveSpeed;
                 Warning_yellow.y = 0;
-                Warning_orange.y = Warning_yellow.y == 0  ? 1080-Warning_orange.y : 1080;
-                Warning_red.y = Warning_orange.y == 0  ? 1080-Warning_red.y : 1080;
                 Warning_yellow2.y = 0;
-                Warning_orange2.y = Warning_yellow2.y == 0  ? 1080-Warning_orange2.y : 1080;
-                Warning_red2.y = Warning_orange2.y == 0  ? 1080-Warning_red2.y : 1080;
+                if(tilingSpriteMessyHair.y <= 200){
+                    Warning_red.y = 0;
+                    Warning_red2.y = 0;
+                    chibi.texture = chibi_cry_txt;
+                    switch (tilingSpriteMessyHair.y % 60){
+                        case 0:
+                            Warning_red.texture = warning_red1_txt;
+                            Warning_red2.texture = warning_red1_txt;
+                        break;
+                        case 10:
+                            Warning_red.texture = warning_orange1_txt;
+                            Warning_red2.texture = warning_orange1_txt;
+                        break;
+                        case 20:
+                            Warning_red.texture = warning_yellow1_txt;
+                            Warning_red2.texture = warning_yellow1_txt;
+                        break;
+                        case 30:
+                            Warning_red.texture = warning_red2_txt;
+                            Warning_red2.texture = warning_red2_txt;
+                        break;
+                        case 40:
+                            Warning_red.texture = warning_orange2_txt;
+                            Warning_red2.texture = warning_orange2_txt;
+                        break;
+                        case 50:
+                            Warning_red.texture = warning_yellow2_txt;
+                            Warning_red2.texture = warning_yellow2_txt;
+                        break;
+                    }
+                } else {
+                    chibi.texture = chibi_oups_txt;
+                    Warning_red.y = 1080;
+                    Warning_red2.y = 1080;
+                    switch (tilingSpriteMessyHair.y % 40){
+                        case 0:
+                            Warning_yellow.texture = warning_orange1_txt;
+                            Warning_yellow2.texture = warning_orange1_txt;
+                        break;
+                        case 10:
+                            Warning_yellow.texture = warning_yellow1_txt;
+                            Warning_yellow2.texture = warning_yellow1_txt;
+                        break;
+                        break;
+                        case 20:
+                            Warning_yellow.texture = warning_orange2_txt;
+                            Warning_yellow2.texture = warning_orange2_txt;
+                        break;
+                        case 30:
+                            Warning_yellow.texture = warning_yellow2_txt;
+                            Warning_yellow2.texture = warning_yellow2_txt;
+                        break;
+                    }
+                }
                 break;
 
             case 'recover':
@@ -733,7 +962,7 @@
         }
 
         if(knot_2.y <= 10) {
-            onWinGame();
+            //onWinGame();
             knot_2.y = 2780;
         }
 
