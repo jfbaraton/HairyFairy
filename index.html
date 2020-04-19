@@ -112,7 +112,7 @@
     mode = 'start';
     tool = 'knot';
     music = false;
-    sound = false;
+    sound = true;
     progress = 0;
     //Create the box
     box = new PIXI.Graphics();
@@ -188,7 +188,7 @@
     message = new Text("100 m", style);
     message.position.set(1700, 650-progress_offset);
     message.interactive = true;
-    message.on('pointerdown', () => onWinGame())
+    //message.on('pointerdown', () => onWinGame())
     app.stage.addChild(message);
 
 
@@ -200,7 +200,7 @@
     //Create the `cat` sprite
     cat = new Sprite(resources["images/cat.png"].texture);
     cat.x = 16;
-    cat.y = 96;
+    cat.y = 1296;
     cat.vx = 0;
     cat.vy = 0;
     cat.toolIcon = defaultIcon;
@@ -538,7 +538,7 @@
     welcome_princess.y = 0;
     welcome_princess.vx = 0;
     welcome_princess.vy = 0;
-    app.stage.addChild(welcome_princess);
+    //app.stage.addChild(welcome_princess);
 
 
     //Create the `BG_lose` sprite
@@ -562,8 +562,9 @@
     butt_restart = new Sprite(resources["images/comb_again.png"].texture);
     butt_restart.x = 950;
     butt_restart.y = 1280;
+    //butt_restart.y = 1280;
     butt_restart.interactive = true;
-    butt_restart.on('pointerdown', onStartGame());
+    butt_restart.on('pointerdown', onStartGame);
 
 
     //Create the text sprite
@@ -583,10 +584,10 @@
     let style3 = new TextStyle({
     fontFamily: "sans-serif",
     fontSize: 35,
-    fill: "black",
+    fill: "pink",
     });
-    butt_sound = new Text("Sounds", style3);
-    butt_sound.position.set(128, 8);
+    butt_sound = new Text("Sounds On/Off", style3);
+    butt_sound.position.set(108, 8);
     butt_sound.interactive = true;
     butt_sound.on('pointerdown', () => sound = !sound)
     app.stage.addChild(butt_sound);
@@ -594,12 +595,12 @@
     //Create the text sprite
     let style4 = new TextStyle({
     fontFamily: "Bodoni MT", // "chalkduster"
-    fontSize: 70,
+    fontSize: 190,
     //fontStyle: 'underline',
     fill: "pink",
     });
-    msg_status = new Text("Click here to Start", style4);
-    msg_status.position.set(1300, 700);
+    msg_status = new Text("                       4", style4);
+    msg_status.position.set(100, 300);
     msg_status.interactive = true;
     msg_status.on('pointerdown', onStartGame)
     app.stage.addChild(msg_status);
@@ -705,6 +706,7 @@
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 0;
+        butt_restart.y = 800;
         onPlayVideo('ending', true);
         mode = 'lose';
     }
