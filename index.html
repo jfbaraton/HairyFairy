@@ -586,7 +586,8 @@
     let style4 = new TextStyle({
     fontFamily: "Bodoni MT", // "chalkduster"
     fontSize: 70,
-    fill: "green",
+    //fontStyle: 'underline',
+    fill: "pink",
     });
     msg_status = new Text("Click here to Start", style4);
     msg_status.position.set(1300, 700);
@@ -675,8 +676,8 @@
     function onWinGame() {
         resetJammers();
         msg_status.text = 'Click here to restart';
-        msg_status.y = 700;
-        msg_status.x = 1300;
+        msg_status.y = 300;
+        msg_status.x = 1100;
         BG_start.y = 1080;
         chibi.y=1080;
         BG_win.y = 0;
@@ -687,9 +688,10 @@
 
     function onLoseGame() {
         resetJammers();
-        msg_status.text = 'Click here to restart';
-        msg_status.y = 700;
-        msg_status.x = 1300;
+        msg_status.text = '            ';
+        msg_status.y = 400;
+        msg_status.x = 1130;
+        chibi.y=1080
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 0;
@@ -983,11 +985,9 @@
                 tilingSpriteMessyHair.vy = 0;
                 tilingSpriteMessyHair.tilePosition.vy = 0;
                 comb_short.vy=0;
-                /*tilingSpriteMessyHair.tilePosition.vy = 0;
-                tilingSpriteMessyHair.tilePosition.y = 0;
                 tilingSpriteMessyHair.y = 370;
                 nice_hair.y = 370-1080;
-                comb_short.y=176;*/
+                comb_short.y=176;
                 Warning_yellow.y = 1080;
                 Warning_orange.y = 1080;
                 Warning_red.y = 1080;
