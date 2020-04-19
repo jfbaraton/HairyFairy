@@ -36,8 +36,12 @@
     .add("images/comb_short.png")
     .add("images/blob.png")
     .add("images/wand.png")
+    .add("images/knot.png")
+    .add("images/chibi_cry1.png")
     .add("images/knot_1.png")
     .add("images/knot_2.png")
+    .add("images/gum1.png")
+    .add("images/gum2.png")
     .add("images/Warning-yellow.png")
     .add("images/Warning-orange.png")
     .add("images/Warning-red.png")
@@ -51,15 +55,16 @@
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
     .add("sounds/oh_no.mp4")
+    .add("sounds/ending.mp4")
     .add("sounds/tool_select.mp4")
     .load(setup);
 
     //Define any variables that are used in more than one function
     let mode, tool, music, sound, musicSprite, progress;
     let butt_start, butt_restart, butt_music, butt_sound;
-    let BG_start, BG_win, BG_loose;
+    let BG_start, BG_win, BG_lose;
     let msg_status;
-    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected;
+    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi;
     let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
@@ -71,6 +76,7 @@
     const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
     const sax_fairy_txt = PIXI.Texture.from('images/sax_fairy.png');
     const sax_fairy_selected_txt = PIXI.Texture.from('images/sax_fairy_selected.png');
+    const chibi_cry_txt = PIXI.Texture.from('images/chibi_cry1.png');
 
 
     // Css style for icons
@@ -226,6 +232,13 @@
         .on('pointerout', onButtonOut);
     app.stage.addChild(sax_fairy);
 
+
+    //Create the `chibi` sprite
+    chibi = new Sprite(chibi_cry_txt);
+    chibi.x = 1350;
+    chibi.y = 1080-771;
+    app.stage.addChild(chibi);
+
     /*
     //Create the `blob` sprite
     blob = new Sprite(resources["images/blob.png"].texture);
@@ -244,7 +257,7 @@
     app.stage.addChild(blob);*/
 
     //Create the `knot_1` sprite
-    knot_1 = new Sprite(resources["images/knot_1.png"].texture);
+    knot_1 = new Sprite(resources["images/knot.png"].texture);
     knot_1.x = 700;
     knot_1.y = 1080;
     knot_1.vx = 0;
@@ -259,7 +272,7 @@
     app.stage.addChild(knot_1);
 
     //Create the `knot_2` sprite
-    knot_2 = new Sprite(resources["images/cat.png"].texture);
+    knot_2 = new Sprite(resources["images/gum1.png"].texture);
     knot_2.x = 850;
     knot_2.y = 1280;
     knot_2.vx = 0;
@@ -274,7 +287,7 @@
     app.stage.addChild(knot_2);
 
     //Create the `knot_3` sprite
-    knot_3 = new Sprite(resources["images/blob.png"].texture);
+    knot_3 = new Sprite(resources["images/knot_1.png"].texture);
     knot_3.x = 950;
     knot_3.y = 1280;
     knot_3.vx = 0;
@@ -364,13 +377,13 @@
     BG_win.vy = 0;
     app.stage.addChild(BG_win);
 
-    //Create the `BG_loose` sprite
-    BG_loose = new Sprite(resources["images/BG_empty.png"].texture);
-    BG_loose.x = 0;
-    BG_loose.y = 1080;
-    BG_loose.vx = 0;
-    BG_loose.vy = 0;
-    app.stage.addChild(BG_loose);
+    //Create the `BG_lose` sprite
+    BG_lose = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_lose.x = 0;
+    BG_lose.y = 1080;
+    BG_lose.vx = 0;
+    BG_lose.vy = 0;
+    app.stage.addChild(BG_lose);
 
 
     //Create the text sprite
@@ -491,9 +504,9 @@
         msg_status.y = 1080;
         BG_start.y = 1080;
         BG_win.y = 1080;
-        BG_loose.y = 1080;
+        BG_lose.y = 1080;
         progress = 0;
-        onPlayVideo('oh_no', true);
+        onPlayVideo('ending', true);
         mode = 'normal';
     }
 
@@ -503,20 +516,20 @@
         msg_status.x = 150;
         BG_start.y = 1080;
         BG_win.y = 0;
-        BG_loose.y = 1080;
-        onPlayVideo('oh_no', true);
+        BG_lose.y = 1080;
+        onPlayVideo('ending', true);
         mode = 'win';
     }
 
-    function onLooseGame() {
-        msg_status.text = 'LOOSE!    Click here to restart';
+    function onLoseGame() {
+        msg_status.text = 'Lose!    Click here to restart';
         msg_status.y = 350;
         msg_status.x = 150;
         BG_start.y = 1080;
         BG_win.y = 1080;
-        BG_loose.y = 0;
-        onPlayVideo('oh_no', true);
-        mode = 'loose';
+        BG_lose.y = 0;
+        onPlayVideo('ending', true);
+        mode = 'lose';
     }
 
     function onButtonDown() {
@@ -599,7 +612,13 @@
 
             app.stage.addChild(videoSprite);
         } else {
+            // need to be able to interrupt music when muted or screen changes. so for now no music :(
+            /*app.stage.removeChild(musicSprite);
+            musicSprite.texture.source.pause();
+            musicSprite.texture.dispose();
             musicSprite.texture = texture;
+
+            app.stage.addChild(musicSprite);*/
         }
     }
     }
@@ -709,7 +728,7 @@
         progress_comb.y = 174+(progress/10);
 
         if(knot_1.y <= 10) {
-            onLooseGame();
+            onLoseGame();
             knot_1.y = 2580;
         }
 
