@@ -32,6 +32,7 @@
     loader
     .add("images/BG_empty.png")
     .add("images/BG_win.png")
+    .add("images/BG_lose.png")
     .add("images/messy_hair.png")
     .add("images/nice_hair.png")
     .add("images/comb_short.png")
@@ -71,7 +72,7 @@
     let BG_start, BG_win, BG_lose;
     let msg_status;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
-    let blob, comb_short, back, box, message, state, tilingSprite, jammers;
+    let blob, comb_short, back, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
@@ -101,7 +102,7 @@
     // Add custom cursor styles
     app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
     app.renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
-
+    const progress_offset = 100;
 
     let count = 0;
 
@@ -163,7 +164,7 @@
     //Create the `progress_dirty` sprite
     progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
     progress_dirty.x = 1600;
-    progress_dirty.y = 176;
+    progress_dirty.y = 176-progress_offset;
     progress_dirty.vx = 0;
     progress_dirty.vy = 0;
     app.stage.addChild(progress_dirty);
@@ -171,10 +172,28 @@
     //Create the `progress_comb` sprite
     progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
     progress_comb.x = 1600;
-    progress_comb.y = 176;
+    progress_comb.y = 176-progress_offset;
     progress_comb.vx = 0;
     progress_comb.vy = 0;
     app.stage.addChild(progress_comb);
+
+    //text for progression
+    let style = new TextStyle({
+    fontFamily: "sans-serif",
+    fontSize: 18,
+    fill: "white",
+    });
+    message = new Text("100 m", style);
+    message.position.set(1700, 650-progress_offset);
+    message.interactive = true;
+    message.on('pointerdown', () => onWinGame())
+    app.stage.addChild(message);
+
+
+    //Create the text sprite
+    message2 = new Text("0 m", style);
+    message2.position.set(1700, 180-progress_offset);
+    app.stage.addChild(message2);
 
     //Create the `cat` sprite
     cat = new Sprite(resources["images/cat.png"].texture);
@@ -515,7 +534,7 @@
 
 
     //Create the `BG_lose` sprite
-    BG_lose = new Sprite(resources["images/BG_empty.png"].texture);
+    BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
     BG_lose.x = 0;
     BG_lose.y = 1080;
     BG_lose.vx = 0;
@@ -537,20 +556,6 @@
     chibi.x = 1350;
     chibi.y = 1080;
     app.stage.addChild(chibi);
-
-
-    //Create the text sprite
-    let style = new TextStyle({
-    fontFamily: "sans-serif",
-    fontSize: 18,
-    fill: "white",
-    });
-    message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
-    message.position.set(8, 508);
-    message.interactive = true;
-    message.on('pointerdown', () => onWinGame())
-    app.stage.addChild(message);
-
 
     //Create the text sprite
     let style2 = new TextStyle({
@@ -824,7 +829,7 @@
 
     function resetJammers(){
         for (var i = 0; i < jammers.length; i++) {
-            jammers[i].x = 580+randomInt(0,900);
+            jammers[i].x = 580+randomInt(0,700);
             jammers[i].y = 1080+randomInt(50,1600);
             jammers[i].vy = 0;
         }
@@ -876,8 +881,8 @@
                     nice_hair.y = 370-1080;
                     comb_short.y=176;
                 }
-                if (progress_comb.y >= 660){
-                    progress_comb.y = 174;
+                if (progress_comb.y >= 660-progress_offset){
+                    progress_comb.y = 174-progress_offset;
 
                     mode = 'win';
                 }
@@ -992,7 +997,7 @@
 
         }
 
-        progress_comb.y = 174+(progress/10);
+        progress_comb.y = 174+(progress/10)-progress_offset;
 
         if(isJammersTouchingTop()) {
             onLoseGame();
