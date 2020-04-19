@@ -5,8 +5,8 @@
 <script src="../pixi/pixi.min.js"></script>
 <script>
 
-//Aliases
-let Application = PIXI.Application,
+    //Aliases
+    let Application = PIXI.Application,
     Container = PIXI.Container,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
@@ -16,288 +16,308 @@ let Application = PIXI.Application,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle;
 
-//Create a Pixi Application
-let app = new Application({
+    //Create a Pixi Application
+    let app = new Application({
     width: 1920,
     height: 1080,
     antialiasing: true,
     transparent: false,
     resolution: 1
-  }
-);
+    }
+    );
 
-//Add the canvas that Pixi automatically created for you to the HTML document
-document.body.appendChild(app.view);
+    //Add the canvas that Pixi automatically created for you to the HTML document
+    document.body.appendChild(app.view);
 
-loader
-  .add("images/BG_empty.png")
-  .add("images/messy_hair.png")
-  .add("images/nice_hair.png")
-  .add("images/comb_short.png")
-  .add("images/blob.png")
-  .add("images/wand.png")
-  .add("images/knot_1.png")
-  .add("images/knot_2.png")
-  .add("images/Warning-yellow.png")
-  .add("images/Warning-orange.png")
-  .add("images/Warning-red.png")
-  .add("images/goo_fairy.png")
-  .add("images/goo_fairy_selected.png")
-  .add("images/sailor_fairy.png")
-  .add("images/sailor_fairy_selected.png")
-  .add("images/sax_fairy.png")
-  .add("images/sax_fairy_selected.png")
-  .add("images/cat.png")
-  .add("sounds/oh_no.mp4")
-  .add("sounds/tool_select.mp4")
-  .load(setup);
+    loader
+    .add("images/BG_empty.png")
+    .add("images/messy_hair.png")
+    .add("images/nice_hair.png")
+    .add("images/comb_short.png")
+    .add("images/blob.png")
+    .add("images/wand.png")
+    .add("images/knot_1.png")
+    .add("images/knot_2.png")
+    .add("images/Warning-yellow.png")
+    .add("images/Warning-orange.png")
+    .add("images/Warning-red.png")
+    .add("images/goo_fairy.png")
+    .add("images/goo_fairy_selected.png")
+    .add("images/sailor_fairy.png")
+    .add("images/sailor_fairy_selected.png")
+    .add("images/sax_fairy.png")
+    .add("images/sax_fairy_selected.png")
+    .add("images/cat.png")
+    .add("images/progress_comb.png")
+    .add("images/progress_dirty.png")
+    .add("sounds/oh_no.mp4")
+    .add("sounds/tool_select.mp4")
+    .load(setup);
 
-//Define any variables that are used in more than one function
-let mode, tool, music, sound, musicSprite, cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
+    //Define any variables that are used in more than one function
+    let mode, tool, music, sound, musicSprite;
+    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected;
+    let blob, comb_short, back, box, message, state, tilingSprite, knot_1, knot_2, knot_3;
+    let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
 
-// create a texture from an image path
-const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
-const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
-const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
-const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
-const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
-const sax_fairy_txt = PIXI.Texture.from('images/sax_fairy.png');
-const sax_fairy_selected_txt = PIXI.Texture.from('images/sax_fairy_selected.png');
-
-
-// Css style for icons
-const defaultIcon = "url('images/wand.png'),auto";
-const hoverIcon = "url('images/cat.png'),auto";
-
-// Add custom cursor styles
-app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
-app.renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
+    // create a texture from an image path
+    const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
+    const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
+    const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
+    const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
+    const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
+    const sax_fairy_txt = PIXI.Texture.from('images/sax_fairy.png');
+    const sax_fairy_selected_txt = PIXI.Texture.from('images/sax_fairy_selected.png');
 
 
-let count = 0;
+    // Css style for icons
+    const defaultIcon = "url('images/wand.png'),auto";
+    const hoverIcon = "url('images/cat.png'),auto";
 
-function setup() {
-  mode = 'normal';
-  tool = 'knot';
-  music = false;
-  sound = false;
-  //Create the box
-  box = new PIXI.Graphics();
-  box.beginFill(0xCCFF99);
-  box.drawRect(0, 0, 64, 64);
-  box.endFill();
-  box.x = 120;
-  box.y = 96;
-  app.stage.addChild(box);
+    // Add custom cursor styles
+    app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
+    app.renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
 
-  //Create the `BG` sprite
-  back = new Sprite(resources["images/BG_empty.png"].texture);
-  back.x = 0;
-  back.y = 0;
-  back.vx = 0;
-  back.vy = 0;
-  app.stage.addChild(back);
 
-  //Create the `messy_hair` sprite
-  messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
-  messy_hair.x = 540;
-  messy_hair.y = 370;
-  messy_hair.vx = 0;
-  messy_hair.vy = 0;
-  //app.stage.addChild(messy_hair);
-  tilingSpriteMessyHair = new PIXI.TilingSprite(
+    let count = 0;
+
+    function setup() {
+    mode = 'normal';
+    tool = 'knot';
+    music = false;
+    sound = false;
+    //Create the box
+    box = new PIXI.Graphics();
+    box.beginFill(0xCCFF99);
+    box.drawRect(0, 0, 64, 64);
+    box.endFill();
+    box.x = 120;
+    box.y = 96;
+    app.stage.addChild(box);
+
+    //Create the `BG` sprite
+    back = new Sprite(resources["images/BG_empty.png"].texture);
+    back.x = 0;
+    back.y = 0;
+    back.vx = 0;
+    back.vy = 0;
+    app.stage.addChild(back);
+
+    //Create the `messy_hair` sprite
+    messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
+    messy_hair.x = 540;
+    messy_hair.y = 370;
+    messy_hair.vx = 0;
+    messy_hair.vy = 0;
+    //app.stage.addChild(messy_hair);
+    tilingSpriteMessyHair = new PIXI.TilingSprite(
     textureMessyHair,
     961,
     2160,
-);
-  tilingSpriteMessyHair.x=540;
-  tilingSpriteMessyHair.y=370;
-  app.stage.addChild(tilingSpriteMessyHair);
+    );
+    tilingSpriteMessyHair.x=540;
+    tilingSpriteMessyHair.y=370;
+    app.stage.addChild(tilingSpriteMessyHair);
 
-  //Create the `nice_hair` sprite
-  nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
-  nice_hair.x = 540;
-  nice_hair.y = 370-1080;
-  nice_hair.vx = 0;
-  nice_hair.vy = 0;
-  app.stage.addChild(nice_hair);
+    //Create the `nice_hair` sprite
+    nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
+    nice_hair.x = 540;
+    nice_hair.y = 370-1080;
+    nice_hair.vx = 0;
+    nice_hair.vy = 0;
+    app.stage.addChild(nice_hair);
 
-  //Create the `comb_short` sprite
-  comb_short = new Sprite(resources["images/comb_short.png"].texture);
-  comb_short.x = 521;
-  comb_short.y = 176;
-  comb_short.vx = 0;
-  comb_short.vy = 0;
-  app.stage.addChild(comb_short);
+    //Create the `comb_short` sprite
+    comb_short = new Sprite(resources["images/comb_short.png"].texture);
+    comb_short.x = 521;
+    comb_short.y = 176;
+    comb_short.vx = 0;
+    comb_short.vy = 0;
+    app.stage.addChild(comb_short);
 
-  //Create the `cat` sprite
-  cat = new Sprite(resources["images/cat.png"].texture);
-  cat.x = 16;
-  cat.y = 96;
-  cat.vx = 0;
-  cat.vy = 0;
-  cat.toolIcon = defaultIcon;
+    //Create the `cat` sprite
+    cat = new Sprite(resources["images/cat.png"].texture);
+    cat.x = 16;
+    cat.y = 96;
+    cat.vx = 0;
+    cat.vy = 0;
+    cat.toolIcon = defaultIcon;
     cat.interactive = true;
-  cat.on('pointerdown', onButtonDown)
+    cat.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(cat);
+    app.stage.addChild(cat);
 
-  //Create the `goo_fairy` sprite
-  goo_fairy = new Sprite(goo_fairy_txt);
-  goo_fairy.x = 50;
-  goo_fairy.y = 50;
-  goo_fairy.vx = 0;
-  goo_fairy.vy = 0;
-  goo_fairy.tool = 'gum';
-  goo_fairy.toolIcon = defaultIcon;
-  goo_fairy.sel_txt = goo_fairy_selected_txt;
-  goo_fairy.unsel_txt = goo_fairy_txt;
-  goo_fairy.interactive = true;
-  goo_fairy.on('pointerdown', onButtonDown)
+    //Create the `goo_fairy` sprite
+    goo_fairy = new Sprite(goo_fairy_txt);
+    goo_fairy.x = 50;
+    goo_fairy.y = 50;
+    goo_fairy.vx = 0;
+    goo_fairy.vy = 0;
+    goo_fairy.tool = 'gum';
+    goo_fairy.toolIcon = defaultIcon;
+    goo_fairy.sel_txt = goo_fairy_selected_txt;
+    goo_fairy.unsel_txt = goo_fairy_txt;
+    goo_fairy.interactive = true;
+    goo_fairy.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(goo_fairy);
+    app.stage.addChild(goo_fairy);
 
 
-  //Create the `sailor_fairy` sprite
-  sailor_fairy = new Sprite(sailor_fairy_txt);
-  sailor_fairy.x = 50;
-  sailor_fairy.y = 400;
-  sailor_fairy.vx = 0;
-  sailor_fairy.vy = 0;
-  sailor_fairy.tool = 'knot';
-  sailor_fairy.toolIcon = defaultIcon;
-  sailor_fairy.sel_txt = sailor_fairy_selected_txt;
-  sailor_fairy.unsel_txt = sailor_fairy_txt;
-  sailor_fairy.interactive = true;
-  sailor_fairy.on('pointerdown', onButtonDown)
+    //Create the `sailor_fairy` sprite
+    sailor_fairy = new Sprite(sailor_fairy_txt);
+    sailor_fairy.x = 50;
+    sailor_fairy.y = 400;
+    sailor_fairy.vx = 0;
+    sailor_fairy.vy = 0;
+    sailor_fairy.tool = 'knot';
+    sailor_fairy.toolIcon = defaultIcon;
+    sailor_fairy.sel_txt = sailor_fairy_selected_txt;
+    sailor_fairy.unsel_txt = sailor_fairy_txt;
+    sailor_fairy.interactive = true;
+    sailor_fairy.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(sailor_fairy);
+    app.stage.addChild(sailor_fairy);
 
 
-  //Create the `sax_fairy` sprite
-  sax_fairy = new Sprite(sax_fairy_txt);
-  sax_fairy.x = 50;
-  sax_fairy.y = 750;
-  sax_fairy.vx = 0;
-  sax_fairy.vy = 0;
-  sax_fairy.tool = 'sax';
-  sax_fairy.toolIcon = defaultIcon;
-  sax_fairy.sel_txt = sax_fairy_selected_txt;
-  sax_fairy.unsel_txt = sax_fairy_txt;
-  sax_fairy.interactive = true;
-  sax_fairy.on('pointerdown', onButtonDown)
+    //Create the `sax_fairy` sprite
+    sax_fairy = new Sprite(sax_fairy_txt);
+    sax_fairy.x = 50;
+    sax_fairy.y = 750;
+    sax_fairy.vx = 0;
+    sax_fairy.vy = 0;
+    sax_fairy.tool = 'sax';
+    sax_fairy.toolIcon = defaultIcon;
+    sax_fairy.sel_txt = sax_fairy_selected_txt;
+    sax_fairy.unsel_txt = sax_fairy_txt;
+    sax_fairy.interactive = true;
+    sax_fairy.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(sax_fairy);
+    app.stage.addChild(sax_fairy);
 
-/*
-  //Create the `blob` sprite
-  blob = new Sprite(resources["images/blob.png"].texture);
-  blob.x = 16;
-  blob.y = 396;
-  blob.vx = 0;
-  blob.vy = 0;
-  blob.tool = 'knot';
-  blob.toolIcon = hoverIcon;
+    /*
+    //Create the `blob` sprite
+    blob = new Sprite(resources["images/blob.png"].texture);
+    blob.x = 16;
+    blob.y = 396;
+    blob.vx = 0;
+    blob.vy = 0;
+    blob.tool = 'knot';
+    blob.toolIcon = hoverIcon;
     blob.interactive = true;
-  blob.on('pointerdown', onButtonDown)
+    blob.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(blob);*/
+    app.stage.addChild(blob);*/
 
-  //Create the `knot_1` sprite
-  knot_1 = new Sprite(resources["images/knot_1.png"].texture);
-  knot_1.x = 700;
-  knot_1.y = 1080;
-  knot_1.vx = 0;
-  knot_1.vy = 0;
-  knot_1.killedby = 'knot';
+    //Create the `knot_1` sprite
+    knot_1 = new Sprite(resources["images/knot_1.png"].texture);
+    knot_1.x = 700;
+    knot_1.y = 1080;
+    knot_1.vx = 0;
+    knot_1.vy = 0;
+    knot_1.killedby = 'knot';
     knot_1.interactive = true;
-  knot_1.on('pointerdown', onButtonDown)
+    knot_1.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(knot_1);
+    app.stage.addChild(knot_1);
 
-  //Create the `knot_2` sprite
-  knot_2 = new Sprite(resources["images/knot_2.png"].texture);
-  knot_2.x = 850;
-  knot_2.y = 1280;
-  knot_2.vx = 0;
-  knot_2.vy = 0;
-  knot_2.killedby = 'gum';
+    //Create the `knot_2` sprite
+    knot_2 = new Sprite(resources["images/cat.png"].texture);
+    knot_2.x = 850;
+    knot_2.y = 1280;
+    knot_2.vx = 0;
+    knot_2.vy = 0;
+    knot_2.killedby = 'gum';
     knot_2.interactive = true;
-  knot_2.on('pointerdown', onButtonDown)
+    knot_2.on('pointerdown', onButtonDown)
         .on('pointerup', onButtonUp)
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-  app.stage.addChild(knot_2);
+    app.stage.addChild(knot_2);
 
-  //Create the `Warning_yellow` sprite
-  Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
-  Warning_yellow.x = 480;
-  Warning_yellow.y = 1080;
-  Warning_yellow.vx = 0;
-  Warning_yellow.vy = 0;
-  app.stage.addChild(Warning_yellow);
+    //Create the `knot_3` sprite
+    knot_3 = new Sprite(resources["images/blob.png"].texture);
+    knot_3.x = 950;
+    knot_3.y = 1280;
+    knot_3.vx = 0;
+    knot_3.vy = 0;
+    knot_3.killedby = 'sax';
+    knot_3.interactive = true;
+    knot_3.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);
+    app.stage.addChild(knot_3);
 
-  //Create the `Warning_orange` sprite
-  Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
-  Warning_orange.x = 480;
-  Warning_orange.y = 1080;
-  Warning_orange.vx = 0;
-  Warning_orange.vy = 0;
-  app.stage.addChild(Warning_orange);
+    //Create the `Warning_yellow` sprite
+    Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
+    Warning_yellow.x = 480;
+    Warning_yellow.y = 1080;
+    Warning_yellow.vx = 0;
+    Warning_yellow.vy = 0;
+    app.stage.addChild(Warning_yellow);
 
-  //Create the `Warning_red` sprite
-  Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
-  Warning_red.x = 480;
-  Warning_red.y = 1080;
-  Warning_red.vx = 0;
-  Warning_red.vy = 0;
-  app.stage.addChild(Warning_red);
+    //Create the `Warning_orange` sprite
+    Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
+    Warning_orange.x = 480;
+    Warning_orange.y = 1080;
+    Warning_orange.vx = 0;
+    Warning_orange.vy = 0;
+    app.stage.addChild(Warning_orange);
 
-  //Create the `Warning_yellow2` sprite
-  Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
-  Warning_yellow2.x = 1460;
-  Warning_yellow2.y = 1080;
-  Warning_yellow2.vx = 0;
-  Warning_yellow2.vy = 0;
-  app.stage.addChild(Warning_yellow2);
+    //Create the `Warning_red` sprite
+    Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
+    Warning_red.x = 480;
+    Warning_red.y = 1080;
+    Warning_red.vx = 0;
+    Warning_red.vy = 0;
+    app.stage.addChild(Warning_red);
 
-  //Create the `Warning_orange2` sprite
-  Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
-  Warning_orange2.x = 480;
-  Warning_orange2.y = 1080;
-  Warning_orange2.vx = 0;
-  Warning_orange2.vy = 0;
-  app.stage.addChild(Warning_orange2);
+    //Create the `Warning_yellow2` sprite
+    Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
+    Warning_yellow2.x = 1460;
+    Warning_yellow2.y = 1080;
+    Warning_yellow2.vx = 0;
+    Warning_yellow2.vy = 0;
+    app.stage.addChild(Warning_yellow2);
 
-  //Create the `Warning_red2` sprite
-  Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
-  Warning_red2.x = 480;
-  Warning_red2.y = 1080;
-  Warning_red2.vx = 0;
-  Warning_red2.vy = 0;
-  app.stage.addChild(Warning_red2);
+    //Create the `Warning_orange2` sprite
+    Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
+    Warning_orange2.x = 480;
+    Warning_orange2.y = 1080;
+    Warning_orange2.vx = 0;
+    Warning_orange2.vy = 0;
+    app.stage.addChild(Warning_orange2);
+
+    //Create the `Warning_red2` sprite
+    Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
+    Warning_red2.x = 480;
+    Warning_red2.y = 1080;
+    Warning_red2.vx = 0;
+    Warning_red2.vy = 0;
+    app.stage.addChild(Warning_red2);
 
 
-  const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
+    const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
     musicSprite = new PIXI.Sprite(sound_init_texture);
 
     // out of screen
@@ -308,22 +328,22 @@ function setup() {
 
     app.stage.addChild(musicSprite);
 
-  //Capture the keyboard arrow keys
-  let left = keyboard(37),
+    //Capture the keyboard arrow keys
+    let left = keyboard(37),
       up = keyboard(38),
       right = keyboard(39),
       down = keyboard(40);
 
-  //Left arrow key `press` method
-  left.press = function() {
+    //Left arrow key `press` method
+    left.press = function() {
 
     //Change the cat's velocity when the key is pressed
     cat.vx = -5;
     cat.vy = 0;
-  };
+    };
 
-  //Left arrow key `release` method
-  left.release = function() {
+    //Left arrow key `release` method
+    left.release = function() {
 
     //If the left arrow has been released, and the right arrow isn't down,
     //and the cat isn't moving vertically:
@@ -331,60 +351,60 @@ function setup() {
     if (!right.isDown && cat.vy === 0) {
       cat.vx = 0;
     }
-  };
+    };
 
-  //Up
-  up.press = function() {
+    //Up
+    up.press = function() {
     cat.vy = -5;
     cat.vx = 0;
-  };
-  up.release = function() {
+    };
+    up.release = function() {
     if (!down.isDown && cat.vx === 0) {
       cat.vy = 0;
     }
-  };
+    };
 
-  //Right
-  right.press = function() {
+    //Right
+    right.press = function() {
     cat.vx = 5;
     cat.vy = 0;
-  };
-  right.release = function() {
+    };
+    right.release = function() {
     if (!left.isDown && cat.vy === 0) {
       cat.vx = 0;
     }
-  };
+    };
 
-  //Down
-  down.press = function() {
+    //Down
+    down.press = function() {
     cat.vy = 5;
     cat.vx = 0;
-  };
-  down.release = function() {
+    };
+    down.release = function() {
     if (!up.isDown && cat.vx === 0) {
       cat.vy = 0;
     }
-  };
+    };
 
-  //Create the text sprite
-  let style = new TextStyle({
+    //Create the text sprite
+    let style = new TextStyle({
     fontFamily: "sans-serif",
     fontSize: 18,
     fill: "white",
-  });
-  message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
-  message.position.set(8, 8);
-  app.stage.addChild(message);
+    });
+    message = new Text("No collision... ("+cat.x+", "+cat.y+")", style);
+    message.position.set(8, 8);
+    app.stage.addChild(message);
 
-  //Set the game state
-  state = play;
+    //Set the game state
+    state = play;
 
-  //Start the game loop
-  app.ticker.add(delta => gameLoop(delta));
-}
+    //Start the game loop
+    app.ticker.add(delta => gameLoop(delta));
+    }
 
 
-function onButtonDown() {
+    function onButtonDown() {
     let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
     this.isdown = true;
     if(this.textureButtonDown){
@@ -404,17 +424,17 @@ function onButtonDown() {
     }
     this.alpha = 1;
 
-}
+    }
 
-function updateToolTxt(fairy) {
+    function updateToolTxt(fairy) {
     if(tool === fairy.tool){
         fairy.texture = fairy.sel_txt;
     } else {
         fairy.texture = fairy.unsel_txt;
     }
-}
+    }
 
-function onButtonUp() {
+    function onButtonUp() {
     this.isdown = false;
     if (this.isOver) {
         if(this.textureButtonOver){
@@ -425,9 +445,9 @@ function onButtonUp() {
             this.texture = textureButton;
         }
     }
-}
+    }
 
-function onButtonOver() {
+    function onButtonOver() {
     this.isOver = true;
     if (this.isdown) {
         return;
@@ -435,9 +455,9 @@ function onButtonOver() {
     if(this.textureButtonOver){
         this.texture = textureButtonOver;
     }
-}
+    }
 
-function onButtonOut() {
+    function onButtonOut() {
     this.isOver = false;
     if (this.isdown) {
         return;
@@ -445,8 +465,8 @@ function onButtonOut() {
     if(this.textureButton){
         this.texture = textureButton;
     }
-}
-function onPlayVideo(sound_name, is_music) {
+    }
+    function onPlayVideo(sound_name, is_music) {
 
     if((!is_music && sound) || (is_music && music)) {
         // create a video texture from a path
@@ -467,38 +487,38 @@ function onPlayVideo(sound_name, is_music) {
             musicSprite.texture = texture;
         }
     }
-}
+    }
 
 
-function gameLoop(delta){
+    function gameLoop(delta){
 
-  //Update the current game state:
-  state(delta);
-}
+    //Update the current game state:
+    state(delta);
+    }
 
-function play(delta) {
-  let speedMultiplier = 1;
-  let normalSpeed = 5*speedMultiplier;
-  let recoverSpeed = 1*speedMultiplier;
-  let dangerSpeed = 1*speedMultiplier;
-  let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
-  //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+    function play(delta) {
+    let speedMultiplier = 1;
+    let normalSpeed = 5*speedMultiplier;
+    let recoverSpeed = 1*speedMultiplier;
+    let dangerSpeed = 1*speedMultiplier;
+    let moveSpeed = mode === 'danger' ? dangerSpeed : normalSpeed;
+    //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
-  // evolution
-  switch (mode) {
+    // evolution
+    switch (mode) {
         case 'normal':
-        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
             onPlayVideo('oh_no');
             mode = 'danger';
         }
         break;
         case 'danger':
-        if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y) {
+        if(knot_1.y > tilingSpriteMessyHair.y && knot_2.y > tilingSpriteMessyHair.y && knot_3.y > tilingSpriteMessyHair.y) {
             mode = 'recover';
         }
         break;
         case 'recover':
-        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y) {
+        if(knot_1.y <= tilingSpriteMessyHair.y || knot_2.y <= tilingSpriteMessyHair.y || knot_3.y <= tilingSpriteMessyHair.y) {
             onPlayVideo('oh_no');
             mode = 'danger';
         }
@@ -509,10 +529,10 @@ function play(delta) {
             comb_short.y=176;
         }
         break;
-  }
+    }
 
-  // action
-  switch (mode) {
+    // action
+    switch (mode) {
         case 'normal':
         tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
         tilingSpriteMessyHair.vy = 0;
@@ -545,75 +565,79 @@ function play(delta) {
         Warning_red2.y = 1080;
 
         break;
-  }
+    }
 
 
-  if(knot_1.y <= 10) {
-    knot_1.y = 2580;
-  }
+    if(knot_1.y <= 10) {
+        knot_1.y = 2580;
+    }
 
+    if(knot_2.y <= 10) {
+        knot_2.y = 2780;
+    }
 
-  if(knot_2.y <= 10) {
-    knot_2.y = 2780;
-  }
+    if(knot_3.y <= 10) {
+        knot_3.y = 2980;
+    }
 
-  //use the cat's velocity to make it move
-  cat.x += cat.vx;
-  cat.y += cat.vy;
-  tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
-  tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
-  comb_short.y += tilingSpriteMessyHair.vy;
-  nice_hair.y += tilingSpriteMessyHair.vy;
-  knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
-  knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+    //use the cat's velocity to make it move
+    cat.x += cat.vx;
+    cat.y += cat.vy;
+    tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
+    tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
+    comb_short.y += tilingSpriteMessyHair.vy;
+    nice_hair.y += tilingSpriteMessyHair.vy;
+    knot_1.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+    knot_2.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
+    knot_3.y -= mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
-  //check for a collision between the cat and the box
-  if (hitTestRectangle(cat, box)) {
+    //check for a collision between the cat and the box
+    if (hitTestRectangle(cat, box)) {
 
     //if there's a collision, change the message text
     //and tint the box red
     message.text = "hit!";
     box.tint = 0xff3300;
-  } else {
+    } else {
 
     //if there's no collision, reset the message
     //text and the box's color
     //message.text = "No collision...("+cat.x+", "+cat.y+")";
     box.tint = 0xccff99;
-  }
-}
+    }
+    }
 
-//The `hitTestRectangle` function
-function hitTestRectangle(r1, r2) {
+    //The `hitTestRectangle` function
+    function hitTestRectangle(r1, r2) {
 
-  //Define the variables we'll need to calculate
-  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+    //Define the variables we'll need to calculate
+    let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
 
-  //hit will determine whether there's a collision
-  hit = false;
+    //hit will determine whether there's a collision
+    hit = false;
 
-  //Find the center points of each sprite
-  r1.centerX = r1.x + r1.width / 2;
-  r1.centerY = r1.y + r1.height / 2;
-  r2.centerX = r2.x + r2.width / 2;
-  r2.centerY = r2.y + r2.height / 2;
+    //Find the center points of each sprite
+    r1.centerX = r1.x + r1.width / 2;
+    r1.centerY = r1.y + r1.height / 2;
+    r2.centerX = r2.x + r2.width / 2;
+    r2.centerY = r2.y + r2.height / 2;
 
-  //Find the half-widths and half-heights of each sprite
-  r1.halfWidth = r1.width / 2;
-  r1.halfHeight = r1.height / 2;
-  r2.halfWidth = r2.width / 2;
-  r2.halfHeight = r2.height / 2;
+    //Find the half-widths and half-heights of each sprite
+    r1.halfWidth = r1.width / 2;
+    r1.halfHeight = r1.height / 2;
+    r2.halfWidth = r2.width / 2;
+    r2.halfHeight = r2.height / 2;
 
-  //Calculate the distance vector between the sprites
-  vx = r1.centerX - r2.centerX;
-  vy = r1.centerY - r2.centerY;
+    //Calculate the distance vector between the sprites
+    vx = r1.centerX - r2.centerX;
+    vy = r1.centerY - r2.centerY;
 
-  //Figure out the combined half-widths and half-heights
-  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+    //Figure out the combined half-widths and half-heights
+    combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+    combinedHalfHeights = r1.halfHeight + r2.halfHeight;
 
-  //Check for a collision on the x axis
-  if (Math.abs(vx) < combinedHalfWidths) {
+    //Check for a collision on the x axis
+    if (Math.abs(vx) < combinedHalfWidths) {
 
     //A collision might be occurring. Check for a collision on the y axis
     if (Math.abs(vy) < combinedHalfHeights) {
@@ -625,55 +649,55 @@ function hitTestRectangle(r1, r2) {
       //There's no collision on the y axis
       hit = false;
     }
-  } else {
+    } else {
 
     //There's no collision on the x axis
     hit = false;
-  }
-
-  //`hit` will be either `true` or `false`
-  return hit;
-};
-
-
-//The `keyboard` helper function
-function keyboard(keyCode) {
-  let key = {};
-  key.code = keyCode;
-  key.isDown = false;
-  key.isUp = true;
-  key.press = undefined;
-  key.release = undefined;
-
-  //The `downHandler`
-  key.downHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isUp && key.press) key.press();
-      key.isDown = true;
-      key.isUp = false;
     }
-    event.preventDefault();
-  };
 
-  //The `upHandler`
-  key.upHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isDown && key.release) key.release();
-      key.isDown = false;
-      key.isUp = true;
+    //`hit` will be either `true` or `false`
+    return hit;
+    };
+
+
+    //The `keyboard` helper function
+    function keyboard(keyCode) {
+        let key = {};
+        key.code = keyCode;
+        key.isDown = false;
+        key.isUp = true;
+        key.press = undefined;
+        key.release = undefined;
+
+        //The `downHandler`
+        key.downHandler = function(event) {
+            if (event.keyCode === key.code) {
+              if (key.isUp && key.press) key.press();
+              key.isDown = true;
+              key.isUp = false;
+            }
+            event.preventDefault();
+        };
+
+        //The `upHandler`
+        key.upHandler = function(event) {
+            if (event.keyCode === key.code) {
+              if (key.isDown && key.release) key.release();
+              key.isDown = false;
+              key.isUp = true;
+            }
+            event.preventDefault();
+        };
+
+        //Attach event listeners
+        window.addEventListener(
+            "keydown", key.downHandler.bind(key), false
+        );
+        window.addEventListener(
+            "keyup", key.upHandler.bind(key), false
+        );
+        return key;
     }
-    event.preventDefault();
-  };
-
-  //Attach event listeners
-  window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
-  );
-  window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
-  );
-  return key;
-}
 
 </script>
 </body>
