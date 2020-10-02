@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>Collision detection</title>
+<title>Hairy Fairy</title>
 <body>
 <script src="pixi/pixi.min.js"></script>
 <script>
@@ -15,16 +15,79 @@
     Sprite = PIXI.Sprite,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle;
-
+    
+	var size = [1920, 1080];
+	var ratio = size[0] / size[1];
+	var newRatio = 0.5;
+		if (window.innerWidth / window.innerHeight >= ratio) {
+			newRatio = window.innerHeight * ratio/size[0];
+			//var w = window.innerHeight * ratio;
+			//var h = window.innerHeight;
+		} else {
+			
+			//var newRatio = window.innerWidth / ratio/size[1];
+			//var w = window.innerWidth;
+			//var h = window.innerWidth / ratio;
+		}
+		//renderer.view.style.width = w + 'px';
+		//renderer.view.style.height = h + 'px';
+		if(newRatio <0.3){
+			newRatio = 0.3;
+		}
+		
+		if(newRatio >1){
+			newRatio = 1;
+		}
+		
+		/*app.renderer.resolution = newRatio;
+		//app.renderer.resize(newRatio *size[0] , newRatio*size[1]);
+		app.renderer.resize(size[0] , size[1]);
+		console.log('newRes ',newRatio);
+		console.log('res ',app.renderer.resolution);
+		console.log('renderer ',app.renderer);*/
     //Create a Pixi Application
     let app = new Application({
-    width: 1920,
-    height: 1080,
+    width: size[0],
+    height: size[1],
     antialiasing: true,
     transparent: false,
-    resolution: .7
+    resolution: newRatio
     }
     );
+    
+    function resize() {
+		
+		var newRatio = 0.5;
+		if (window.innerWidth / window.innerHeight >= ratio) {
+			newRatio = window.innerHeight * ratio/size[0];
+			//var w = window.innerHeight * ratio;
+			//var h = window.innerHeight;
+		} else {
+			
+			//var newRatio = window.innerWidth / ratio/size[1];
+			//var w = window.innerWidth;
+			//var h = window.innerWidth / ratio;
+		}
+		//renderer.view.style.width = w + 'px';
+		//renderer.view.style.height = h + 'px';
+		if(newRatio <0.3){
+			newRatio = 0.3;
+		}
+		
+		if(newRatio >1){
+			newRatio = 1;
+		}
+		
+		/*app.renderer.resolution = newRatio;
+		//app.renderer.resize(newRatio *size[0] , newRatio*size[1]);
+		app.renderer.resize(size[0] , size[1]);
+		console.log('newRes ',newRatio);
+		console.log('res ',app.renderer.resolution);
+		console.log('renderer ',app.renderer);*/
+	}
+	/*window.onresize = function(event) {
+		resize();
+	};*/
 
     //Add the canvas that Pixi automatically created for you to the HTML document
     document.body.appendChild(app.view);
@@ -1134,4 +1197,5 @@
     }
 
 </script>
+
 </body>
