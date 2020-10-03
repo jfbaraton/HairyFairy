@@ -229,7 +229,7 @@
 
     function setup() {
         mode = 'start';
-        tool = 'peanut';
+        tool = 'lazer';
         music = false;
         sound = true;
         progress = 0;
@@ -1245,8 +1245,10 @@
                     // check if there are still notes
 
 
-                    // go towards left
-                    cat.vx = -cat.vx;
+                    // teleport back
+                    cat.x = ROLLER_COASTER_LEFT;
+
+                    cat.vx = 3;
                     placeNewJammers();
                 }
 
@@ -1254,8 +1256,8 @@
                 if(cat.x <=  ROLLER_COASTER_LEFT && cat.vx <0) { // touch left
                     // end of cycle
 
-                    // go towards left
-                    cat.vx = -cat.vx;
+                    // go towards right
+                    //cat.vx = -cat.vx;
                 }
 
                 break;
