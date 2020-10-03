@@ -156,6 +156,11 @@
     .add("images/2ndloop.png")
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("images/Weapons/Weapon2 - Lazer3.3.png")
+    .add("images/portee vide3.png")
+    .add("images/Skills_bar.png")
+    .add("images/Weapons/slingshot charged 1.png")
+    .add("images/Weapons/Weapon2.png")
+    .add("images/Weapons/Weapon3.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -185,6 +190,7 @@
     let msg_menu_1;
     let msg_menu_2;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
+    let skills_bar, weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
@@ -221,8 +227,8 @@
 
 
     // Css style for icons
-    const defaultIcon = "url('images/curseur_Menu.png'),auto";
-    const hoverIcon = "url('images/cat.png'),auto";
+    const defaultIcon = "url('images/wand.png'),auto";
+    const hoverIcon = "url('images/wand.png'),auto";
 
     // Add custom cursor styles
     app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
@@ -305,6 +311,51 @@
         looping.interactive = true;
         looping.on('pointerdown', onButtonDown);
         app.stage.addChild(looping);
+
+        //Create the 'weapon selection' sprite
+
+        var WEAPON_SCALE = 0.2;
+        var WEAPON_MENU_SCALE = 1;
+        weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
+        weapon1.x = 15;
+        weapon1.y = ROLLER_COASTER_LOW;
+        weapon1.vx = 0;
+        weapon1.vy = 0;
+        weapon1.interactive = true;
+        weapon1.on('pointerdown', onButtonDown);
+        weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
+        app.stage.addChild(weapon1);
+
+        var WEAPON_SPACING = 50;
+        weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
+        weapon2.x = weapon1.x+ WEAPON_SPACING;
+        weapon2.y = ROLLER_COASTER_LOW;
+        weapon2.vx = 0;
+        weapon2.vy = 0;
+        weapon2.interactive = true;
+        weapon2.on('pointerdown', onButtonDown);
+        weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);
+        app.stage.addChild(weapon2);
+
+        weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
+        weapon3.x = weapon2.x+ WEAPON_SPACING;
+        weapon3.y = ROLLER_COASTER_LOW;
+        weapon3.vx = 0;
+        weapon3.vy = 0;
+        weapon3.interactive = true;
+        weapon3.on('pointerdown', onButtonDown);
+        weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE,WEAPON_SCALE);
+        app.stage.addChild(weapon3);
+
+        skills_bar = new Sprite(resources["images/Skills_bar.png"].texture);
+        skills_bar.x = 8;
+        skills_bar.y = ROLLER_COASTER_LOW;
+        skills_bar.vx = 0;
+        skills_bar.vy = 0;
+        skills_bar.interactive = true;
+        skills_bar.on('pointerdown', onButtonDown);
+        skills_bar.scale = new PIXI.ObservablePoint(()=>{},skills_bar,WEAPON_MENU_SCALE,WEAPON_MENU_SCALE);
+        app.stage.addChild(skills_bar);
 
         //Create the `messy_hair` sprite
         messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
