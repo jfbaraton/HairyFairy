@@ -959,7 +959,7 @@
                 bullets[i].y = cat.y+80;
 
                 var curr_weapon_speed = 10;
-                var oppositeSz = (bullets[i].y - targetY );
+                var oppositeSz = (targetY - bullets[i].y );
                 var adjacentSz = (targetX - bullets[i].x);
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
                 if(adjacentSz == 0){
@@ -968,30 +968,32 @@
                 } else {
                     bullets[i].vx =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed / (oppositeSz / adjacentSz) : curr_weapon_speed ;
                     bullets[i].vy =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed: curr_weapon_speed * (oppositeSz / adjacentSz) ;
-                    if(adjacentSz > 0) {
+                    /*if(adjacentSz > 0) {
                         if (oppositeSz > 0) {
-                            console.log('++ ');
+                            console.log('++ ',(oppositeSz / adjacentSz));
                             bullets[i].vy = -bullets[i].vy;
                         } else {
-                            console.log('+- ');
+                            console.log('+- ',(oppositeSz / adjacentSz));
                         }
                     } else {
                         if (oppositeSz > 0) {
-                            console.log('-+ ');
+                            console.log('-+ ',(oppositeSz / adjacentSz));
                             bullets[i].vx = -bullets[i].vx;
 
                         } else {
-                            console.log('-- ');
+                            console.log('-- ',(oppositeSz / adjacentSz));
                             bullets[i].vy = -bullets[i].vy;
                             bullets[i].vx = -bullets[i].vx;
 
                         }
                         //bullets[i].vx = -bullets[i].vx;
 
-                    }
+                    }*/
                 }
 
-               //bullets[i].vy = -bullets[i].vy;
+
+                bullets[i].vx = bullets[i].vx > 0 != adjacentSz >0 ? - bullets[i].vx : bullets[i].vx;
+                bullets[i].vy = bullets[i].vy > 0 ? -bullets[i].vy : bullets[i].vy;
 
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
 
@@ -999,14 +1001,14 @@
                 //bullets[i].vy = -curr_weapon_speed* Math.sin(bullets[i].shoot_angle);
                 //console.log('shoot ',i, ' ',(bullets[i].shoot_angle*180/3.1416));
                 //console.log('shooted ',oppositeSz,adjacentSz , ' ',(bullets[i].shoot_angle*180/3.1416));
-                console.log('shooted ',adjacentSz,oppositeSz ,(oppositeSz / adjacentSz), ' ',bullets[i].vx,bullets[i].vy);
+                //console.log('shooted ',adjacentSz,oppositeSz ,(oppositeSz / adjacentSz), ' ',bullets[i].vx,bullets[i].vy);
                 //console.log('shooted ',bullets[i]);
 
             }
 
         }
         if(!found) {
-            //console.log('shoot in CD');
+            console.log('shoot in CD');
         }
     }
 
