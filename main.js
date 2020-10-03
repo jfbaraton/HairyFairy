@@ -85,8 +85,28 @@
     //Add the canvas that Pixi automatically created for you to the HTML document
     document.body.appendChild(app.view);
 
+    sound_bank = {
+        'Catch_gold' : 'Catch_gold.mp4',
+        'Gun_switch' : 'Gun_switch.mp4',
+        'signal_10sec_left' : 'signal_10sec_left.mp4',
+        'claps_end_of_level' : 'claps_end_of_level.mp4',
+        'Menu_musique' : 'Menu_musique.mp4',
+        'take_a_bonus' : 'take_a_bonus.mp4',
+        'Countdown_Start_Race' : 'Countdown_Start_Race.mp4',
+        'musique_game' : 'musique_game.mp4',
+        'tool_select' : 'tool_select.mp4',
+        'Crash_on_the_roller_coaster' : 'Crash_on_the_roller_coaster.mp4',
+        'oh_no' : 'oh_no.mp4',
+        'upgrade_weapon' : 'upgrade_weapon.mp4',
+        'Cross_finish_line' : 'Cross_finish_line.mp4',
+        'Shot_Deagle_Weapon_1' : 'Shot_Deagle_Weapon_1.mp4',
+        'when_lose_because_no_time' : 'when_lose_because_no_time.mp4',
+        'ending' : 'ending.mp4',
+        'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4'
+    };
+
     loader
-    .add("images/BG_empty.png")
+    .add("images/BG_2nd loop.png")
     .add("images/BG_empty_Landscape.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
@@ -98,6 +118,11 @@
     .add("images/blob.png")
     .add("images/wand.png")
     .add("images/knot.png")
+    .add("images/Note_1.png")
+    .add("images/Note_2.png")
+    .add("images/Note_3.png")
+    .add("images/Note_4.png")
+    .add("images/Note_5.png")
     .add("images/chibi_cry1.png")
     .add("images/chibi_happy1.png")
     .add("images/chibi_oups1.png")
@@ -120,13 +145,28 @@
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
     .add("images/welcome_princess.png")
-    .add("sounds/oh_no.mp4")
-    .add("sounds/ending.mp4")
-    .add("sounds/tool_select.mp4")
+    .add("sounds/"+sound_bank["Catch_gold"])
+    .add("sounds/"+sound_bank["Gun_switch"])
+    .add("sounds/"+sound_bank["signal_10sec_left"])
+    .add("sounds/"+sound_bank["claps_end_of_level"])
+    .add("sounds/"+sound_bank["Menu_musique"])
+    .add("sounds/"+sound_bank["take_a_bonus"])
+    .add("sounds/"+sound_bank["Countdown_Start_Race"])
+    .add("sounds/"+sound_bank["musique_game"])
+    .add("sounds/"+sound_bank["tool_select"])
+    .add("sounds/"+sound_bank["Crash_on_the_roller_coaster"])
+    .add("sounds/"+sound_bank["oh_no"])
+    .add("sounds/"+sound_bank["upgrade_weapon"])
+    .add("sounds/"+sound_bank["Cross_finish_line"])
+    .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
+    .add("sounds/"+sound_bank["when_lose_because_no_time"])
+    .add("sounds/"+sound_bank["ending"])
+    .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
+
     .load(setup);
 
     //Define any variables that are used in more than one function
-    let mode, tool, music, sound, musicSprite, progress;
+    let mode, tool, music, sound, BGmusicSprite, musicSprite, progress;
     let butt_start, butt_restart, butt_music, butt_sound;
     let BG_start, BG_win, BG_lose;
     let msg_status;
@@ -176,590 +216,590 @@
     let count = 0;
 
     function setup() {
-    mode = 'start';
-    tool = 'knot';
-    music = false;
-    sound = true;
-    progress = 0;
-    //Create the box
-    box = new PIXI.Graphics();
-    box.beginFill(0xCCFF99);
-    box.drawRect(0, 0, 64, 64);
-    box.endFill();
-    box.x = 120;
-    box.y = 96;
-    app.stage.addChild(box);
+        mode = 'start';
+        tool = 'knot';
+        music = true;
+        sound = true;
+        progress = 0;
+        //Create the box
+        box = new PIXI.Graphics();
+        box.beginFill(0xCCFF99);
+        box.drawRect(0, 0, 64, 64);
+        box.endFill();
+        box.x = 120;
+        box.y = 96;
+        app.stage.addChild(box);
 
-    //Create the `BG` sprite
-    back = new Sprite(resources["images/BG_empty.png"].texture);
-    back.x = 0;
-    back.y = 0;
-    back.vx = 0;
-    back.vy = 0;
-    app.stage.addChild(back);
+        //Create the `BG` sprite
+        back = new Sprite(resources["images/BG_2nd loop.png"].texture);
+        back.x = 0;
+        back.y = 0;
+        back.vx = 0;
+        back.vy = 0;
+        app.stage.addChild(back);
 
-    //Create the `messy_hair` sprite
-    messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
-    messy_hair.x = 540;
-    messy_hair.y = 370;
-    messy_hair.vx = 0;
-    messy_hair.vy = 0;
-    //app.stage.addChild(messy_hair);
-    tilingSpriteMessyHair = new PIXI.TilingSprite(
-        textureMessyHair,
-        961,
-        2160,
-    );
-    tilingSpriteMessyHair.x=540;
-    tilingSpriteMessyHair.y=370;
-    //app.stage.addChild(tilingSpriteMessyHair);
+        //Create the `messy_hair` sprite
+        messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
+        messy_hair.x = 540;
+        messy_hair.y = 370;
+        messy_hair.vx = 0;
+        messy_hair.vy = 0;
+        //app.stage.addChild(messy_hair);
+        tilingSpriteMessyHair = new PIXI.TilingSprite(
+            textureMessyHair,
+            961,
+            2160,
+        );
+        tilingSpriteMessyHair.x=540;
+        tilingSpriteMessyHair.y=370;
+        //app.stage.addChild(tilingSpriteMessyHair);
 
-    //Create the `nice_hair` sprite
-    nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
-    nice_hair.x = 540;
-    nice_hair.y = 370-1080;
-    nice_hair.vx = 0;
-    nice_hair.vy = 0;
-    //app.stage.addChild(nice_hair);
+        //Create the `nice_hair` sprite
+        nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
+        nice_hair.x = 540;
+        nice_hair.y = 370-1080;
+        nice_hair.vx = 0;
+        nice_hair.vy = 0;
+        //app.stage.addChild(nice_hair);
 
-    //Create the `rollerCoaster1` sprite
-    rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
-    rollerCoaster1.x = 521;
-    rollerCoaster1.y = 650;
-    rollerCoaster1.vx = 0;
-    rollerCoaster1.vy = 0;
-    rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
-    app.stage.addChild(rollerCoaster1);
+        //Create the `rollerCoaster1` sprite
+        rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
+        rollerCoaster1.x = 521;
+        rollerCoaster1.y = 650;
+        rollerCoaster1.vx = 0;
+        rollerCoaster1.vy = 0;
+        rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
+        app.stage.addChild(rollerCoaster1);
 
-    //Create the `progress_dirty` sprite
-    progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
-    progress_dirty.x = 1600;
-    progress_dirty.y = 176-progress_offset;
-    progress_dirty.vx = 0;
-    progress_dirty.vy = 0;
-    app.stage.addChild(progress_dirty);
+        //Create the `progress_dirty` sprite
+        progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
+        progress_dirty.x = 1600;
+        progress_dirty.y = 176-progress_offset;
+        progress_dirty.vx = 0;
+        progress_dirty.vy = 0;
+        app.stage.addChild(progress_dirty);
 
-    //Create the `progress_comb` sprite
-    progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
-    progress_comb.x = 1600;
-    progress_comb.y = 176-progress_offset;
-    progress_comb.vx = 0;
-    progress_comb.vy = 0;
-    app.stage.addChild(progress_comb);
+        //Create the `progress_comb` sprite
+        progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
+        progress_comb.x = 1600;
+        progress_comb.y = 176-progress_offset;
+        progress_comb.vx = 0;
+        progress_comb.vy = 0;
+        app.stage.addChild(progress_comb);
 
-    //text for progression
-    let style = new TextStyle({
-    fontFamily: "sans-serif",
-    fontSize: 18,
-    fill: "brown",
-    });
-    message = new Text("100 m", style);
-    message.position.set(1700, 650-progress_offset);
-    message.interactive = true;
-    //message.on('pointerdown', () => onWinGame())
-    app.stage.addChild(message);
-
-
-    //Create the text sprite
-    message2 = new Text("0 m", style);
-    message2.position.set(1700, 180-progress_offset);
-    app.stage.addChild(message2);
+        //text for progression
+        let style = new TextStyle({
+        fontFamily: "sans-serif",
+        fontSize: 18,
+        fill: "brown",
+        });
+        message = new Text("100 m", style);
+        message.position.set(1700, 650-progress_offset);
+        message.interactive = true;
+        //message.on('pointerdown', () => onWinGame())
+        app.stage.addChild(message);
 
 
-    //Create the `goo_fairy` sprite
-    goo_fairy = new Sprite(goo_fairy_txt);
-    goo_fairy.x = 50;
-    goo_fairy.y = 50;
-    goo_fairy.vx = 0;
-    goo_fairy.vy = 0;
-    goo_fairy.tool = 'gum';
-    goo_fairy.toolIcon = defaultIcon;
-    goo_fairy.sel_txt = goo_fairy_selected_txt;
-    goo_fairy.unsel_txt = goo_fairy_txt;
-    goo_fairy.interactive = true;
-    goo_fairy.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    //app.stage.addChild(goo_fairy);
+        //Create the text sprite
+        message2 = new Text("0 m", style);
+        message2.position.set(1700, 180-progress_offset);
+        app.stage.addChild(message2);
 
 
-    //Create the `sailor_fairy` sprite
-    sailor_fairy = new Sprite(sailor_fairy_txt);
-    sailor_fairy.x = 50;
-    sailor_fairy.y = 400;
-    sailor_fairy.vx = 0;
-    sailor_fairy.vy = 0;
-    sailor_fairy.tool = 'knot';
-    sailor_fairy.toolIcon = defaultIcon;
-    sailor_fairy.sel_txt = sailor_fairy_selected_txt;
-    sailor_fairy.unsel_txt = sailor_fairy_txt;
-    sailor_fairy.interactive = true;
-    sailor_fairy.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    //app.stage.addChild(sailor_fairy);
+        //Create the `goo_fairy` sprite
+        goo_fairy = new Sprite(goo_fairy_txt);
+        goo_fairy.x = 50;
+        goo_fairy.y = 50;
+        goo_fairy.vx = 0;
+        goo_fairy.vy = 0;
+        goo_fairy.tool = 'gum';
+        goo_fairy.toolIcon = defaultIcon;
+        goo_fairy.sel_txt = goo_fairy_selected_txt;
+        goo_fairy.unsel_txt = goo_fairy_txt;
+        goo_fairy.interactive = true;
+        goo_fairy.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        //app.stage.addChild(goo_fairy);
 
 
-    //Create the `sax_fairy` sprite
-    sax_fairy = new Sprite(sax_fairy_txt);
-    sax_fairy.x = 50;
-    sax_fairy.y = 750;
-    sax_fairy.vx = 0;
-    sax_fairy.vy = 0;
-    sax_fairy.tool = 'sax';
-    sax_fairy.toolIcon = defaultIcon;
-    sax_fairy.sel_txt = sax_fairy_selected_txt;
-    sax_fairy.unsel_txt = sax_fairy_txt;
-    sax_fairy.interactive = true;
-    sax_fairy.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    //app.stage.addChild(sax_fairy);
-
-    jammers = [];
-    //Create the `knot_1` sprite
-    knot_1 = new Sprite(resources["images/knot.png"].texture);
-    knot_1.x = 700;
-    knot_1.y = 1080;
-    knot_1.vx = 0;
-    knot_1.vy = 0;
-    knot_1.killedby = 'knot';
-    knot_1.interactive = true;
-    knot_1.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_1);
-    jammers.push(knot_1);
-
-    //Create the `knot_2` sprite
-    knot_2 = new Sprite(resources["images/gum1.png"].texture);
-    knot_2.x = 850;
-    knot_2.y = 1280;
-    knot_2.vx = 0;
-    knot_2.vy = 0;
-    knot_2.killedby = 'gum';
-    knot_2.interactive = true;
-    knot_2.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_2);
-    jammers.push(knot_2);
-
-    //Create the `knot_3` sprite
-    knot_3 = new Sprite(resources["images/knot_1.png"].texture);
-    knot_3.x = 950;
-    knot_3.y = 1280;
-    knot_3.vx = 0;
-    knot_3.vy = 0;
-    knot_3.killedby = 'sax';
-    knot_3.interactive = true;
-    knot_3.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_3);
-    jammers.push(knot_3);
-    //Create the `knot_1` sprite
-    knot_11 = new Sprite(resources["images/knot.png"].texture);
-    knot_11.x = 700;
-    knot_11.y = 1080;
-    knot_11.vx = 0;
-    knot_11.vy = 0;
-    knot_11.killedby = 'knot';
-    knot_11.interactive = true;
-    knot_11.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_11);
-    jammers.push(knot_11);
-
-    //Create the `knot_2` sprite
-    knot_21 = new Sprite(resources["images/gum2.png"].texture);
-    knot_21.x = 850;
-    knot_21.y = 1280;
-    knot_21.vx = 0;
-    knot_21.vy = 0;
-    knot_21.killedby = 'gum';
-    knot_21.interactive = true;
-    knot_21.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_21);
-    jammers.push(knot_21);
-
-    //Create the `knot_31` sprite
-    knot_31 = new Sprite(resources["images/knot_1.png"].texture);
-    knot_31.x = 950;
-    knot_31.y = 1280;
-    knot_31.vx = 0;
-    knot_31.vy = 0;
-    knot_31.killedby = 'sax';
-    knot_31.interactive = true;
-    knot_31.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_31);
-    jammers.push(knot_31);
-    //Create the `knot_12` sprite
-    knot_12 = new Sprite(resources["images/knot.png"].texture);
-    knot_12.x = 700;
-    knot_12.y = 1080;
-    knot_12.vx = 0;
-    knot_12.vy = 0;
-    knot_12.killedby = 'knot';
-    knot_12.interactive = true;
-    knot_12.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_12);
-    jammers.push(knot_12);
-
-    //Create the `knot_22` sprite
-    knot_22 = new Sprite(resources["images/gum1.png"].texture);
-    knot_22.x = 850;
-    knot_22.y = 1280;
-    knot_22.vx = 0;
-    knot_22.vy = 0;
-    knot_22.killedby = 'gum';
-    knot_22.interactive = true;
-    knot_22.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_22);
-    jammers.push(knot_22);
-
-    //Create the `knot_32` sprite
-    knot_32 = new Sprite(resources["images/knot_1.png"].texture);
-    knot_32.x = 950;
-    knot_32.y = 1280;
-    knot_32.vx = 0;
-    knot_32.vy = 0;
-    knot_32.killedby = 'sax';
-    knot_32.interactive = true;
-    knot_32.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_32);
-    jammers.push(knot_32);
-    //Create the `knot_13` sprite
-    knot_13 = new Sprite(resources["images/knot.png"].texture);
-    knot_13.x = 700;
-    knot_13.y = 1080;
-    knot_13.vx = 0;
-    knot_13.vy = 0;
-    knot_13.killedby = 'knot';
-    knot_13.interactive = true;
-    knot_13.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_13);
-    jammers.push(knot_13);
-
-    //Create the `knot_2` sprite
-    knot_23 = new Sprite(resources["images/gum2.png"].texture);
-    knot_23.x = 850;
-    knot_23.y = 1280;
-    knot_23.vx = 0;
-    knot_23.vy = 0;
-    knot_23.killedby = 'gum';
-    knot_23.interactive = true;
-    knot_23.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_23);
-    jammers.push(knot_23);
-
-    //Create the `knot_3` sprite
-    knot_33 = new Sprite(resources["images/knot_1.png"].texture);
-    knot_33.x = 950;
-    knot_33.y = 1280;
-    knot_33.vx = 0;
-    knot_33.vy = 0;
-    knot_33.killedby = 'sax';
-    knot_33.interactive = true;
-    knot_33.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(knot_33);
-    jammers.push(knot_33);
-
-    //Create the `Warning_yellow` sprite
-    Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
-    Warning_yellow.x = 480;
-    Warning_yellow.y = 1080;
-    Warning_yellow.vx = 0;
-    Warning_yellow.vy = 0;
-    //app.stage.addChild(Warning_yellow);
-
-    //Create the `Warning_orange` sprite
-    Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
-    Warning_orange.x = 480;
-    Warning_orange.y = 1080;
-    Warning_orange.vx = 0;
-    Warning_orange.vy = 0;
-    //app.stage.addChild(Warning_orange);
-
-    //Create the `Warning_red` sprite
-    Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
-    Warning_red.x = 480;
-    Warning_red.y = 1080;
-    Warning_red.vx = 0;
-    Warning_red.vy = 0;
-    //app.stage.addChild(Warning_red);
-
-    //Create the `Warning_yellow2` sprite
-    Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
-    Warning_yellow2.x = 1460;
-    Warning_yellow2.y = 1080;
-    Warning_yellow2.vx = 0;
-    Warning_yellow2.vy = 0;
-    //app.stage.addChild(Warning_yellow2);
-
-    //Create the `Warning_orange2` sprite
-    Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
-    Warning_orange2.x = 1460;
-    Warning_orange2.y = 1080;
-    Warning_orange2.vx = 0;
-    Warning_orange2.vy = 0;
-    //app.stage.addChild(Warning_orange2);
-
-    //Create the `Warning_red2` sprite
-    Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
-    Warning_red2.x = 1460;
-    Warning_red2.y = 1080;
-    Warning_red2.vx = 0;
-    Warning_red2.vy = 0;
-    //app.stage.addChild(Warning_red2);
+        //Create the `sailor_fairy` sprite
+        sailor_fairy = new Sprite(sailor_fairy_txt);
+        sailor_fairy.x = 50;
+        sailor_fairy.y = 400;
+        sailor_fairy.vx = 0;
+        sailor_fairy.vy = 0;
+        sailor_fairy.tool = 'knot';
+        sailor_fairy.toolIcon = defaultIcon;
+        sailor_fairy.sel_txt = sailor_fairy_selected_txt;
+        sailor_fairy.unsel_txt = sailor_fairy_txt;
+        sailor_fairy.interactive = true;
+        sailor_fairy.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        //app.stage.addChild(sailor_fairy);
 
 
-    const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
-    musicSprite = new PIXI.Sprite(sound_init_texture);
+        //Create the `sax_fairy` sprite
+        sax_fairy = new Sprite(sax_fairy_txt);
+        sax_fairy.x = 50;
+        sax_fairy.y = 750;
+        sax_fairy.vx = 0;
+        sax_fairy.vy = 0;
+        sax_fairy.tool = 'sax';
+        sax_fairy.toolIcon = defaultIcon;
+        sax_fairy.sel_txt = sax_fairy_selected_txt;
+        sax_fairy.unsel_txt = sax_fairy_txt;
+        sax_fairy.interactive = true;
+        sax_fairy.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        //app.stage.addChild(sax_fairy);
 
-    // out of screen
-    musicSprite.x = app.screen.width+200;
-    musicSprite.y = app.screen.height+200;
-    musicSprite.width = 1;
-    musicSprite.height = 1;
+        jammers = [];
+        //Create the `knot_1` sprite
+        knot_1 = new Sprite(resources["images/Note_1.png"].texture);
+        knot_1.x = 700;
+        knot_1.y = 1080;
+        knot_1.vx = 0;
+        knot_1.vy = 0;
+        knot_1.killedby = 'knot';
+        knot_1.interactive = true;
+        knot_1.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_1);
+        jammers.push(knot_1);
 
-    app.stage.addChild(musicSprite);
+        //Create the `knot_2` sprite
+        knot_2 = new Sprite(resources["images/Note_2.png"].texture);
+        knot_2.x = 850;
+        knot_2.y = 1280;
+        knot_2.vx = 0;
+        knot_2.vy = 0;
+        knot_2.killedby = 'gum';
+        knot_2.interactive = true;
+        knot_2.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_2);
+        jammers.push(knot_2);
 
-    //Create the `chibi` sprite
-    chibi = new Sprite(chibi_happy_txt);
-    chibi.x = 1350;
-    chibi.y = 1080;
-    //app.stage.addChild(chibi);
+        //Create the `knot_3` sprite
+        knot_3 = new Sprite(resources["images/Note_3.png"].texture);
+        knot_3.x = 950;
+        knot_3.y = 1280;
+        knot_3.vx = 0;
+        knot_3.vy = 0;
+        knot_3.killedby = 'sax';
+        knot_3.interactive = true;
+        knot_3.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_3);
+        jammers.push(knot_3);
+        //Create the `knot_1` sprite
+        knot_11 = new Sprite(resources["images/Note_4.png"].texture);
+        knot_11.x = 700;
+        knot_11.y = 1080;
+        knot_11.vx = 0;
+        knot_11.vy = 0;
+        knot_11.killedby = 'knot';
+        knot_11.interactive = true;
+        knot_11.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_11);
+        jammers.push(knot_11);
 
-    //Create the `BG_start` sprite
-    BG_start = new Sprite(resources["images/BG_start.png"].texture);
-    BG_start.x = 0;
-    BG_start.y = 0;
-    BG_start.vx = 0;
-    BG_start.vy = 0;
-    app.stage.addChild(BG_start);
+        //Create the `knot_2` sprite
+        knot_21 = new Sprite(resources["images/Note_5.png"].texture);
+        knot_21.x = 850;
+        knot_21.y = 1280;
+        knot_21.vx = 0;
+        knot_21.vy = 0;
+        knot_21.killedby = 'gum';
+        knot_21.interactive = true;
+        knot_21.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_21);
+        jammers.push(knot_21);
 
-    //Create the `welcome_princess` sprite
-    welcome_princess = new Sprite(resources["images/welcome_princess.png"].texture);
-    welcome_princess.x = 0;
-    welcome_princess.y = 0;
-    welcome_princess.vx = 0;
-    welcome_princess.vy = 0;
-    //app.stage.addChild(welcome_princess);
+        //Create the `knot_31` sprite
+        knot_31 = new Sprite(resources["images/knot_1.png"].texture);
+        knot_31.x = 950;
+        knot_31.y = 1280;
+        knot_31.vx = 0;
+        knot_31.vy = 0;
+        knot_31.killedby = 'sax';
+        knot_31.interactive = true;
+        knot_31.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_31);
+        jammers.push(knot_31);
+        //Create the `knot_12` sprite
+        knot_12 = new Sprite(resources["images/knot.png"].texture);
+        knot_12.x = 700;
+        knot_12.y = 1080;
+        knot_12.vx = 0;
+        knot_12.vy = 0;
+        knot_12.killedby = 'knot';
+        knot_12.interactive = true;
+        knot_12.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_12);
+        jammers.push(knot_12);
+
+        //Create the `knot_22` sprite
+        knot_22 = new Sprite(resources["images/gum1.png"].texture);
+        knot_22.x = 850;
+        knot_22.y = 1280;
+        knot_22.vx = 0;
+        knot_22.vy = 0;
+        knot_22.killedby = 'gum';
+        knot_22.interactive = true;
+        knot_22.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_22);
+        jammers.push(knot_22);
+
+        //Create the `knot_32` sprite
+        knot_32 = new Sprite(resources["images/knot_1.png"].texture);
+        knot_32.x = 950;
+        knot_32.y = 1280;
+        knot_32.vx = 0;
+        knot_32.vy = 0;
+        knot_32.killedby = 'sax';
+        knot_32.interactive = true;
+        knot_32.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_32);
+        jammers.push(knot_32);
+        //Create the `knot_13` sprite
+        knot_13 = new Sprite(resources["images/knot.png"].texture);
+        knot_13.x = 700;
+        knot_13.y = 1080;
+        knot_13.vx = 0;
+        knot_13.vy = 0;
+        knot_13.killedby = 'knot';
+        knot_13.interactive = true;
+        knot_13.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_13);
+        jammers.push(knot_13);
+
+        //Create the `knot_2` sprite
+        knot_23 = new Sprite(resources["images/gum2.png"].texture);
+        knot_23.x = 850;
+        knot_23.y = 1280;
+        knot_23.vx = 0;
+        knot_23.vy = 0;
+        knot_23.killedby = 'gum';
+        knot_23.interactive = true;
+        knot_23.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_23);
+        jammers.push(knot_23);
+
+        //Create the `knot_3` sprite
+        knot_33 = new Sprite(resources["images/knot_1.png"].texture);
+        knot_33.x = 950;
+        knot_33.y = 1280;
+        knot_33.vx = 0;
+        knot_33.vy = 0;
+        knot_33.killedby = 'sax';
+        knot_33.interactive = true;
+        knot_33.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(knot_33);
+        jammers.push(knot_33);
+
+        //Create the `Warning_yellow` sprite
+        Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
+        Warning_yellow.x = 480;
+        Warning_yellow.y = 1080;
+        Warning_yellow.vx = 0;
+        Warning_yellow.vy = 0;
+        //app.stage.addChild(Warning_yellow);
+
+        //Create the `Warning_orange` sprite
+        Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
+        Warning_orange.x = 480;
+        Warning_orange.y = 1080;
+        Warning_orange.vx = 0;
+        Warning_orange.vy = 0;
+        //app.stage.addChild(Warning_orange);
+
+        //Create the `Warning_red` sprite
+        Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
+        Warning_red.x = 480;
+        Warning_red.y = 1080;
+        Warning_red.vx = 0;
+        Warning_red.vy = 0;
+        //app.stage.addChild(Warning_red);
+
+        //Create the `Warning_yellow2` sprite
+        Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
+        Warning_yellow2.x = 1460;
+        Warning_yellow2.y = 1080;
+        Warning_yellow2.vx = 0;
+        Warning_yellow2.vy = 0;
+        //app.stage.addChild(Warning_yellow2);
+
+        //Create the `Warning_orange2` sprite
+        Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
+        Warning_orange2.x = 1460;
+        Warning_orange2.y = 1080;
+        Warning_orange2.vx = 0;
+        Warning_orange2.vy = 0;
+        //app.stage.addChild(Warning_orange2);
+
+        //Create the `Warning_red2` sprite
+        Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
+        Warning_red2.x = 1460;
+        Warning_red2.y = 1080;
+        Warning_red2.vx = 0;
+        Warning_red2.vy = 0;
+        //app.stage.addChild(Warning_red2);
 
 
-    //Create the `BG_lose` sprite
-    BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
-    BG_lose.x = 0;
-    BG_lose.y = 1080;
-    BG_lose.vx = 0;
-    BG_lose.vy = 0;
-    app.stage.addChild(BG_lose);
+        const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
+        musicSprite = new PIXI.Sprite(sound_init_texture);
+
+        // out of screen
+        musicSprite.x = app.screen.width+200;
+        musicSprite.y = app.screen.height+200;
+        musicSprite.width = 1;
+        musicSprite.height = 1;
+
+        app.stage.addChild(musicSprite);
+
+        //Create the `chibi` sprite
+        chibi = new Sprite(chibi_happy_txt);
+        chibi.x = 1350;
+        chibi.y = 1080;
+        //app.stage.addChild(chibi);
+
+        //Create the `BG_start` sprite
+        BG_start = new Sprite(resources["images/BG_start.png"].texture);
+        BG_start.x = 0;
+        BG_start.y = 0;
+        BG_start.vx = 0;
+        BG_start.vy = 0;
+        app.stage.addChild(BG_start);
+
+        //Create the `welcome_princess` sprite
+        welcome_princess = new Sprite(resources["images/welcome_princess.png"].texture);
+        welcome_princess.x = 0;
+        welcome_princess.y = 0;
+        welcome_princess.vx = 0;
+        welcome_princess.vy = 0;
+        //app.stage.addChild(welcome_princess);
 
 
-    //Create the `BG_win` sprite
-    BG_win = new Sprite(resources["images/BG_win.png"].texture);
-    BG_win.x = 0;
-    BG_win.y = 1080;
-    BG_win.vx = 0;
-    BG_win.vy = 0;
-    app.stage.addChild(BG_win);
+        //Create the `BG_lose` sprite
+        BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
+        BG_lose.x = 0;
+        BG_lose.y = 1080;
+        BG_lose.vx = 0;
+        BG_lose.vy = 0;
+        app.stage.addChild(BG_lose);
 
 
-    butt_restart = new Sprite(resources["images/comb_again.png"].texture);
-    butt_restart.x = 950;
-    butt_restart.y = 1280;
-    //butt_restart.y = 1280;
-    butt_restart.interactive = true;
-    butt_restart.on('pointerdown', onStartGame);
+        //Create the `BG_win` sprite
+        BG_win = new Sprite(resources["images/BG_win.png"].texture);
+        BG_win.x = 0;
+        BG_win.y = 1080;
+        BG_win.vx = 0;
+        BG_win.vy = 0;
+        app.stage.addChild(BG_win);
 
 
-    //Create the text sprite
-    let style2 = new TextStyle({
-    fontFamily: "sans-serif",
-    fontSize: 35,
-    fill: "black",
-    });
-    butt_music = new Text("Music", style2);
-    butt_music.position.set(8, 8);
-    butt_music.interactive = true;
-    butt_music.on('pointerdown', () => music = !music)
-    //app.stage.addChild(butt_music);
+        butt_restart = new Sprite(resources["images/comb_again.png"].texture);
+        butt_restart.x = 950;
+        butt_restart.y = 1280;
+        //butt_restart.y = 1280;
+        butt_restart.interactive = true;
+        butt_restart.on('pointerdown', onStartGame);
 
 
-    //Create the text sprite
-    let style3 = new TextStyle({
-    fontFamily: "sans-serif",
-    fontSize: 35,
-    fill: "brown",
-    });
-    butt_sound = new Text("Sounds On/Off", style3);
-    butt_sound.position.set(8, 8);
-    butt_sound.interactive = true;
-    butt_sound.on('pointerdown', () => sound = !sound)
-    app.stage.addChild(butt_sound);
-
-    //Create the text sprite
-    let style4 = new TextStyle({
-    fontFamily: "Bodoni MT", // "chalkduster"
-    fontSize: 190,
-    //fontStyle: 'underline',
-    fill: "pink",
-    });
-    msg_status = new Text("                                     .", style4);
-    msg_status.position.set(100, 300);
-    msg_status.interactive = true;
-    msg_status.on('pointerdown', onStartGame)
-    app.stage.addChild(msg_status);
-
-    msg_menu_1 = new Text("Start game", style4);
-    msg_menu_1.position.set(MENU_X0+80, MENU_Y0);
-    console.log('pos1 ',MENU_X0+80, ' ', MENU_Y0);
-    msg_menu_1.interactive = true;
-    msg_menu_1.on('pointerdown', onStartGame)
-    app.stage.addChild(msg_menu_1);
-
-    msg_menu_2 = new Text("Settings", style4);
-    msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
-    console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
-    msg_menu_2.interactive = true;
-    //msg_menu_2.on('pointerdown', onStartGame)
-    app.stage.addChild(msg_menu_2);
+        //Create the text sprite
+        let style2 = new TextStyle({
+        fontFamily: "sans-serif",
+        fontSize: 35,
+        fill: "black",
+        });
+        butt_music = new Text("Music", style2);
+        butt_music.position.set(8, 8);
+        butt_music.interactive = true;
+        butt_music.on('pointerdown', () => music = !music)
+        //app.stage.addChild(butt_music);
 
 
-    //Create the `cat` sprite
-    cat = new Sprite(resources["images/cat.png"].texture);
-    cat.x = MENU_X0;
-    cat.y = MENU_Y0+80;
-    cat.vx = 0;
-    cat.vy = 0;
-    cat.toolIcon = defaultIcon;
-    cat.interactive = true;
-    /*cat.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);*/
-    app.stage.addChild(cat);
+        //Create the text sprite
+        let style3 = new TextStyle({
+        fontFamily: "sans-serif",
+        fontSize: 35,
+        fill: "brown",
+        });
+        butt_sound = new Text("Sounds On/Off", style3);
+        butt_sound.position.set(8, 8);
+        butt_sound.interactive = true;
+        butt_sound.on('pointerdown', () => {sound = !sound; music = sound;})
+        app.stage.addChild(butt_sound);
 
-    //Capture the keyboard arrow keys
-    let left = keyboard(37),
-      up = keyboard(38),
-      right = keyboard(39),
-      down = keyboard(40),
-      enter = keyboard(13),
-      space = keyboard()
-      ;
+        //Create the text sprite
+        let style4 = new TextStyle({
+        fontFamily: "Bodoni MT", // "chalkduster"
+        fontSize: 190,
+        //fontStyle: 'underline',
+        fill: "pink",
+        });
+        msg_status = new Text("                                     .", style4);
+        msg_status.position.set(100, 300);
+        msg_status.interactive = true;
+        msg_status.on('pointerdown', onStartGame)
+        app.stage.addChild(msg_status);
 
-    //Left arrow key `press` method
-    left.press = function() {
+        msg_menu_1 = new Text("Start game", style4);
+        msg_menu_1.position.set(MENU_X0+80, MENU_Y0);
+        console.log('pos1 ',MENU_X0+80, ' ', MENU_Y0);
+        msg_menu_1.interactive = true;
+        msg_menu_1.on('pointerdown', onStartGame)
+        //app.stage.addChild(msg_menu_1);
 
-        //Change the cat's velocity when the key is pressed
-        //cat.vx = -5;
-        //cat.vy = 0;
-    };
+        msg_menu_2 = new Text("Settings", style4);
+        msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
+        console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
+        msg_menu_2.interactive = true;
+        //msg_menu_2.on('pointerdown', onStartGame)
+        //app.stage.addChild(msg_menu_2);
 
-    //Left arrow key `release` method
-    left.release = function() {
 
-        //If the left arrow has been released, and the right arrow isn't down,
-        //and the cat isn't moving vertically:
-        //Stop the cat
-        /*if (!right.isDown && cat.vy === 0) {
-          cat.vx = 0;
-        }*/
-    };
+        //Create the `cat` sprite
+        cat = new Sprite(resources["images/cat.png"].texture);
+        cat.x = MENU_X0;
+        cat.y = MENU_Y0+80;
+        cat.vx = 0;
+        cat.vy = 0;
+        cat.toolIcon = defaultIcon;
+        cat.interactive = true;
+        /*cat.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);*/
+        app.stage.addChild(cat);
 
-    //Up
-    up.press = function() {
+        //Capture the keyboard arrow keys
+        let left = keyboard(37),
+          up = keyboard(38),
+          right = keyboard(39),
+          down = keyboard(40),
+          enter = keyboard(13),
+          space = keyboard()
+          ;
 
-        if(mode == 'start') {
-            //menu_cursor = (menu_cursor +1)% MENU_MAX;
+        //Left arrow key `press` method
+        left.press = function() {
 
-        } else {
-            cat.vy = -5;
-            cat.vx = 0;
-        }
-    };
-    up.release = function() {
-        if(mode == 'start') {
-            menu_cursor = (menu_cursor +1)% MENU_MAX;
-            cat.x = MENU_X0;
-            cat.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
-        } else {
-            if (!down.isDown && cat.vx === 0) {
-              cat.vy = 0;
+            //Change the cat's velocity when the key is pressed
+            //cat.vx = -5;
+            //cat.vy = 0;
+        };
+
+        //Left arrow key `release` method
+        left.release = function() {
+
+            //If the left arrow has been released, and the right arrow isn't down,
+            //and the cat isn't moving vertically:
+            //Stop the cat
+            /*if (!right.isDown && cat.vy === 0) {
+              cat.vx = 0;
+            }*/
+        };
+
+        //Up
+        up.press = function() {
+
+            if(mode == 'start') {
+                //menu_cursor = (menu_cursor +1)% MENU_MAX;
+
+            } else {
+                cat.vy = -5;
+                cat.vx = 0;
             }
-        }
-    };
+        };
+        up.release = function() {
+            if(mode == 'start') {
+                menu_cursor = (menu_cursor +1)% MENU_MAX;
+                cat.x = MENU_X0;
+                cat.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
+            } else {
+                if (!down.isDown && cat.vx === 0) {
+                  cat.vy = 0;
+                }
+            }
+        };
 
-    //Right
-    right.press = function() {
+        //Right
+        right.press = function() {
 
-    };
-    right.release = function() {
+        };
+        right.release = function() {
 
-    };
+        };
 
-    //Down
-    down.press = function() {
-    };
-    down.release = function() {
-    };
+        //Down
+        down.press = function() {
+        };
+        down.release = function() {
+        };
 
-    //Set the game state
-    state = play;
+        //Set the game state
+        state = play;
 
-    //Start the game loop
-    app.ticker.add(delta => gameLoop(delta));
-}
+        //Start the game loop
+        app.ticker.add(delta => gameLoop(delta));
+    }
 
     function onStartGame() {
         resetJammers();
@@ -776,7 +816,8 @@
         progress = 0;
         welcome_princess.y = 1080;
         //chibi.y = 1080-771;
-        onPlayVideo('ending', true);
+        //onPlayVideo('claps_end_of_level', true);
+        onPlayVideo('musique_game', true);
         mode = 'normal';
     }
 
@@ -791,7 +832,7 @@
         chibi.y=1080;
         BG_win.y = 0;
         BG_lose.y = 1080;
-        onPlayVideo('ending', true);
+        onPlayVideo('claps_end_of_level', true);
         mode = 'win';
     }
 
@@ -875,12 +916,12 @@
         }
     }
     function onPlayVideo(sound_name, is_music) {
-
+        console.log('onPlayVideo ',sound_name, ' ', is_music);
         if((!is_music && sound) || (is_music && music)) {
             // create a video texture from a path
-            const texture = PIXI.Texture.from('sounds/'+sound_name+'.mp4');
 
             if(!is_music) {
+                const texture = PIXI.Texture.from('sounds/'+sound_bank[sound_name]);
                 // create a new Sprite using the video texture (yes it's that easy)
                 const videoSprite = new PIXI.Sprite(texture);
 
@@ -892,13 +933,20 @@
 
                 app.stage.addChild(videoSprite);
             } else {
-                // need to be able to interrupt music when muted or screen changes. so for now no music :(
-                /*app.stage.removeChild(musicSprite);
-                musicSprite.texture.source.pause();
-                musicSprite.texture.dispose();
-                musicSprite.texture = texture;
-
-                app.stage.addChild(musicSprite);*/
+                if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
+                    BGmusicSprite.baseTexture.source.pause();
+                }
+                BGmusicSprite = PIXI.Texture.from('sounds/'+sound_bank[sound_name]);
+                if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source){
+                    BGmusicSprite.baseTexture.source.loop = true;
+                    console.log('music T2 ',BGmusicSprite.baseTexture.source);
+                    //BGmusicSprite.baseTexture.source.play();
+                }
+                /*console.log('music ',BGmusicSprite);
+                console.log('music t ',BGmusicSprite.source);
+                console.log('music T ',BGmusicSprite.baseTexture.pause);
+                console.log('music T1 ',BGmusicSprite.baseTexture.source);
+                */
             }
         }
     }
