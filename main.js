@@ -142,6 +142,7 @@
     .add("images/split_fairy_selected.png")
     .add("images/cat.png")
     .add("images/static_ham_wheel.png")
+    .add("images/dynamic_ham_wheel.png")
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
     .add("images/welcome_princess.png")
@@ -150,6 +151,7 @@
     .add("images/curseur_Menu.png")
     .add("images/2ndloop.png")
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
+    .add("images/Weapons/Weapon2 - Lazer3.3.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -171,6 +173,7 @@
     .load(setup);
 
     //Define any variables that are used in more than one function
+    let timeInSec = 0;
     let mode, tool, music, sound, BGmusicSprite, musicSprite, progress;
     let butt_start, butt_restart, butt_music, butt_sound;
     let BG_start, BG_win, BG_lose;
@@ -181,18 +184,21 @@
     let blob, rollerCoaster1, back, looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
-    let bullets, bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
+    let bullets;
+    let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
+    let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
     let MENU_MAX = 2 ;
     let MENU_X0 = 100;
     let MENU_Y0 = 300;
     let MENU_OFFSET = 170;
     let menu_cursor = 0;
-    let ROLLER_COASTER_LEFT = 480;
+    let ROLLER_COASTER_LEFT = 400;
     let ROLLER_COASTER_RIGHT = 1460;
     let ROLLER_COASTER_LOW = 900;
 
     // create a texture from an image path
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
+    const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
@@ -223,7 +229,7 @@
 
     function setup() {
         mode = 'start';
-        tool = 'knot';
+        tool = 'peanut';
         music = false;
         sound = true;
         progress = 0;
@@ -584,6 +590,7 @@
         bullet_peanut1.y = 1280;
         bullet_peanut1.vx = 0;
         bullet_peanut1.vy = 0;
+        bullet_peanut1.weaponType = 'peanut';
         app.stage.addChild(bullet_peanut1);
         bullets.push(bullet_peanut1);
 
@@ -594,6 +601,7 @@
         bullet2_peanut1.y = 1280;
         bullet2_peanut1.vx = 0;
         bullet2_peanut1.vy = 0;
+        bullet2_peanut1.weaponType = 'peanut';
         app.stage.addChild(bullet2_peanut1);
         bullets.push(bullet2_peanut1);
 
@@ -604,6 +612,7 @@
         bullet3_peanut1.y = 1280;
         bullet3_peanut1.vx = 0;
         bullet3_peanut1.vy = 0;
+        bullet3_peanut1.weaponType = 'peanut';
         app.stage.addChild(bullet3_peanut1);
         bullets.push(bullet3_peanut1);
 
@@ -613,8 +622,52 @@
         bullet4_peanut1.y = 1280;
         bullet4_peanut1.vx = 0;
         bullet4_peanut1.vy = 0;
+        bullet4_peanut1.weaponType = 'peanut';
         app.stage.addChild(bullet4_peanut1);
         bullets.push(bullet4_peanut1);
+
+        //Create the `bullet` sprite
+        bullet_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet_lazer1.x = 950;
+        bullet_lazer1.y = 1280;
+        bullet_lazer1.vx = 0;
+        bullet_lazer1.vy = 0;
+        bullet_lazer1.weaponType = 'lazer';
+        app.stage.addChild(bullet_lazer1);
+        bullets.push(bullet_lazer1);
+
+
+        //Create the `bullet` sprite
+        bullet2_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet2_lazer1.x = 950;
+        bullet2_lazer1.y = 1280;
+        bullet2_lazer1.vx = 0;
+        bullet2_lazer1.vy = 0;
+        bullet2_lazer1.weaponType = 'lazer';
+        app.stage.addChild(bullet2_lazer1);
+        bullets.push(bullet2_lazer1);
+
+
+        //Create the `bullet` sprite
+        bullet3_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet3_lazer1.x = 950;
+        bullet3_lazer1.y = 1280;
+        bullet3_lazer1.vx = 0;
+        bullet3_lazer1.vy = 0;
+        bullet3_lazer1.weaponType = 'lazer';
+        app.stage.addChild(bullet3_peanut1);
+        bullets.push(bullet3_peanut1);
+
+        //Create the `bullet` sprite
+        bullet4_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet4_lazer1.x = 950;
+        bullet4_lazer1.y = 1280;
+        bullet4_lazer1.vx = 0;
+        bullet4_lazer1.vy = 0;
+        bullet4_lazer1.weaponType = 'lazer';
+        app.stage.addChild(bullet4_lazer1);
+        bullets.push(bullet4_lazer1);
+
 
         //Create the `Warning_yellow` sprite
         Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
@@ -666,7 +719,7 @@
 
 
         const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
-        musicSprite = new PIXI.Sprite(sound_init_texture);
+        /*musicSprite = new PIXI.Sprite(sound_init_texture);
 
         // out of screen
         musicSprite.x = app.screen.width+200;
@@ -674,7 +727,7 @@
         musicSprite.width = 1;
         musicSprite.height = 1;
 
-        app.stage.addChild(musicSprite);
+        app.stage.addChild(musicSprite);*/
 
         //Create the `chibi` sprite
         chibi = new Sprite(chibi_happy_txt);
@@ -779,7 +832,13 @@
 
 
         //Create the `cat` sprite
-        cat = new Sprite(resources["images/static_ham_wheel.png"].texture);
+        //cat = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
+
+        cat = new PIXI.TilingSprite(
+            textureHamster,
+            500,
+            459
+        );
         cat.x = MENU_X0;
         cat.y = 1900+MENU_Y0;
         cat.vx = 0;
@@ -952,13 +1011,13 @@
     function shoot(targetX,targetY){
         var found = false;
         for (var i = 0; i < bullets.length && !found; i++) {
-            if(!bullets[i].flying){
+            if(!bullets[i].flying && bullets[i].weaponType == tool){
                 bullets[i].flying = true;
                 found = true;
                 bullets[i].x = cat.x+80;
                 bullets[i].y = cat.y+80;
 
-                var curr_weapon_speed = 10;
+                var curr_weapon_speed = bullets[i].weapon_speed || 10;
                 var oppositeSz = (targetY - bullets[i].y );
                 var adjacentSz = (targetX - bullets[i].x);
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
@@ -1168,6 +1227,8 @@
     }
 
     function play(delta) {
+        timeInSec += 1;
+        timeInSec = timeInSec % 60;
         let speedMultiplier = 1;
         let normalSpeed = 5*speedMultiplier;
         let recoverSpeed = 1*speedMultiplier;
@@ -1227,7 +1288,7 @@
         // action
         switch (mode) {
             case 'normal':
-                tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
+                cat.tilePosition.vy = 500;
                 tilingSpriteMessyHair.vy = 0;
                 rollerCoaster1.vy=0;
                 Warning_yellow.y = 1080;
@@ -1239,7 +1300,7 @@
                 progress++;
                 break;
             case 'danger':
-                tilingSpriteMessyHair.tilePosition.vy = 0;
+                cat.tilePosition.vy = 500;
                 tilingSpriteMessyHair.vy = -moveSpeed;
                 Warning_yellow.y = 0;
                 Warning_yellow2.y = 0;
@@ -1340,7 +1401,8 @@
         //use the cat's velocity to make it move
         /*cat.x += cat.vx;
         cat.y += cat.vy;*/
-        tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
+        //cat.tilePosition.x += cat.tilePosition.vy;
+        cat.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         rollerCoaster1.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
@@ -1435,20 +1497,20 @@
         //Check for a collision on the x axis
         if (Math.abs(vx) < combinedHalfWidths) {
 
-        //A collision might be occurring. Check for a collision on the y axis
-        if (Math.abs(vy) < combinedHalfHeights) {
+            //A collision might be occurring. Check for a collision on the y axis
+            if (Math.abs(vy) < combinedHalfHeights) {
 
-          //There's definitely a collision happening
-          hit = true;
+              //There's definitely a collision happening
+              hit = true;
+            } else {
+
+              //There's no collision on the y axis
+              hit = false;
+            }
         } else {
 
-          //There's no collision on the y axis
-          hit = false;
-        }
-        } else {
-
-        //There's no collision on the x axis
-        hit = false;
+            //There's no collision on the x axis
+            hit = false;
         }
 
         //`hit` will be either `true` or `false`
