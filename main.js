@@ -218,7 +218,7 @@
     function setup() {
         mode = 'start';
         tool = 'knot';
-        music = true;
+        music = false;
         sound = true;
         progress = 0;
         //Create the box
@@ -717,7 +717,7 @@
         //Create the `cat` sprite
         cat = new Sprite(resources["images/cat.png"].texture);
         cat.x = MENU_X0;
-        cat.y = MENU_Y0+80;
+        cat.y = 2000+MENU_Y0+80;
         cat.vx = 0;
         cat.vy = 0;
         cat.toolIcon = defaultIcon;
@@ -997,6 +997,17 @@
         }
     }
 
+    function placeNewJammers(){
+        var difficulty = 1; // 0 easy to 9 hardcore
+        for (var i = 0; i < jammers.length; i++) {
+            if(i<=3+difficulty){
+                jammers[i].x = 200+randomInt(0,1600);
+                jammers[i].y = 100+randomInt(50,600);
+                jammers[i].vy = 0;
+            }
+        }
+    }
+
     function moveJammers(speed){
         var difficulty = 1; // 0 easy to 9 hardcore
         /*for (var i = 0; i < jammers.length; i++) {
@@ -1018,15 +1029,16 @@
         // evolution
         switch (mode) {
             case 'normal':
-                if(isJammersTouchingComb()) {
+                /*if(isJammersTouchingComb()) {
                     onPlayVideo('oh_no');
                     chibi.texture = chibi_oups_txt;
                     //mode = 'danger';
-                }
+                }*/
 
                 if(cat.x >=  ROLLER_COASTER_RIGHT && cat.vx >0) { // touch right
                     // go towards left
                     cat.vx = -cat.vx;
+                    placeNewJammers();
                 }
 
 
