@@ -149,6 +149,7 @@
     .add("images/assault_crosshair_gun3.png")
     .add("images/curseur_Menu.png")
     .add("images/2ndloop.png")
+    .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -180,6 +181,7 @@
     let blob, rollerCoaster1, back, looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
+    let bullets, bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
     let MENU_MAX = 2 ;
     let MENU_X0 = 100;
     let MENU_Y0 = 300;
@@ -240,6 +242,8 @@
         back.y = 0;
         back.vx = 0;
         back.vy = 0;
+        back.interactive = true;
+        back.on('pointerdown', onButtonDown);
         app.stage.addChild(back);
 
         //Create the `BG` sprite
@@ -248,6 +252,8 @@
         looping.y = 0;
         looping.vx = 0;
         looping.vy = 0;
+        looping.interactive = true;
+        looping.on('pointerdown', onButtonDown);
         app.stage.addChild(looping);
 
         //Create the `messy_hair` sprite
@@ -290,6 +296,8 @@
         progress_dirty.vx = 0;
         progress_dirty.vy = 0;
         progress_dirty.scale = new PIXI.ObservablePoint(()=>{},progress_dirty,0.92,0.92);
+        progress_dirty.interactive = true;
+        progress_dirty.on('pointerdown', onButtonDown);
         //progress_dirty.rotation = 3.1415/2.;
         app.stage.addChild(progress_dirty);
 
@@ -299,6 +307,8 @@
         progress_comb.y = 176-progress_offset;
         progress_comb.vx = 0;
         progress_comb.vy = 0;
+        progress_comb.interactive = true;
+        progress_comb.on('pointerdown', onButtonDown);
         //app.stage.addChild(progress_comb);
 
         //text for progression
@@ -565,6 +575,46 @@
             .on('pointerout', onButtonOut);
         app.stage.addChild(knot_33);
         jammers.push(knot_33);
+
+
+        bullets = [];
+        //Create the `bullet` sprite
+        bullet_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
+        bullet_peanut1.x = 950;
+        bullet_peanut1.y = 1280;
+        bullet_peanut1.vx = 0;
+        bullet_peanut1.vy = 0;
+        app.stage.addChild(bullet_peanut1);
+        bullets.push(bullet_peanut1);
+
+
+        //Create the `bullet` sprite
+        bullet2_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
+        bullet2_peanut1.x = 950;
+        bullet2_peanut1.y = 1280;
+        bullet2_peanut1.vx = 0;
+        bullet2_peanut1.vy = 0;
+        app.stage.addChild(bullet2_peanut1);
+        bullets.push(bullet2_peanut1);
+
+
+        //Create the `bullet` sprite
+        bullet3_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
+        bullet3_peanut1.x = 950;
+        bullet3_peanut1.y = 1280;
+        bullet3_peanut1.vx = 0;
+        bullet3_peanut1.vy = 0;
+        app.stage.addChild(bullet3_peanut1);
+        bullets.push(bullet3_peanut1);
+
+        //Create the `bullet` sprite
+        bullet4_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
+        bullet4_peanut1.x = 950;
+        bullet4_peanut1.y = 1280;
+        bullet4_peanut1.vx = 0;
+        bullet4_peanut1.vy = 0;
+        app.stage.addChild(bullet4_peanut1);
+        bullets.push(bullet4_peanut1);
 
         //Create the `Warning_yellow` sprite
         Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
@@ -867,7 +917,7 @@
         mode = 'lose';
     }
 
-    function onButtonDown() {
+    function onButtonDown(param) {
         let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
         this.isdown = true;
         if(this.textureButtonDown){
@@ -885,9 +935,79 @@
             updateToolTxt(goo_fairy);
             updateToolTxt(sailor_fairy);
             updateToolTxt(sax_fairy);
+        } else {
+            var targetX = param.data.global.x;
+            var targetY = param.data.global.y;
+
+            shoot(targetX,targetY);
+
+            //console.log('click ',param.data.global);
+            //var mousePosition = app.renderer.interaction.mouse.global;
+            //console.log('click ',mousePosition);
         }
         this.alpha = 1;
 
+    }
+
+    function shoot(targetX,targetY){
+        var found = false;
+        for (var i = 0; i < bullets.length && !found; i++) {
+            if(!bullets[i].flying){
+                bullets[i].flying = true;
+                found = true;
+                bullets[i].x = cat.x+80;
+                bullets[i].y = cat.y+80;
+
+                var curr_weapon_speed = 10;
+                var oppositeSz = (bullets[i].y - targetY );
+                var adjacentSz = (targetX - bullets[i].x);
+                //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
+                if(adjacentSz == 0){
+                    bullets[i].vx = 0;
+                    bullets[i].vy = -curr_weapon_speed;
+                } else {
+                    bullets[i].vx =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed / (oppositeSz / adjacentSz) : curr_weapon_speed ;
+                    bullets[i].vy =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed: curr_weapon_speed * (oppositeSz / adjacentSz) ;
+                    if(adjacentSz > 0) {
+                        if (oppositeSz > 0) {
+                            console.log('++ ');
+                            bullets[i].vy = -bullets[i].vy;
+                        } else {
+                            console.log('+- ');
+                        }
+                    } else {
+                        if (oppositeSz > 0) {
+                            console.log('-+ ');
+                            bullets[i].vx = -bullets[i].vx;
+
+                        } else {
+                            console.log('-- ');
+                            bullets[i].vy = -bullets[i].vy;
+                            bullets[i].vx = -bullets[i].vx;
+
+                        }
+                        //bullets[i].vx = -bullets[i].vx;
+
+                    }
+                }
+
+               //bullets[i].vy = -bullets[i].vy;
+
+                //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
+
+                //bullets[i].vx = curr_weapon_speed* Math.cos(bullets[i].shoot_angle);
+                //bullets[i].vy = -curr_weapon_speed* Math.sin(bullets[i].shoot_angle);
+                //console.log('shoot ',i, ' ',(bullets[i].shoot_angle*180/3.1416));
+                //console.log('shooted ',oppositeSz,adjacentSz , ' ',(bullets[i].shoot_angle*180/3.1416));
+                console.log('shooted ',adjacentSz,oppositeSz ,(oppositeSz / adjacentSz), ' ',bullets[i].vx,bullets[i].vy);
+                //console.log('shooted ',bullets[i]);
+
+            }
+
+        }
+        if(!found) {
+            //console.log('shoot in CD');
+        }
     }
 
     function updateToolTxt(fairy) {
@@ -1016,9 +1136,11 @@
         var difficulty = 1; // 0 easy to 9 hardcore
         for (var i = 0; i < jammers.length; i++) {
             if(i<=3+difficulty){
+                jammers[i].flying = true;
                 jammers[i].x = 200+randomInt(0,1600);
                 //jammers[i].y = 100+randomInt(50,600);
                 jammers[i].y = 200+randomInt(1,100);
+                jammers[i].vx = 0;
                 jammers[i].vy = 0;
             }
         }
@@ -1034,6 +1156,15 @@
         }*/
     }
 
+    function moveBullets(speed){
+        for (var i = 0; i < bullets.length; i++) {
+            if(bullets[i].flying){
+                bullets[i].y += bullets[i].vy;
+                bullets[i].x += bullets[i].vx;
+            }
+        }
+    }
+
     function play(delta) {
         let speedMultiplier = 1;
         let normalSpeed = 5*speedMultiplier;
@@ -1045,13 +1176,12 @@
         // evolution
         switch (mode) {
             case 'normal':
-                /*if(isJammersTouchingComb()) {
-                    onPlayVideo('oh_no');
-                    chibi.texture = chibi_oups_txt;
-                    //mode = 'danger';
-                }*/
+                checkBulletCollision();
 
                 if(cat.x >=  ROLLER_COASTER_RIGHT && cat.vx >0) { // touch right
+                    // check if there are still notes
+
+
                     // go towards left
                     cat.vx = -cat.vx;
                     placeNewJammers();
@@ -1215,7 +1345,7 @@
         cat.x += cat.vx;
 
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
-
+        moveBullets(1);
         //check for a collision between the cat and the box
         if (hitTestRectangle(cat, box)) {
 
@@ -1230,6 +1360,45 @@
             //message.text = "No collision...("+cat.x+", "+cat.y+")";
             box.tint = 0xccff99;
         }
+    }
+
+    function checkBulletCollision(){
+
+        for (var i = 0; i < bullets.length; i++) {
+            if(bullets[i].flying){
+                // check if out of screen
+                if(bullets[i].y < -200 || bullets[i].y > size[0] +200 || bullets[i].x < -200 || bullets[i].y > size[1] +200){
+                    bullets[i].flying = false;
+                    bullets[i].x = -200;
+                    bullets[i].y = -200;
+                } else {
+
+                    for (var j = 0; j < jammers.length; j++) {
+                        if(jammers[j].flying){
+                            //console.log('check ',i,j,bullets,jammers);
+                            if (hitTestRectangle(bullets[i], jammers[j])) {
+                                // TODO score
+
+                                // TODO impact noise
+
+                                // TODO impact FX
+
+                                // reset note and bullet
+                                bullets[i].flying = false;
+                                bullets[i].x = -200;
+                                bullets[i].y = -200;
+                                jammers[j].flying = false;
+                                jammers[j].x = -200;
+                                jammers[j].y = -200;
+                                jammers[j].vx = 0;
+                                jammers[j].vy = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     //The `hitTestRectangle` function
