@@ -87,6 +87,7 @@
 
     loader
     .add("images/BG_empty.png")
+    .add("images/BG_empty_Landscape.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
     .add("images/BG_start.png")
@@ -140,6 +141,9 @@
     let MENU_Y0 = 300;
     let MENU_OFFSET = 170;
     let menu_cursor = 0;
+    let ROLLER_COASTER_LEFT = 480;
+    let ROLLER_COASTER_RIGHT = 1460;
+    let ROLLER_COASTER_LOW = 900;
 
     // create a texture from an image path
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -208,7 +212,7 @@
     );
     tilingSpriteMessyHair.x=540;
     tilingSpriteMessyHair.y=370;
-    app.stage.addChild(tilingSpriteMessyHair);
+    //app.stage.addChild(tilingSpriteMessyHair);
 
     //Create the `nice_hair` sprite
     nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
@@ -216,7 +220,7 @@
     nice_hair.y = 370-1080;
     nice_hair.vx = 0;
     nice_hair.vy = 0;
-    app.stage.addChild(nice_hair);
+    //app.stage.addChild(nice_hair);
 
     //Create the `comb_short` sprite
     comb_short = new Sprite(resources["images/comb_short.png"].texture);
@@ -224,7 +228,7 @@
     comb_short.y = 176;
     comb_short.vx = 0;
     comb_short.vy = 0;
-    app.stage.addChild(comb_short);
+    //app.stage.addChild(comb_short);
 
     //Create the `progress_dirty` sprite
     progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
@@ -277,7 +281,7 @@
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-    app.stage.addChild(goo_fairy);
+    //app.stage.addChild(goo_fairy);
 
 
     //Create the `sailor_fairy` sprite
@@ -296,7 +300,7 @@
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-    app.stage.addChild(sailor_fairy);
+    //app.stage.addChild(sailor_fairy);
 
 
     //Create the `sax_fairy` sprite
@@ -315,7 +319,7 @@
         .on('pointerupoutside', onButtonUp)
         .on('pointerover', onButtonOver)
         .on('pointerout', onButtonOut);
-    app.stage.addChild(sax_fairy);
+    //app.stage.addChild(sax_fairy);
 
     jammers = [];
     //Create the `knot_1` sprite
@@ -513,7 +517,7 @@
     Warning_yellow.y = 1080;
     Warning_yellow.vx = 0;
     Warning_yellow.vy = 0;
-    app.stage.addChild(Warning_yellow);
+    //app.stage.addChild(Warning_yellow);
 
     //Create the `Warning_orange` sprite
     Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
@@ -521,7 +525,7 @@
     Warning_orange.y = 1080;
     Warning_orange.vx = 0;
     Warning_orange.vy = 0;
-    app.stage.addChild(Warning_orange);
+    //app.stage.addChild(Warning_orange);
 
     //Create the `Warning_red` sprite
     Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
@@ -529,7 +533,7 @@
     Warning_red.y = 1080;
     Warning_red.vx = 0;
     Warning_red.vy = 0;
-    app.stage.addChild(Warning_red);
+    //app.stage.addChild(Warning_red);
 
     //Create the `Warning_yellow2` sprite
     Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
@@ -537,7 +541,7 @@
     Warning_yellow2.y = 1080;
     Warning_yellow2.vx = 0;
     Warning_yellow2.vy = 0;
-    app.stage.addChild(Warning_yellow2);
+    //app.stage.addChild(Warning_yellow2);
 
     //Create the `Warning_orange2` sprite
     Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
@@ -545,7 +549,7 @@
     Warning_orange2.y = 1080;
     Warning_orange2.vx = 0;
     Warning_orange2.vy = 0;
-    app.stage.addChild(Warning_orange2);
+    //app.stage.addChild(Warning_orange2);
 
     //Create the `Warning_red2` sprite
     Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
@@ -553,7 +557,7 @@
     Warning_red2.y = 1080;
     Warning_red2.vx = 0;
     Warning_red2.vy = 0;
-    app.stage.addChild(Warning_red2);
+    //app.stage.addChild(Warning_red2);
 
 
     const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
@@ -571,7 +575,7 @@
     chibi = new Sprite(chibi_happy_txt);
     chibi.x = 1350;
     chibi.y = 1080;
-    app.stage.addChild(chibi);
+    //app.stage.addChild(chibi);
 
     //Create the `BG_start` sprite
     BG_start = new Sprite(resources["images/BG_start.png"].texture);
@@ -633,10 +637,10 @@
     let style3 = new TextStyle({
     fontFamily: "sans-serif",
     fontSize: 35,
-    fill: "pink",
+    fill: "brown",
     });
     butt_sound = new Text("Sounds On/Off", style3);
-    butt_sound.position.set(108, 8);
+    butt_sound.position.set(8, 8);
     butt_sound.interactive = true;
     butt_sound.on('pointerdown', () => sound = !sound)
     app.stage.addChild(butt_sound);
@@ -651,14 +655,14 @@
     msg_status = new Text("                                     .", style4);
     msg_status.position.set(100, 300);
     msg_status.interactive = true;
-    //msg_status.on('pointerdown', onStartGame)
+    msg_status.on('pointerdown', onStartGame)
     app.stage.addChild(msg_status);
 
     msg_menu_1 = new Text("Start game", style4);
     msg_menu_1.position.set(MENU_X0+80, MENU_Y0);
     console.log('pos1 ',MENU_X0+80, ' ', MENU_Y0);
     msg_menu_1.interactive = true;
-    //msg_menu_1.on('pointerdown', onStartGame)
+    msg_menu_1.on('pointerdown', onStartGame)
     app.stage.addChild(msg_menu_1);
 
     msg_menu_2 = new Text("Settings", style4);
@@ -759,13 +763,18 @@
     function onStartGame() {
         resetJammers();
         msg_status.y = 1080;
+        msg_menu_1.y = msg_menu_1.y + 1080;
+        msg_menu_2.y = msg_menu_2.y + 1080;
+        cat.x = ROLLER_COASTER_LEFT;
+        cat.vx = 5;
+        cat.y = ROLLER_COASTER_LOW;
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 1080;
         butt_restart.y=1080;
         progress = 0;
         welcome_princess.y = 1080;
-        chibi.y = 1080-771;
+        //chibi.y = 1080-771;
         onPlayVideo('ending', true);
         mode = 'normal';
     }
@@ -775,6 +784,8 @@
         msg_status.text = 'Click here to restart';
         msg_status.y = 300;
         msg_status.x = 1100;
+        msg_menu_1.y = msg_menu_1.y - 1080;
+        msg_menu_2.y = msg_menu_2.y - 1080;
         BG_start.y = 1080;
         chibi.y=1080;
         BG_win.y = 0;
@@ -788,6 +799,8 @@
         msg_status.text = '            ';
         msg_status.y = 400;
         msg_status.x = 1130;
+        msg_menu_1.y = msg_menu_1.y - 1080;
+        msg_menu_2.y = msg_menu_2.y - 1080;
         chibi.y=1080
         BG_start.y = 1080;
         BG_win.y = 1080;
@@ -936,13 +949,13 @@
     }
 
     function moveJammers(speed){
-        var difficulty = 4; // 0 easy to 9 hardcore
-        for (var i = 0; i < jammers.length; i++) {
+        var difficulty = 1; // 0 easy to 9 hardcore
+        /*for (var i = 0; i < jammers.length; i++) {
             if(i<=3+difficulty){
                 jammers[i].y -= speed;
                 jammers[i].vy = 0;
                 }
-        }
+        }*/
     }
 
     function play(delta) {
@@ -959,8 +972,22 @@
                 if(isJammersTouchingComb()) {
                     onPlayVideo('oh_no');
                     chibi.texture = chibi_oups_txt;
-                    mode = 'danger';
+                    //mode = 'danger';
                 }
+
+                if(cat.x >=  ROLLER_COASTER_RIGHT && cat.vx >0) { // touch right
+                    // go towards left
+                    cat.vx = -cat.vx;
+                }
+
+
+                if(cat.x <=  ROLLER_COASTER_LEFT && cat.vx <0) { // touch left
+                    // end of cycle
+
+                    // go towards left
+                    cat.vx = -cat.vx;
+                }
+
                 break;
             case 'danger':
                 if(!isJammersTouchingComb()) {
@@ -1097,7 +1124,7 @@
         progress_comb.y = 174+(progress/10)-progress_offset;
 
         if(isJammersTouchingTop()) {
-            onLoseGame();
+            //onLoseGame();
         }
 
 
@@ -1108,6 +1135,7 @@
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         comb_short.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
+        cat.x += cat.vx;
 
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
 
