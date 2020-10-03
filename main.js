@@ -106,8 +106,7 @@
     };
 
     loader
-    .add("images/BG_2nd loop.png")
-    .add("images/BG_empty_Landscape.png")
+    .add("images/BG_empty.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
     .add("images/BG_start.png")
@@ -148,6 +147,8 @@
     .add("images/welcome_princess.png")
     .add("images/partition.png")
     .add("images/assault_crosshair_gun3.png")
+    .add("images/curseur_Menu.png")
+    .add("images/2ndloop.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -176,7 +177,7 @@
     let msg_menu_1;
     let msg_menu_2;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
-    let blob, rollerCoaster1, back, box, message, message2, state, tilingSprite, jammers;
+    let blob, rollerCoaster1, back, looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
     let MENU_MAX = 2 ;
@@ -208,7 +209,7 @@
 
 
     // Css style for icons
-    const defaultIcon = "url('images/wand.png'),auto";
+    const defaultIcon = "url('images/curseur_Menu.png'),auto";
     const hoverIcon = "url('images/cat.png'),auto";
 
     // Add custom cursor styles
@@ -234,12 +235,20 @@
         app.stage.addChild(box);
 
         //Create the `BG` sprite
-        back = new Sprite(resources["images/BG_2nd loop.png"].texture);
+        back = new Sprite(resources["images/BG_empty.png"].texture);
         back.x = 0;
         back.y = 0;
         back.vx = 0;
         back.vy = 0;
         app.stage.addChild(back);
+
+        //Create the `BG` sprite
+        looping = new Sprite(resources["images/2ndloop.png"].texture);
+        looping.x = 0;
+        looping.y = 0;
+        looping.vx = 0;
+        looping.vy = 0;
+        app.stage.addChild(looping);
 
         //Create the `messy_hair` sprite
         messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
