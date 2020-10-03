@@ -107,6 +107,10 @@
 
     loader
     .add("images/BG_empty.png")
+    .add("images/FlagsSolo1.3.png")
+    .add("images/FlagsSolo2.3.png")
+    .add("images/Hotairbaloon2SOLO.png")
+    .add("images/HotairbaloonSOLO.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
     .add("images/BG_start.png")
@@ -181,7 +185,7 @@
     let msg_menu_1;
     let msg_menu_2;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
-    let blob, rollerCoaster1, back, looping, box, message, message2, state, tilingSprite, jammers;
+    let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
     let bullets;
@@ -251,6 +255,46 @@
         back.interactive = true;
         back.on('pointerdown', onButtonDown);
         app.stage.addChild(back);
+
+        //Create hot air balloons for the `BG` sprite
+        BG_baloons1 = new Sprite(resources["images/Hotairbaloon2SOLO.png"].texture);
+        BG_baloons1.x = 0;
+        BG_baloons1.y = 0;
+        BG_baloons1.vx = 0;
+        BG_baloons1.vy = 0;
+        BG_baloons1.interactive = true;
+        BG_baloons1.on('pointerdown', onButtonDown);
+        app.stage.addChild(BG_baloons1);
+
+        BG_baloons2 = new Sprite(resources["images/HotairbaloonSOLO.png"].texture);
+        BG_baloons2.x = 0;
+        BG_baloons2.y = 0;
+        BG_baloons2.vx = 0;
+        BG_baloons2.vy = 0;
+        BG_baloons2.interactive = true;
+        BG_baloons2.on('pointerdown', onButtonDown);
+        app.stage.addChild(BG_baloons2);
+
+        //Create flags for the `BG` sprite
+        BG_flags1 = new Sprite(resources["images/FlagsSolo1.3.png"].texture);
+        BG_flags1.x = 0;
+        BG_flags1.y = 0;
+        BG_flags1.vx = 0;
+        BG_flags1.vy = 0;
+        BG_flags1.interactive = true;
+        BG_flags1.on('pointerdown', onButtonDown);
+        app.stage.addChild(BG_flags1);
+
+        BG_flags2 = new Sprite(resources["images/FlagsSolo2.3.png"].texture);
+        BG_flags2.x = 3;
+        BG_flags2.y = size[1];
+        BG_flags2.vx = 0;
+        BG_flags2.vy = 0;
+        BG_flags2.interactive = true;
+        BG_flags2.on('pointerdown', onButtonDown);
+        app.stage.addChild(BG_flags2);
+
+
 
         //Create the `BG` sprite
         looping = new Sprite(resources["images/2ndloop.png"].texture);
@@ -1426,6 +1470,7 @@
             //message.text = "No collision...("+cat.x+", "+cat.y+")";
             box.tint = 0xccff99;
         }
+        animate_BG(timeInSec);
     }
 
     function checkBulletCollision(){
@@ -1464,7 +1509,6 @@
                 }
             }
         }
-
     }
 
     //The `hitTestRectangle` function
@@ -1519,6 +1563,18 @@
         return hit;
     };
 
+    function animate_BG(time) {
+        if(time % 15 == 1) {
+            var max_delta = 10;
+            var isGoingUp = ( BG_baloons1.y <= max_delta &&  BG_baloons1.x == 1 ) || BG_baloons1.y <= 0;
+            var dy = isGoingUp ? 1 : -1;
+
+            BG_baloons1.y += dy;
+            BG_baloons2.y += dy;
+            BG_flags1.y = size[1]- BG_flags1.y;
+            BG_flags2.y = size[1]- BG_flags2.y;
+        }
+    }
 
     //The `keyboard` helper function
     function keyboard(keyCode) {
