@@ -781,12 +781,12 @@
         //Create the `cat` sprite
         cat = new Sprite(resources["images/static_ham_wheel.png"].texture);
         cat.x = MENU_X0;
-        cat.y = 2000+MENU_Y0+80;
+        cat.y = 1900+MENU_Y0;
         cat.vx = 0;
         cat.vy = 0;
         cat.toolIcon = defaultIcon;
         cat.interactive = true;
-        cat.scale = new PIXI.ObservablePoint(()=>{},cat,0.3,0.3);
+        cat.scale = new PIXI.ObservablePoint(()=>{},cat,0.5,0.5);
         /*cat.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -873,7 +873,7 @@
         msg_menu_2.y = msg_menu_2.y + 1080;
         cat.x = ROLLER_COASTER_LEFT;
         cat.vx = 5;
-        cat.y = ROLLER_COASTER_LOW;
+        cat.y = ROLLER_COASTER_LOW - 100;
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 1080;
