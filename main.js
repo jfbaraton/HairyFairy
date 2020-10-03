@@ -94,7 +94,7 @@
     .add("images/comb_again.png")
     .add("images/messy_hair.png")
     .add("images/nice_hair.png")
-    .add("images/comb_short.png")
+    .add("images/rollerCoaster1.png")
     .add("images/blob.png")
     .add("images/wand.png")
     .add("images/knot.png")
@@ -133,7 +133,7 @@
     let msg_menu_1;
     let msg_menu_2;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
-    let blob, comb_short, back, box, message, message2, state, tilingSprite, jammers;
+    let blob, rollerCoaster1, back, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
     let MENU_MAX = 2 ;
@@ -222,13 +222,14 @@
     nice_hair.vy = 0;
     //app.stage.addChild(nice_hair);
 
-    //Create the `comb_short` sprite
-    comb_short = new Sprite(resources["images/comb_short.png"].texture);
-    comb_short.x = 521;
-    comb_short.y = 176;
-    comb_short.vx = 0;
-    comb_short.vy = 0;
-    //app.stage.addChild(comb_short);
+    //Create the `rollerCoaster1` sprite
+    rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
+    rollerCoaster1.x = 521;
+    rollerCoaster1.y = 650;
+    rollerCoaster1.vx = 0;
+    rollerCoaster1.vy = 0;
+    rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
+    app.stage.addChild(rollerCoaster1);
 
     //Create the `progress_dirty` sprite
     progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
@@ -250,7 +251,7 @@
     let style = new TextStyle({
     fontFamily: "sans-serif",
     fontSize: 18,
-    fill: "white",
+    fill: "brown",
     });
     message = new Text("100 m", style);
     message.position.set(1700, 650-progress_offset);
@@ -1006,7 +1007,7 @@
                     chibi.texture = chibi_happy_txt;
                     tilingSpriteMessyHair.y = 370;
                     nice_hair.y = 370-1080;
-                    comb_short.y=176;
+                    rollerCoaster1.y=176;
                 }
                 if (progress_comb.y >= 660-progress_offset){
                     progress_comb.y = 174-progress_offset;
@@ -1020,7 +1021,7 @@
             case 'normal':
                 tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
                 tilingSpriteMessyHair.vy = 0;
-                comb_short.vy=0;
+                rollerCoaster1.vy=0;
                 Warning_yellow.y = 1080;
                 Warning_orange.y = 1080;
                 Warning_red.y = 1080;
@@ -1108,10 +1109,10 @@
                 recoverSpeed =0;
                 tilingSpriteMessyHair.vy = 0;
                 tilingSpriteMessyHair.tilePosition.vy = 0;
-                comb_short.vy=0;
+                rollerCoaster1.vy=0;
                 tilingSpriteMessyHair.y = 370;
                 nice_hair.y = 370-1080;
-                comb_short.y=176;
+                //rollerCoaster1.y=176;
                 Warning_yellow.y = 1080;
                 Warning_orange.y = 1080;
                 Warning_red.y = 1080;
@@ -1133,7 +1134,7 @@
         cat.y += cat.vy;*/
         tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
-        comb_short.y += tilingSpriteMessyHair.vy;
+        rollerCoaster1.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
         cat.x += cat.vx;
 
