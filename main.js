@@ -142,9 +142,12 @@
     .add("images/split_fairy.png")
     .add("images/split_fairy_selected.png")
     .add("images/cat.png")
+    .add("images/static_ham_wheel.png")
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
     .add("images/welcome_princess.png")
+    .add("images/partition.png")
+    .add("images/assault_crosshair_gun3.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -269,14 +272,16 @@
         rollerCoaster1.vx = 0;
         rollerCoaster1.vy = 0;
         rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
-        app.stage.addChild(rollerCoaster1);
+        //app.stage.addChild(rollerCoaster1);
 
         //Create the `progress_dirty` sprite
-        progress_dirty = new Sprite(resources["images/progress_dirty.png"].texture);
-        progress_dirty.x = 1600;
-        progress_dirty.y = 176-progress_offset;
+        progress_dirty = new Sprite(resources["images/partition.png"].texture);
+        progress_dirty.x = 280;
+        progress_dirty.y = -160;
         progress_dirty.vx = 0;
         progress_dirty.vy = 0;
+        progress_dirty.scale = new PIXI.ObservablePoint(()=>{},progress_dirty,0.92,0.92);
+        //progress_dirty.rotation = 3.1415/2.;
         app.stage.addChild(progress_dirty);
 
         //Create the `progress_comb` sprite
@@ -285,7 +290,7 @@
         progress_comb.y = 176-progress_offset;
         progress_comb.vx = 0;
         progress_comb.vy = 0;
-        app.stage.addChild(progress_comb);
+        //app.stage.addChild(progress_comb);
 
         //text for progression
         let style = new TextStyle({
@@ -297,13 +302,13 @@
         message.position.set(1700, 650-progress_offset);
         message.interactive = true;
         //message.on('pointerdown', () => onWinGame())
-        app.stage.addChild(message);
+        //app.stage.addChild(message);
 
 
         //Create the text sprite
         message2 = new Text("0 m", style);
         message2.position.set(1700, 180-progress_offset);
-        app.stage.addChild(message2);
+        //app.stage.addChild(message2);
 
 
         //Create the `goo_fairy` sprite
@@ -715,13 +720,14 @@
 
 
         //Create the `cat` sprite
-        cat = new Sprite(resources["images/cat.png"].texture);
+        cat = new Sprite(resources["images/static_ham_wheel.png"].texture);
         cat.x = MENU_X0;
         cat.y = 2000+MENU_Y0+80;
         cat.vx = 0;
         cat.vy = 0;
         cat.toolIcon = defaultIcon;
         cat.interactive = true;
+        cat.scale = new PIXI.ObservablePoint(()=>{},cat,0.3,0.3);
         /*cat.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -1002,7 +1008,8 @@
         for (var i = 0; i < jammers.length; i++) {
             if(i<=3+difficulty){
                 jammers[i].x = 200+randomInt(0,1600);
-                jammers[i].y = 100+randomInt(50,600);
+                //jammers[i].y = 100+randomInt(50,600);
+                jammers[i].y = 200+randomInt(1,100);
                 jammers[i].vy = 0;
             }
         }
