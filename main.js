@@ -1566,11 +1566,17 @@
     function animate_BG(time) {
         if(time % 15 == 1) {
             var max_delta = 10;
-            var isGoingUp = ( BG_baloons1.y <= max_delta &&  BG_baloons1.x == 1 ) || BG_baloons1.y <= 0;
+            var isGoingUp = ( BG_baloons1.y <= max_delta &&  BG_baloons1.x == 0 ) || BG_baloons1.y <= 0;
+            if( BG_baloons1.y >= max_delta) {
+                BG_baloons1.x = 1;
+            }
+            if( BG_baloons1.y <= 0) {
+                BG_baloons1.x = 0;
+            }
             var dy = isGoingUp ? 1 : -1;
 
             BG_baloons1.y += dy;
-            BG_baloons2.y += dy;
+            BG_baloons2.y -= dy;
             BG_flags1.y = size[1]- BG_flags1.y;
             BG_flags2.y = size[1]- BG_flags2.y;
         }
