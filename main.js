@@ -129,10 +129,17 @@
     let butt_start, butt_restart, butt_music, butt_sound;
     let BG_start, BG_win, BG_lose;
     let msg_status;
+    let msg_menu_1;
+    let msg_menu_2;
     let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
     let blob, comb_short, back, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
+    let MENU_MAX = 2 ;
+    let MENU_X0 = 100;
+    let MENU_Y0 = 300;
+    let MENU_OFFSET = 170;
+    let menu_cursor = 0;
 
     // create a texture from an image path
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -195,9 +202,9 @@
     messy_hair.vy = 0;
     //app.stage.addChild(messy_hair);
     tilingSpriteMessyHair = new PIXI.TilingSprite(
-    textureMessyHair,
-    961,
-    2160,
+        textureMessyHair,
+        961,
+        2160,
     );
     tilingSpriteMessyHair.x=540;
     tilingSpriteMessyHair.y=370;
@@ -253,20 +260,6 @@
     message2.position.set(1700, 180-progress_offset);
     app.stage.addChild(message2);
 
-    //Create the `cat` sprite
-    cat = new Sprite(resources["images/cat.png"].texture);
-    cat.x = 16;
-    cat.y = 1296;
-    cat.vx = 0;
-    cat.vy = 0;
-    cat.toolIcon = defaultIcon;
-    cat.interactive = true;
-    cat.on('pointerdown', onButtonDown)
-        .on('pointerup', onButtonUp)
-        .on('pointerupoutside', onButtonUp)
-        .on('pointerover', onButtonOver)
-        .on('pointerout', onButtonOut);
-    app.stage.addChild(cat);
 
     //Create the `goo_fairy` sprite
     goo_fairy = new Sprite(goo_fairy_txt);
@@ -655,76 +648,113 @@
     //fontStyle: 'underline',
     fill: "pink",
     });
-    msg_status = new Text("                       .", style4);
+    msg_status = new Text("                                     .", style4);
     msg_status.position.set(100, 300);
     msg_status.interactive = true;
-    msg_status.on('pointerdown', onStartGame)
+    //msg_status.on('pointerdown', onStartGame)
     app.stage.addChild(msg_status);
+
+    msg_menu_1 = new Text("Start game", style4);
+    msg_menu_1.position.set(MENU_X0+80, MENU_Y0);
+    console.log('pos1 ',MENU_X0+80, ' ', MENU_Y0);
+    msg_menu_1.interactive = true;
+    //msg_menu_1.on('pointerdown', onStartGame)
+    app.stage.addChild(msg_menu_1);
+
+    msg_menu_2 = new Text("Settings", style4);
+    msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
+    console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
+    msg_menu_2.interactive = true;
+    //msg_menu_2.on('pointerdown', onStartGame)
+    app.stage.addChild(msg_menu_2);
+
+
+    //Create the `cat` sprite
+    cat = new Sprite(resources["images/cat.png"].texture);
+    cat.x = MENU_X0;
+    cat.y = MENU_Y0+80;
+    cat.vx = 0;
+    cat.vy = 0;
+    cat.toolIcon = defaultIcon;
+    cat.interactive = true;
+    /*cat.on('pointerdown', onButtonDown)
+        .on('pointerup', onButtonUp)
+        .on('pointerupoutside', onButtonUp)
+        .on('pointerover', onButtonOver)
+        .on('pointerout', onButtonOut);*/
+    app.stage.addChild(cat);
 
     //Capture the keyboard arrow keys
     let left = keyboard(37),
       up = keyboard(38),
       right = keyboard(39),
-      down = keyboard(40);
+      down = keyboard(40),
+      enter = keyboard(13),
+      space = keyboard()
+      ;
 
     //Left arrow key `press` method
     left.press = function() {
 
-    //Change the cat's velocity when the key is pressed
-    cat.vx = -5;
-    cat.vy = 0;
+        //Change the cat's velocity when the key is pressed
+        //cat.vx = -5;
+        //cat.vy = 0;
     };
 
     //Left arrow key `release` method
     left.release = function() {
 
-    //If the left arrow has been released, and the right arrow isn't down,
-    //and the cat isn't moving vertically:
-    //Stop the cat
-    if (!right.isDown && cat.vy === 0) {
-      cat.vx = 0;
-    }
+        //If the left arrow has been released, and the right arrow isn't down,
+        //and the cat isn't moving vertically:
+        //Stop the cat
+        /*if (!right.isDown && cat.vy === 0) {
+          cat.vx = 0;
+        }*/
     };
 
     //Up
     up.press = function() {
-    cat.vy = -5;
-    cat.vx = 0;
+
+        if(mode == 'start') {
+            //menu_cursor = (menu_cursor +1)% MENU_MAX;
+
+        } else {
+            cat.vy = -5;
+            cat.vx = 0;
+        }
     };
     up.release = function() {
-    if (!down.isDown && cat.vx === 0) {
-      cat.vy = 0;
-    }
+        if(mode == 'start') {
+            menu_cursor = (menu_cursor +1)% MENU_MAX;
+            cat.x = MENU_X0;
+            cat.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
+        } else {
+            if (!down.isDown && cat.vx === 0) {
+              cat.vy = 0;
+            }
+        }
     };
 
     //Right
     right.press = function() {
-    cat.vx = 5;
-    cat.vy = 0;
+
     };
     right.release = function() {
-    if (!left.isDown && cat.vy === 0) {
-      cat.vx = 0;
-    }
+
     };
 
     //Down
     down.press = function() {
-        cat.vy = 5;
-        cat.vx = 0;
-        };
-        down.release = function() {
-        if (!up.isDown && cat.vx === 0) {
-          cat.vy = 0;
-        }
-        };
+    };
+    down.release = function() {
+    };
 
-        //Set the game state
-        state = play;
+    //Set the game state
+    state = play;
 
-        //Start the game loop
-        app.ticker.add(delta => gameLoop(delta));
-    }
+    //Start the game loop
+    app.ticker.add(delta => gameLoop(delta));
+}
 
     function onStartGame() {
         resetJammers();
@@ -788,9 +818,9 @@
         }
         this.alpha = 1;
 
-        }
+    }
 
-        function updateToolTxt(fairy) {
+    function updateToolTxt(fairy) {
         if(tool === fairy.tool){
             fairy.texture = fairy.sel_txt;
         } else {
@@ -799,36 +829,36 @@
     }
 
     function onButtonUp() {
-    this.isdown = false;
-    if (this.isOver) {
-        if(this.textureButtonOver){
-            this.texture = textureButtonOver;
+        this.isdown = false;
+        if (this.isOver) {
+            if(this.textureButtonOver){
+                this.texture = textureButtonOver;
+            }
+        } else {
+            if(this.textureButton){
+                this.texture = textureButton;
+            }
         }
-    } else {
-        if(this.textureButton){
-            this.texture = textureButton;
-        }
-    }
     }
 
     function onButtonOver() {
-    this.isOver = true;
-    if (this.isdown) {
-        return;
-    }
-    if(this.textureButtonOver){
-        this.texture = textureButtonOver;
-    }
+        this.isOver = true;
+        if (this.isdown) {
+            return;
+        }
+        if(this.textureButtonOver){
+            this.texture = textureButtonOver;
+        }
     }
 
     function onButtonOut() {
-    this.isOver = false;
-    if (this.isdown) {
-        return;
-    }
-    if(this.textureButton){
-        this.texture = textureButton;
-    }
+        this.isOver = false;
+        if (this.isdown) {
+            return;
+        }
+        if(this.textureButton){
+            this.texture = textureButton;
+        }
     }
     function onPlayVideo(sound_name, is_music) {
 
@@ -865,8 +895,8 @@
 
     function gameLoop(delta){
 
-    //Update the current game state:
-    state(delta);
+        //Update the current game state:
+        state(delta);
     }
 
     function isJammersTouchingComb() {
@@ -1072,8 +1102,8 @@
 
 
         //use the cat's velocity to make it move
-        cat.x += cat.vx;
-        cat.y += cat.vy;
+        /*cat.x += cat.vx;
+        cat.y += cat.vy;*/
         tilingSpriteMessyHair.tilePosition.y += tilingSpriteMessyHair.tilePosition.vy;
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         comb_short.y += tilingSpriteMessyHair.vy;
