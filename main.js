@@ -200,6 +200,9 @@
     let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
     let MENU_MAX = 2 ;
+    //let LVL_MAX = 20 ;
+    let LVL_MAX = 3 ;
+    let CURRENT_LVL = 0 ;
     let MENU_X0 = 100;
     let MENU_Y0 = 300;
     let MENU_OFFSET = 170;
@@ -244,7 +247,7 @@
     function setup() {
         mode = 'start';
         tool = 'lazer';
-        music = false;
+        music = true;
         sound = true;
         progress = 0;
         //Create the box
@@ -355,10 +358,10 @@
 
         //skills_bar = new Sprite(resources["images/Skills_bar2.png"].texture);
         skills_bar = new PIXI.TilingSprite(
-                    textureSkillbar,
-                    1992/3+1,
-                    340
-                );
+            textureSkillbar,
+            1992/3+1,
+            340
+        );
         skills_bar.x = 150+580;
         skills_bar.y = 807;
         skills_bar.vx = 0;
@@ -764,6 +767,7 @@
         knot_31.vy = 0;
         knot_31.killedby = 'sax';
         knot_31.interactive = true;
+        knot_31.isBad = true;
         knot_31.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -779,6 +783,7 @@
         knot_12.vy = 0;
         knot_12.killedby = 'knot';
         knot_12.interactive = true;
+        knot_12.isBad = true;
         knot_12.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -794,6 +799,7 @@
         knot_22.vx = 0;
         knot_22.vy = 0;
         knot_22.killedby = 'gum';
+        knot_22.isBad = true;
         knot_22.interactive = true;
         knot_22.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
@@ -942,7 +948,11 @@
 
 
         //Create the `bullet` sprite
-        bullet3_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet3_lazer1 = new PIXI.TilingSprite(
+            textureLazer,
+            100,
+            100
+         );
         bullet3_lazer1.x = 950;
         bullet3_lazer1.y = 1280;
         bullet3_lazer1.vx = 0;
@@ -952,7 +962,11 @@
         bullets.push(bullet3_peanut1);
 
         //Create the `bullet` sprite
-        bullet4_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet4_lazer1 = new PIXI.TilingSprite(
+            textureLazer,
+            100,
+            100
+         );
         bullet4_lazer1.x = 950;
         bullet4_lazer1.y = 1280;
         bullet4_lazer1.vx = 0;
@@ -1238,6 +1252,7 @@
     }
 
     function onStartGame() {
+        CURRENT_LVL = 0;
         resetJammers();
         msg_status.y = 1080;
         msg_menu_1.y = msg_menu_1.y + 1080;
@@ -1461,7 +1476,7 @@
                 }
                 BGmusicSprite = PIXI.Texture.from('sounds/'+sound_bank[sound_name]);
                 if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source){
-                    BGmusicSprite.baseTexture.source.loop = true;
+                    BGmusicSprite.baseTexture.source.loop = 'claps_end_of_level' != sound_name;
                     console.log('music T2 ',BGmusicSprite.baseTexture.source);
                     //BGmusicSprite.baseTexture.source.play();
                 }
@@ -1514,19 +1529,29 @@
 
     function resetJammers(){
         for (var i = 0; i < jammers.length; i++) {
-                 // fold
-                jammers[i].flying = false;
-                jammers[i].x = -2000;
-                jammers[i].y = -2000;
-                jammers[i].vx = 0;
-                jammers[i].vy = 0;
+             // fold
+            jammers[i].flying = false;
+            jammers[i].x = -2000;
+            jammers[i].y = -2000;
+            jammers[i].vx = 0;
+            jammers[i].vy = 0;
         }
     }
 
     function placeNewJammers(){
-        var difficulty =3; // 0 easy to 9 hardcore
+        CURRENT_LVL++;
+        var difficulty = (CURRENT_LVL)/2 % 6 ; // 0 easy to 9 hardcore
+        var badNotesCpt = 0;
         for (var i = 0; i < jammers.length; i++) {
             if(i<=3+difficulty){
+                jammers[i].flying = true;
+                jammers[i].x = 20+randomInt(0,1820);
+                //jammers[i].y = 100+randomInt(50,600);
+                jammers[i].y = 180+randomInt(1,500);
+                jammers[i].vx = (randomInt(0,5)-1)/10;
+                jammers[i].vy = (randomInt(0,5)-1)/10;
+            } else if(jammers[i].isBad && badNotesCpt+1 < CURRENT_LVL/(LVL_MAX/3)){
+                badNotesCpt++
                 jammers[i].flying = true;
                 jammers[i].x = 20+randomInt(0,1820);
                 //jammers[i].y = 100+randomInt(50,600);
@@ -1586,6 +1611,10 @@
                     //hamster.x = ROLLER_COASTER_LEFT;
 
                     hamster.vx = 0.5;
+                    if(CURRENT_LVL >LVL_MAX){
+                        onWinGame();
+                    }
+
                     placeNewJammers();
                 }
 
@@ -1741,7 +1770,12 @@
         /*hamster.x += hamster.vx;
         hamster.y += hamster.vy;*/
         //hamster.tilePosition.x += hamster.tilePosition.vy;
-        //hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
+        bullet_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
+       // bullet1_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
+        bullet2_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
+        bullet3_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
+        bullet4_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
+
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         rollerCoaster1.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
