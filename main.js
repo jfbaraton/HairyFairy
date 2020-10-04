@@ -99,6 +99,8 @@
         'Shot_Deagle_Weapon_1' : 'Shot_Deagle_Weapon_1.mp4',
         'when_lose_because_no_time' : 'when_lose_because_no_time.mp4',
         'ending' : 'ending.mp4',
+        'slingshot charging' : 'slingshot charging.mp4',
+        'gun charging' : 'gun charging.mp4',
         'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4'
     };
 
@@ -164,6 +166,7 @@
     .add("images/Weapons/Weapon2.png")
     .add("images/Weapons/Weapon3.png")
     .add("images/Weapons/Weapon2 - Lazer 123 .png")
+    .add("images/Weapons/Weapon3 - Bullet1.png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -180,6 +183,8 @@
     .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
     .add("sounds/"+sound_bank["when_lose_because_no_time"])
     .add("sounds/"+sound_bank["ending"])
+    .add("sounds/"+sound_bank["slingshot charging"])
+    .add("sounds/"+sound_bank["gun charging"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 
     .load(setup);
@@ -202,6 +207,7 @@
     let bullets;
     let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
+    let bullet_gun1,  bullet2_gun1, bullet3_gun1, bullet4_gun1;
     let MENU_MAX = 2 ;
     //let LVL_MAX = 20 ;
     let LVL_MAX = 10 ;
@@ -218,6 +224,7 @@
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
+    const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
     const textureSkillbar= PIXI.Texture.from('images/Skills_bar2.png');
     const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
@@ -250,8 +257,8 @@
     function setup() {
         mode = 'start';
         tool = 'lazer';
-        music = true;
-        sound = true;
+        music = false;
+        sound = false;
         progress = 0;
         //Create the box
         box = new PIXI.Graphics();
@@ -333,6 +340,8 @@
         weapon1.y = 920+10;
         weapon1.vx = 0;
         weapon1.vy = 0;
+        weapon1.weaponSwitch = 'slingshot charging';
+        weapon1.tool = 'peanut';
         weapon1.interactive = true;
         weapon1.on('pointerdown', onButtonDown);
         weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
@@ -344,6 +353,8 @@
         weapon2.y = 920+10;
         weapon2.vx = 0;
         weapon2.vy = 0;
+        weapon1.weaponSwitch = 'slingshot charging';
+        weapon2.tool = 'lazer';
         weapon2.interactive = true;
         weapon2.on('pointerdown', onButtonDown);
         weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);
@@ -354,6 +365,8 @@
         weapon3.y = 920+10;
         weapon3.vx = 0;
         weapon3.vy = 0;
+        weapon1.weaponSwitch = 'gun charging';
+        weapon3.tool = 'gun';
         weapon3.interactive = true;
         weapon3.on('pointerdown', onButtonDown);
         weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE,WEAPON_SCALE);
@@ -993,6 +1006,63 @@
         app.stage.addChild(bullet4_lazer1);
         bullets.push(bullet4_lazer1);
 
+        bullet_gun1 = new PIXI.TilingSprite(
+            textureGun,
+            100,
+            100
+        );
+        bullet_gun1.x = 950;
+        bullet_gun1.y = 1280;
+        bullet_gun1.vx = 0;
+        bullet_gun1.vy = 0;
+        bullet_gun1.weaponType = 'gun';
+        app.stage.addChild(bullet_gun1);
+        bullets.push(bullet_gun1);
+
+
+        //Create the `bullet` sprite
+        bullet2_gun1 = new PIXI.TilingSprite(
+           textureGun,
+           100,
+           100
+        );
+        bullet2_gun1.x = 950;
+        bullet2_gun1.y = 1280;
+        bullet2_gun1.vx = 0;
+        bullet2_gun1.vy = 0;
+        bullet2_gun1.weaponType = 'gun';
+        app.stage.addChild(bullet2_gun1);
+        bullets.push(bullet2_gun1);
+
+
+        //Create the `bullet` sprite
+        bullet3_gun1 = new PIXI.TilingSprite(
+            textureGun,
+            100,
+            100
+         );
+        bullet3_gun1.x = 950;
+        bullet3_gun1.y = 1280;
+        bullet3_gun1.vx = 0;
+        bullet3_gun1.vy = 0;
+        bullet3_gun1.weaponType = 'gun';
+        app.stage.addChild(bullet3_gun1);
+        bullets.push(bullet3_gun1);
+
+        //Create the `bullet` sprite
+        bullet4_gun1 = new PIXI.TilingSprite(
+            textureGun,
+            100,
+            100
+         );
+        bullet4_gun1.x = 950;
+        bullet4_gun1.y = 1280;
+        bullet4_gun1.vx = 0;
+        bullet4_gun1.vy = 0;
+        bullet4_gun1.weaponType = 'gun';
+        app.stage.addChild(bullet4_gun1);
+        bullets.push(bullet4_gun1);
+
 
         //Create the `Warning_yellow` sprite
         Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
@@ -1229,16 +1299,41 @@
           right = keyboard(39),
           down = keyboard(40),
           enter = keyboard(13),
-          space = keyboard()
+          space = keyboard(32),
+          keyLetterS = keyboard(83),
+          keyLetterD = keyboard(68),
+          keyLetterF = keyboard(70),
           ;
 
-        //Left arrow key `press` method
-        left.press = function() {
-
-            //Change the hamster's velocity when the key is pressed
-            //hamster.vx = -5;
-            //hamster.vy = 0;
+        keyLetterS.press = function() {
+            swapWeapon(weapon1);
         };
+
+        keyLetterD.press = function() {
+
+            swapWeapon(weapon2);
+
+        };
+
+        keyLetterF.press = function() {
+
+            swapWeapon(weapon3);
+
+        };
+
+        function swapWeapon (oneWeapon){
+
+            if(oneWeapon.available) {
+                if(tool != oneWeapon.tool) {
+                    tool = oneWeapon.tool;
+
+                    onPlayVideo(oneWeapon.weaponSwitch,false);
+                }
+
+            } else {
+                // play sound for unavailable
+            }
+        }
 
         //Left arrow key `release` method
         left.release = function() {
@@ -1323,8 +1418,8 @@
     function onWinGame() {
         resetJammers();
         msg_status.text = 'Click here to restart';
-        msg_status.y = 750;
-        msg_status.x = 500;
+        msg_status.y = 850;
+        msg_status.x = 200;
 
         hamster.moving = false;
         hamster.vx = 0;
@@ -1616,6 +1711,15 @@
         if(0 == CURRENT_LVL++){
             onPlayVideo('musique_game', true);
         }
+
+
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].flying = false;
+            bullets[i].x = -200;
+            bullets[i].y = -200;
+        }
+
+        weapon1
 
         resetInstru(instrunote1);
         resetInstru(instrunote2);
@@ -1980,6 +2084,8 @@
 
                                 if(jammers[j].isBad){
                                     onLoseGame();
+                                } else {
+                                    onPlayVideo('Catch_gold',false);
                                 }
                             }
                         }
