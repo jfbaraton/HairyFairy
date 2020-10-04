@@ -1669,6 +1669,7 @@
         }
     }
 
+
     //The `hitTestRectangle` function
     function hitTestRectangle(r1, r2) {
 
