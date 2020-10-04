@@ -1624,7 +1624,7 @@
         //          270 =>         looks to the bottom (upside down)
 
         { progress: 0,    x: 300 ,                             y: 752       ,  rotation:0 },// initial point, at enter gate
-	{ progress: 1,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:-45 },// initial point, at enter gate
+	{ progress: 1,    x: 325 ,                             y: 777       ,  rotation:-45 },// initial point, at enter gate
 	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 12.5,    x: 500 ,                             y: 975      ,  rotation:45 },// initial point, at enter gate
 	{ progress: 15.25,    x: 575 ,                             y: 895      ,  rotation:45 },// initial point, at enter gate
