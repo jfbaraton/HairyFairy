@@ -1598,7 +1598,7 @@
         { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
 
 
-        { progress: 50,   x: (ROLLER_COASTER_RIGHT+ROLLER_COASTER_LEFT)/2 ,    y: ROLLER_COASTER_LOW -100  ,  rotation:0 },// middle point, at enter gate
+        { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 800  ,  rotation:0 },// middle point, at enter gate
 
 
         { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
