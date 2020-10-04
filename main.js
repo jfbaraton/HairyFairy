@@ -848,6 +848,8 @@
 
         hamster.x = MENU_X0;
         hamster.y = 1900+MENU_Y0;
+        hamster.curve_offsetX = -100;
+        hamster.curve_offsetY = -110;
         hamster.progress=0;
         hamster.vx = 0;
         hamster.vy = 0;
@@ -1598,9 +1600,11 @@
             if(nextPoint.progress >= curveProgress){
                 //console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
                 //console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
-                sprite.x = previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                sprite.y = previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                sprite.x = (sprite.curve_offsetX || 0) + previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                sprite.y = (sprite.curve_offsetY || 0) + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
                 sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
+                sprite.curve_offsetX
+
                 return;
             }
             previousPoint = nextPoint;
@@ -1619,16 +1623,16 @@
         //          180 =>         looks to the left   (upside down)
         //          270 =>         looks to the bottom (upside down)
 
-        { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
+        { progress: 0,    x: 300 ,                             y: 752       ,  rotation:0 },// initial point, at enter gate
 	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 30,    x: 800 ,                             y: 600      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 46.4,    x: 1000 ,                             y: 900      ,  rotation:0 },// initial point, at enter gate
-        { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 800  ,  rotation:0 },// middle point, at enter gate
+    //{ progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: 675  ,  rotation:0 },// middle point, at enter gate
 	{ progress: 56.6,    x: 1200 ,                             y: 675      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 74,    x: 1350 ,                             y: 1025      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 88.8,    x: 1540 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 95.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
+	{ progress: 100,  x: 1750 ,                            y: 875  ,  rotation: 0 } // final point, at exit gate
     ];
 
     function checkBulletCollision(){
