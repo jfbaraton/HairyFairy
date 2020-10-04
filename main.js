@@ -12,32 +12,29 @@
 	var size = [1920, 1080];
 	var ratio = size[0] / size[1];
 	var newRatio = 0.5;
-		if (window.innerWidth / window.innerHeight >= ratio) {
-			newRatio = window.innerHeight * ratio/size[0];
-			//var w = window.innerHeight * ratio;
-			//var h = window.innerHeight;
-		} else {
-			
-			//var newRatio = window.innerWidth / ratio/size[1];
-			//var w = window.innerWidth;
-			//var h = window.innerWidth / ratio;
-		}
-		//renderer.view.style.width = w + 'px';
-		//renderer.view.style.height = h + 'px';
-		if(newRatio <0.3){
-			newRatio = 0.3;
-		}
-		
-		if(newRatio >1){
-			newRatio = 1;
-		}
-		
-		/*app.renderer.resolution = newRatio;
-		//app.renderer.resize(newRatio *size[0] , newRatio*size[1]);
-		app.renderer.resize(size[0] , size[1]);
-		console.log('newRes ',newRatio);
-		console.log('res ',app.renderer.resolution);
-		console.log('renderer ',app.renderer);*/
+    //console.log('init ratio : ',ratio)
+    //console.log('inner : ',window.innerWidth , window.innerHeight)
+    if (window.innerWidth / window.innerHeight >= ratio) {
+      //  console.log('innerWidth bigger : ',window.innerWidth / window.innerHeight)
+        //console.log('adapt : ',window.innerHeight /size[1])
+        ///newRatio = window.innerHeight * ratio/size[0];
+        newRatio = 0.9*window.innerHeight /size[1];
+
+    } else {
+        //console.log('innerWidth innerHeight : ',window.innerWidth / window.innerHeight)
+        //console.log('adapt : ',window.innerWidth / size[0])
+        newRatio = 0.9*window.innerWidth / size[0];
+    }
+
+    //console.log('newRatio : ',newRatio)
+    if(newRatio <0.3){
+        newRatio = 0.3;
+    }
+
+    if(newRatio >1){
+        newRatio = 1;
+    }
+
     //Create a Pixi Application
     let app = new Application({
         width: size[0],
@@ -189,7 +186,7 @@
     let msg_status;
     let msg_menu_1;
     let msg_menu_2;
-    let cat, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
+    let hamster, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
     let skills_bar, weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
@@ -926,27 +923,29 @@
         //app.stage.addChild(msg_menu_2);
 
 
-        //Create the `cat` sprite
-        //cat = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
+        //Create the `hamster` sprite
+        //hamster = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
 
-        cat = new PIXI.TilingSprite(
+        hamster = new PIXI.TilingSprite(
             textureHamster,
             500,
             459
         );
-        cat.x = MENU_X0;
-        cat.y = 1900+MENU_Y0;
-        cat.vx = 0;
-        cat.vy = 0;
-        cat.toolIcon = defaultIcon;
-        cat.interactive = true;
-        cat.scale = new PIXI.ObservablePoint(()=>{},cat,0.5,0.5);
-        /*cat.on('pointerdown', onButtonDown)
+        hamster.x = MENU_X0;
+        hamster.y = 1900+MENU_Y0;
+        hamster.progress=0;
+        hamster.vx = 0;
+        hamster.vy = 0;
+        hamster.moving = false;
+        hamster.toolIcon = defaultIcon;
+        hamster.interactive = true;
+        hamster.scale = new PIXI.ObservablePoint(()=>{},hamster,0.5,0.5);
+        /*hamster.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);*/
-        app.stage.addChild(cat);
+        app.stage.addChild(hamster);
 
         //Capture the keyboard arrow keys
         let left = keyboard(37),
@@ -960,19 +959,19 @@
         //Left arrow key `press` method
         left.press = function() {
 
-            //Change the cat's velocity when the key is pressed
-            //cat.vx = -5;
-            //cat.vy = 0;
+            //Change the hamster's velocity when the key is pressed
+            //hamster.vx = -5;
+            //hamster.vy = 0;
         };
 
         //Left arrow key `release` method
         left.release = function() {
 
             //If the left arrow has been released, and the right arrow isn't down,
-            //and the cat isn't moving vertically:
-            //Stop the cat
-            /*if (!right.isDown && cat.vy === 0) {
-              cat.vx = 0;
+            //and the hamster isn't moving vertically:
+            //Stop the hamster
+            /*if (!right.isDown && hamster.vy === 0) {
+              hamster.vx = 0;
             }*/
         };
 
@@ -983,20 +982,20 @@
                 //menu_cursor = (menu_cursor +1)% MENU_MAX;
 
             } else {
-                cat.vy = -5;
-                cat.vx = 0;
+                //hamster.vy = -5;
+                //hamster.vx = 0;
             }
         };
         up.release = function() {
-            if(mode == 'start') {
+            /*if(mode == 'start') {
                 menu_cursor = (menu_cursor +1)% MENU_MAX;
-                cat.x = MENU_X0;
-                cat.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
+                hamster.x = MENU_X0;
+                hamster.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
             } else {
-                if (!down.isDown && cat.vx === 0) {
-                  cat.vy = 0;
+                if (!down.isDown && hamster.vx === 0) {
+                  hamster.vy = 0;
                 }
-            }
+            }*/
         };
 
         //Right
@@ -1025,9 +1024,12 @@
         msg_status.y = 1080;
         msg_menu_1.y = msg_menu_1.y + 1080;
         msg_menu_2.y = msg_menu_2.y + 1080;
-        cat.x = ROLLER_COASTER_LEFT;
-        cat.vx = 5;
-        cat.y = ROLLER_COASTER_LOW - 100;
+        hamster.progress = 0;
+        hamster.moving = true;
+        hamster.vx = 1;
+
+        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
+
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 1080;
@@ -1045,6 +1047,12 @@
         msg_status.text = 'Click here to restart';
         msg_status.y = 300;
         msg_status.x = 1100;
+
+        hamster.moving = false;
+        hamster.vx = 1;
+
+        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
+
         msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
         BG_start.y = 1080;
@@ -1060,6 +1068,12 @@
         msg_status.text = '            ';
         msg_status.y = 400;
         msg_status.x = 1130;
+        
+        hamster.moving = false;
+        hamster.vx = 1;
+
+        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
+
         msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
         chibi.y=1080
@@ -1109,11 +1123,11 @@
             if(!bullets[i].flying && bullets[i].weaponType == tool){
                 bullets[i].flying = true;
                 found = true;
-                bullets[i].x = cat.x+80;
-                bullets[i].y = cat.y+80;
+                bullets[i].x = hamster.x+80;
+                bullets[i].y = hamster.y+80;
 
                 var curr_weapon_speed = bullets[i].weapon_speed || 10;
-                var oppositeSz = (targetY - bullets[i].y );
+                var oppositeSz = targetY > bullets[i].y ? 0 : (targetY - bullets[i].y );
                 var adjacentSz = (targetX - bullets[i].x);
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
                 if(adjacentSz == 0){
@@ -1336,23 +1350,24 @@
             case 'normal':
                 checkBulletCollision();
 
-                if(cat.x >=  ROLLER_COASTER_RIGHT && cat.vx >0) { // touch right
+                if(hamster.progress >=  100 && hamster.vx >0) { // touch right
                     // check if there are still notes
 
 
                     // teleport back
-                    cat.x = ROLLER_COASTER_LEFT;
+                    hamster.progress=0;
+                    //hamster.x = ROLLER_COASTER_LEFT;
 
-                    cat.vx = 3;
+                    hamster.vx = 0.5;
                     placeNewJammers();
                 }
 
 
-                if(cat.x <=  ROLLER_COASTER_LEFT && cat.vx <0) { // touch left
+                if(hamster.x <=  ROLLER_COASTER_LEFT && hamster.vx <0) { // touch left
                     // end of cycle
 
                     // go towards right
-                    //cat.vx = -cat.vx;
+                    //hamster.vx = -hamster.vx;
                 }
 
                 break;
@@ -1385,7 +1400,7 @@
         // action
         switch (mode) {
             case 'normal':
-                cat.tilePosition.vy = 500;
+                hamster.tilePosition.vy = 500;
                 tilingSpriteMessyHair.vy = 0;
                 rollerCoaster1.vy=0;
                 Warning_yellow.y = 1080;
@@ -1397,7 +1412,7 @@
                 progress++;
                 break;
             case 'danger':
-                cat.tilePosition.vy = 500;
+                hamster.tilePosition.vy = 500;
                 tilingSpriteMessyHair.vy = -moveSpeed;
                 Warning_yellow.y = 0;
                 Warning_yellow2.y = 0;
@@ -1495,20 +1510,22 @@
         }
 
 
-        //use the cat's velocity to make it move
-        /*cat.x += cat.vx;
-        cat.y += cat.vy;*/
-        //cat.tilePosition.x += cat.tilePosition.vy;
-        cat.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
+        //use the hamster's velocity to make it move
+        /*hamster.x += hamster.vx;
+        hamster.y += hamster.vy;*/
+        //hamster.tilePosition.x += hamster.tilePosition.vy;
+        hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         rollerCoaster1.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
-        cat.x += cat.vx;
+
+        hamster.progress += hamster.vx;
+        setPositionOnCurve(hamster, hamster.progress, hamsterControlPoints);
 
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
         moveBullets(1);
-        //check for a collision between the cat and the box
-        if (hitTestRectangle(cat, box)) {
+        //check for a collision between the hamster and the box
+        if (hitTestRectangle(hamster, box)) {
 
             //if there's a collision, change the message text
             //and tint the box red
@@ -1518,11 +1535,56 @@
 
             //if there's no collision, reset the message
             //text and the box's color
-            //message.text = "No collision...("+cat.x+", "+cat.y+")";
+            //message.text = "No collision...("+hamster.x+", "+hamster.y+")";
             box.tint = 0xccff99;
         }
         animate_BG(timeInSec);
     }
+
+    function setPositionOnCurve(sprite, newProgress, controlPoints){
+        if(!sprite.moving) {
+            console.log('progress ',newProgress, ' not moving ',controlPoints);
+            sprite.x = size[1];
+            sprite.y = size[0];
+            sprite.rotation = 0;
+            return;
+        }
+        var curveProgress = newProgress < 0 ? 0 : newProgress > 100 ? 100 :  newProgress;
+        var previousPoint = controlPoints[0]
+        for (var i = 1; i < controlPoints.length; i++) {
+            var nextPoint = controlPoints[i];
+            if(nextPoint.progress >= curveProgress){
+                console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
+                console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
+                sprite.x = previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                sprite.y = previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
+                return;
+            }
+            previousPoint = nextPoint;
+        }
+        console.log('progress ',curveProgress, ' no point found');
+    }
+
+    let hamsterControlPoints = [
+        // progress is the % of progression on the complete rollercoaster curve
+        // x and y are the coordinates.
+        //          (x=0   , y=0   )  is at the TOP    left  of the game screen
+        //          (x=1920, y=1080)  is at the BOTTOM right of the game screen
+        // rotation is the angle (in degrees) of the hamster
+        //          0   => normal, looks to the right
+        //          90  =>         looks to the top
+        //          180 =>         looks to the left   (upside down)
+        //          270 =>         looks to the bottom (upside down)
+
+        { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
+
+
+        { progress: 50,   x: (ROLLER_COASTER_RIGHT+ROLLER_COASTER_LEFT)/2 ,    y: ROLLER_COASTER_LOW -100  ,  rotation:45 },// middle point, at enter gate
+
+
+        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW       ,  rotation:0 } // final point, at exit gate
+    ];
 
     function checkBulletCollision(){
 
