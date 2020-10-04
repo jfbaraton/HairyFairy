@@ -1302,7 +1302,7 @@
           space = keyboard(32),
           keyLetterS = keyboard(83),
           keyLetterD = keyboard(68),
-          keyLetterF = keyboard(70),
+          keyLetterF = keyboard(70)
           ;
 
         keyLetterS.press = function() {
