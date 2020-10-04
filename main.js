@@ -63,7 +63,7 @@
 		if(newRatio <0.3){
 			newRatio = 0.3;
 		}
-		
+
 		if(newRatio >1){
 			newRatio = 1;
 		}
@@ -99,8 +99,9 @@
         'Shot_Deagle_Weapon_1' : 'Shot_Deagle_Weapon_1.mp4',
         'when_lose_because_no_time' : 'when_lose_because_no_time.mp4',
         'ending' : 'ending.mp4',
-        'slingshot charging' : 'slingshot charging.mp4',
-        'gun charging' : 'gun charging.mp4',
+        'slingshot_charging' : 'slingshot_charging.mp4',
+        'gun_charging' : 'gun_charging.mp4',
+        'shot_no_weapon' : 'shot_no_weapon.mp4',
         'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4'
     };
 
@@ -183,8 +184,9 @@
     .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
     .add("sounds/"+sound_bank["when_lose_because_no_time"])
     .add("sounds/"+sound_bank["ending"])
-    .add("sounds/"+sound_bank["slingshot charging"])
-    .add("sounds/"+sound_bank["gun charging"])
+    .add("sounds/"+sound_bank["slingshot_charging"])
+    .add("sounds/"+sound_bank["shot_no_weapon"])
+    //.add("sounds/"+sound_bank["gun_charging"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 
     .load(setup);
@@ -257,8 +259,8 @@
     function setup() {
         mode = 'start';
         tool = 'lazer';
-        music = false;
-        sound = false;
+        music = true;
+        sound = true;
         progress = 0;
         //Create the box
         box = new PIXI.Graphics();
@@ -340,9 +342,11 @@
         weapon1.y = 920+10;
         weapon1.vx = 0;
         weapon1.vy = 0;
-        weapon1.weaponSwitch = 'slingshot charging';
+        weapon1.weaponSwitch = 'slingshot_charging';
+        weapon1.weaponShoot = 'shot_no_weapon';
         weapon1.tool = 'peanut';
         weapon1.interactive = true;
+        weapon1.available = true;
         weapon1.on('pointerdown', onButtonDown);
         weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon1);
@@ -353,9 +357,11 @@
         weapon2.y = 920+10;
         weapon2.vx = 0;
         weapon2.vy = 0;
-        weapon1.weaponSwitch = 'slingshot charging';
+        weapon2.weaponSwitch = 'slingshot_charging';
+        weapon2.weaponShoot = 'shot_lazer_weapon_2';
         weapon2.tool = 'lazer';
         weapon2.interactive = true;
+        weapon2.available = true;
         weapon2.on('pointerdown', onButtonDown);
         weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon2);
@@ -365,9 +371,11 @@
         weapon3.y = 920+10;
         weapon3.vx = 0;
         weapon3.vy = 0;
-        weapon1.weaponSwitch = 'gun charging';
+        weapon2.weaponSwitch = 'slingshot_charging';
+        weapon2.weaponShoot = 'Shot_Deagle_Weapon_1';
         weapon3.tool = 'gun';
         weapon3.interactive = true;
+        weapon3.available = true;
         weapon3.on('pointerdown', onButtonDown);
         weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon3);
@@ -912,6 +920,7 @@
         bullet_peanut1.vx = 0;
         bullet_peanut1.vy = 0;
         bullet_peanut1.weaponType = 'peanut';
+        bullet_peanut1.weapon = weapon1;
         app.stage.addChild(bullet_peanut1);
         bullets.push(bullet_peanut1);
 
@@ -923,6 +932,7 @@
         bullet2_peanut1.vx = 0;
         bullet2_peanut1.vy = 0;
         bullet2_peanut1.weaponType = 'peanut';
+        bullet2_peanut1.weapon = weapon1;
         app.stage.addChild(bullet2_peanut1);
         bullets.push(bullet2_peanut1);
 
@@ -934,6 +944,7 @@
         bullet3_peanut1.vx = 0;
         bullet3_peanut1.vy = 0;
         bullet3_peanut1.weaponType = 'peanut';
+        bullet3_peanut1.weapon = weapon1;
         app.stage.addChild(bullet3_peanut1);
         bullets.push(bullet3_peanut1);
 
@@ -944,6 +955,7 @@
         bullet4_peanut1.vx = 0;
         bullet4_peanut1.vy = 0;
         bullet4_peanut1.weaponType = 'peanut';
+        bullet4_peanut1.weapon = weapon1;
         app.stage.addChild(bullet4_peanut1);
         bullets.push(bullet4_peanut1);
 
@@ -959,6 +971,7 @@
         bullet_lazer1.vx = 0;
         bullet_lazer1.vy = 0;
         bullet_lazer1.weaponType = 'lazer';
+        bullet_lazer1.weapon = weapon2;
         app.stage.addChild(bullet_lazer1);
         bullets.push(bullet_lazer1);
 
@@ -974,6 +987,7 @@
         bullet2_lazer1.vx = 0;
         bullet2_lazer1.vy = 0;
         bullet2_lazer1.weaponType = 'lazer';
+        bullet2_lazer1.weapon = weapon2;
         app.stage.addChild(bullet2_lazer1);
         bullets.push(bullet2_lazer1);
 
@@ -989,6 +1003,7 @@
         bullet3_lazer1.vx = 0;
         bullet3_lazer1.vy = 0;
         bullet3_lazer1.weaponType = 'lazer';
+        bullet3_lazer1.weapon = weapon2;
         app.stage.addChild(bullet3_peanut1);
         bullets.push(bullet3_peanut1);
 
@@ -1003,6 +1018,7 @@
         bullet4_lazer1.vx = 0;
         bullet4_lazer1.vy = 0;
         bullet4_lazer1.weaponType = 'lazer';
+        bullet4_lazer1.weapon = weapon2;
         app.stage.addChild(bullet4_lazer1);
         bullets.push(bullet4_lazer1);
 
@@ -1016,6 +1032,7 @@
         bullet_gun1.vx = 0;
         bullet_gun1.vy = 0;
         bullet_gun1.weaponType = 'gun';
+        bullet_gun1.weapon = weapon3;
         app.stage.addChild(bullet_gun1);
         bullets.push(bullet_gun1);
 
@@ -1031,6 +1048,7 @@
         bullet2_gun1.vx = 0;
         bullet2_gun1.vy = 0;
         bullet2_gun1.weaponType = 'gun';
+        bullet2_gun1.weapon = weapon3;
         app.stage.addChild(bullet2_gun1);
         bullets.push(bullet2_gun1);
 
@@ -1046,6 +1064,7 @@
         bullet3_gun1.vx = 0;
         bullet3_gun1.vy = 0;
         bullet3_gun1.weaponType = 'gun';
+        bullet3_gun1.weapon = weapon3;
         app.stage.addChild(bullet3_gun1);
         bullets.push(bullet3_gun1);
 
@@ -1060,6 +1079,7 @@
         bullet4_gun1.vx = 0;
         bullet4_gun1.vy = 0;
         bullet4_gun1.weaponType = 'gun';
+        bullet4_gun1.weapon = weapon3;
         app.stage.addChild(bullet4_gun1);
         bullets.push(bullet4_gun1);
 
@@ -1511,6 +1531,8 @@
                 found = true;
                 bullets[i].x = hamster.x+80;
                 bullets[i].y = hamster.y+80;
+
+                onPlayVideo(bullets[i].weapon.weaponShoot);
 
                 var curr_weapon_speed = bullets[i].weapon_speed || 10;
                 var oppositeSz = targetY > bullets[i].y ? 0 : (targetY - bullets[i].y );
