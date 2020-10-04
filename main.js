@@ -200,7 +200,7 @@
     let MENU_OFFSET = 170;
     let menu_cursor = 0;
     let ROLLER_COASTER_LEFT = 400;
-    let ROLLER_COASTER_RIGHT = 1460;
+    let ROLLER_COASTER_RIGHT = 1760;
     let ROLLER_COASTER_LOW = 900;
 
     // create a texture from an image path
@@ -1068,7 +1068,7 @@
         msg_status.text = '            ';
         msg_status.y = 400;
         msg_status.x = 1130;
-        
+
         hamster.moving = false;
         hamster.vx = 1;
 
@@ -1543,7 +1543,7 @@
 
     function setPositionOnCurve(sprite, newProgress, controlPoints){
         if(!sprite.moving) {
-            console.log('progress ',newProgress, ' not moving ',controlPoints);
+            //console.log('progress ',newProgress, ' not moving ',controlPoints);
             sprite.x = size[1];
             sprite.y = size[0];
             sprite.rotation = 0;
@@ -1563,7 +1563,7 @@
             }
             previousPoint = nextPoint;
         }
-        console.log('progress ',curveProgress, ' no point found');
+        //console.log('progress ',curveProgress, ' no point found');
     }
 
     let hamsterControlPoints = [
@@ -1580,10 +1580,10 @@
         { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
 
 
-        { progress: 50,   x: (ROLLER_COASTER_RIGHT+ROLLER_COASTER_LEFT)/2 ,    y: ROLLER_COASTER_LOW -100  ,  rotation:45 },// middle point, at enter gate
+        { progress: 50,   x: (ROLLER_COASTER_RIGHT+ROLLER_COASTER_LEFT)/2 ,    y: ROLLER_COASTER_LOW -100  ,  rotation:0 },// middle point, at enter gate
 
 
-        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW       ,  rotation:0 } // final point, at exit gate
+        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
     ];
 
     function checkBulletCollision(){
