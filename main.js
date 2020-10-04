@@ -262,8 +262,8 @@
     function setup() {
         mode = 'start';
         tool = 'peanut';
-        music = false;
-        sound = false;
+        music = true;
+        sound = true;
         progress = 0;
         //Create the box
         box = new PIXI.Graphics();
