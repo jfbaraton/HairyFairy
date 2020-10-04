@@ -1164,7 +1164,7 @@
     }
 
     function onLoseGame() {
-            resetJammers();
+        resetJammers();
         if(mode != 'lose') {
             if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
                 BGmusicSprite.baseTexture.source.pause();
