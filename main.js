@@ -192,7 +192,9 @@
     let hamster, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
     let skills_bar, weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping,outer_gates, box, message, message2, state, tilingSprite, jammers;
-    let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
+    let instructions, instrunote1, instrunote2, instrunote3, instrunote4, instrunote5;
+    let note1, note2, note3, note4, note5,note21, note22, note23, note24, note25;
+    let knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
     let bullets;
     let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
@@ -496,91 +498,263 @@
             .on('pointerout', onButtonOut);
         //app.stage.addChild(sax_fairy);
 
-        jammers = [];
         var NOTE_SCALE = 0.7;
-        //Create the `knot_1` sprite
-        knot_1 = new Sprite(resources["images/Note_1.png"].texture);
-        knot_1.x = 700;
-        knot_1.y = 1080;
-        knot_1.vx = 0;
-        knot_1.vy = 0;
-        knot_1.killedby = 'knot';
-        knot_1.interactive = true;
-        knot_1.scale = new PIXI.ObservablePoint(()=>{},knot_1,NOTE_SCALE,NOTE_SCALE);
-        knot_1.on('pointerdown', onButtonDown)
+        instructions = [];
+        //Create the `instrunote1` sprite
+        instrunote1 = new Sprite(resources["images/Note_1.png"].texture);
+        instrunote1.x = 700;
+        instrunote1.y = 1080;
+        instrunote1.vx = 0;
+        instrunote1.vy = 0;
+        //instrunote1.killedby = 'knot';
+        instrunote1.interactive = true;
+        instrunote1.scale = new PIXI.ObservablePoint(()=>{},instrunote1,NOTE_SCALE,NOTE_SCALE);
+        instrunote1.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_1);
-        jammers.push(knot_1);
+        app.stage.addChild(instrunote1);
+        instructions.push(instrunote1);
 
-        //Create the `knot_2` sprite
-        knot_2 = new Sprite(resources["images/Note_2.png"].texture);
-        knot_2.x = 850;
-        knot_2.y = 1280;
-        knot_2.vx = 0;
-        knot_2.vy = 0;
-        knot_2.killedby = 'gum';
-        knot_2.interactive = true;
-        knot_2.scale = new PIXI.ObservablePoint(()=>{},knot_2,NOTE_SCALE,NOTE_SCALE);
-        knot_2.on('pointerdown', onButtonDown)
+        //Create the `instrunote2` sprite
+        instrunote2 = new Sprite(resources["images/Note_2.png"].texture);
+        instrunote2.x = 850;
+        instrunote2.y = 1280;
+        instrunote2.vx = 0;
+        instrunote2.vy = 0;
+        //instrunote2.killedby = 'gum';
+        instrunote2.interactive = true;
+        instrunote2.scale = new PIXI.ObservablePoint(()=>{},instrunote2,NOTE_SCALE,NOTE_SCALE);
+        instrunote2.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_2);
-        jammers.push(knot_2);
+        app.stage.addChild(instrunote2);
+        instructions.push(instrunote2);
 
-        //Create the `knot_3` sprite
-        knot_3 = new Sprite(resources["images/Note_3.png"].texture);
-        knot_3.x = 950;
-        knot_3.y = 1280;
-        knot_3.vx = 0;
-        knot_3.vy = 0;
-        knot_3.killedby = 'sax';
-        knot_3.interactive = true;
-        knot_3.scale = new PIXI.ObservablePoint(()=>{},knot_3,NOTE_SCALE,NOTE_SCALE);
-        knot_3.on('pointerdown', onButtonDown)
+        //Create the `instrunote3` sprite
+        instrunote3 = new Sprite(resources["images/Note_3.png"].texture);
+        instrunote3.x = 950;
+        instrunote3.y = 1280;
+        instrunote3.vx = 0;
+        instrunote3.vy = 0;
+        //instrunote3.killedby = 'sax';
+        instrunote3.interactive = true;
+        instrunote3.scale = new PIXI.ObservablePoint(()=>{},instrunote3,NOTE_SCALE,NOTE_SCALE);
+        instrunote3.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_3);
-        jammers.push(knot_3);
-        //Create the `knot_1` sprite
-        knot_11 = new Sprite(resources["images/Note_4.png"].texture);
-        knot_11.x = 700;
-        knot_11.y = 1080;
-        knot_11.vx = 0;
-        knot_11.vy = 0;
-        knot_11.killedby = 'knot';
-        knot_11.interactive = true;
-        knot_11.scale = new PIXI.ObservablePoint(()=>{},knot_11,NOTE_SCALE,NOTE_SCALE);
-        knot_11.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_11);
-        jammers.push(knot_11);
+        app.stage.addChild(instrunote3);
+        instructions.push(instrunote3);
 
-        //Create the `knot_2` sprite
-        knot_21 = new Sprite(resources["images/Note_5.png"].texture);
-        knot_21.x = 850;
-        knot_21.y = 1280;
-        knot_21.vx = 0;
-        knot_21.vy = 0;
-        knot_21.killedby = 'gum';
-        knot_21.interactive = true;
-        knot_21.scale = new PIXI.ObservablePoint(()=>{},knot_21,NOTE_SCALE,NOTE_SCALE);
-        knot_21.on('pointerdown', onButtonDown)
+        //Create the `instrunote4` sprite
+        instrunote4 = new Sprite(resources["images/Note_4.png"].texture);
+        instrunote4.x = 700;
+        instrunote4.y = 1080;
+        instrunote4.vx = 0;
+        instrunote4.vy = 0;
+        //instrunote4.killedby = 'knot';
+        instrunote4.interactive = true;
+        instrunote4.scale = new PIXI.ObservablePoint(()=>{},instrunote4,NOTE_SCALE,NOTE_SCALE);
+        instrunote4.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_21);
-        jammers.push(knot_21);
+        app.stage.addChild(instrunote4);
+        instructions.push(instrunote4);
+
+        //Create the `instrunote5` sprite
+        instrunote5 = new Sprite(resources["images/Note_5.png"].texture);
+        instrunote5.x = 850;
+        instrunote5.y = 1280;
+        instrunote5.vx = 0;
+        instrunote5.vy = 0;
+        //instrunote5.killedby = 'gum';
+        instrunote5.interactive = true;
+        instrunote5.scale = new PIXI.ObservablePoint(()=>{},instrunote5,NOTE_SCALE,NOTE_SCALE);
+        instrunote5.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(instrunote5);
+        instructions.push(instrunote5);
+
+        jammers = [];
+        //Create the `note1` sprite
+        note1 = new Sprite(resources["images/Note_1.png"].texture);
+        note1.x = 700;
+        note1.y = 1080;
+        note1.vx = 0;
+        note1.vy = 0;
+        //note1.killedby = 'knot';
+        note1.interactive = true;
+        note1.scale = new PIXI.ObservablePoint(()=>{},note1,NOTE_SCALE,NOTE_SCALE);
+        note1.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note1);
+        jammers.push(note1);
+
+        //Create the `note2` sprite
+        note2 = new Sprite(resources["images/Note_2.png"].texture);
+        note2.x = 850;
+        note2.y = 1280;
+        note2.vx = 0;
+        note2.vy = 0;
+        //note2.killedby = 'gum';
+        note2.interactive = true;
+        note2.scale = new PIXI.ObservablePoint(()=>{},note2,NOTE_SCALE,NOTE_SCALE);
+        note2.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note2);
+        jammers.push(note2);
+
+        //Create the `note3` sprite
+        note3 = new Sprite(resources["images/Note_3.png"].texture);
+        note3.x = 950;
+        note3.y = 1280;
+        note3.vx = 0;
+        note3.vy = 0;
+        //note3.killedby = 'sax';
+        note3.interactive = true;
+        note3.scale = new PIXI.ObservablePoint(()=>{},note3,NOTE_SCALE,NOTE_SCALE);
+        note3.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note3);
+        jammers.push(note3);
+
+        //Create the `note4` sprite
+        note4 = new Sprite(resources["images/Note_4.png"].texture);
+        note4.x = 700;
+        note4.y = 1080;
+        note4.vx = 0;
+        note4.vy = 0;
+        //note4.killedby = 'knot';
+        note4.interactive = true;
+        note4.scale = new PIXI.ObservablePoint(()=>{},note4,NOTE_SCALE,NOTE_SCALE);
+        note4.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note4);
+        jammers.push(note4);
+
+        //Create the `note5` sprite
+        note5 = new Sprite(resources["images/Note_5.png"].texture);
+        note5.x = 850;
+        note5.y = 1280;
+        note5.vx = 0;
+        note5.vy = 0;
+        //note5.killedby = 'gum';
+        note5.interactive = true;
+        note5.scale = new PIXI.ObservablePoint(()=>{},note5,NOTE_SCALE,NOTE_SCALE);
+        note5.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note5);
+        jammers.push(note5);
+
+        //Create the `note21` sprite
+        note21 = new Sprite(resources["images/Note_1.png"].texture);
+        note21.x = 700;
+        note21.y = 1080;
+        note21.vx = 0;
+        note21.vy = 0;
+        //note21.killedby = 'knot';
+        note21.interactive = true;
+        note21.scale = new PIXI.ObservablePoint(()=>{},note21,NOTE_SCALE,NOTE_SCALE);
+        note21.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note21);
+        jammers.push(note21);
+
+        //Create the `note22` sprite
+        note22 = new Sprite(resources["images/Note_2.png"].texture);
+        note22.x = 850;
+        note22.y = 1280;
+        note22.vx = 0;
+        note22.vy = 0;
+        //note22.killedby = 'gum';
+        note22.interactive = true;
+        note22.scale = new PIXI.ObservablePoint(()=>{},note22,NOTE_SCALE,NOTE_SCALE);
+        note22.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note22);
+        jammers.push(note22);
+
+        //Create the `note23` sprite
+        note23 = new Sprite(resources["images/Note_3.png"].texture);
+        note23.x = 950;
+        note23.y = 1280;
+        note23.vx = 0;
+        note23.vy = 0;
+        //note23.killedby = 'sax';
+        note23.interactive = true;
+        note23.scale = new PIXI.ObservablePoint(()=>{},note23,NOTE_SCALE,NOTE_SCALE);
+        note23.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note23);
+        jammers.push(note23);
+
+        //Create the `note24` sprite
+        note24 = new Sprite(resources["images/Note_4.png"].texture);
+        note24.x = 700;
+        note24.y = 1080;
+        note24.vx = 0;
+        note24.vy = 0;
+        //note24.killedby = 'knot';
+        note24.interactive = true;
+        note24.scale = new PIXI.ObservablePoint(()=>{},note24,NOTE_SCALE,NOTE_SCALE);
+        note24.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note24);
+        jammers.push(note24);
+
+        //Create the `note25` sprite
+        note25 = new Sprite(resources["images/Note_5.png"].texture);
+        note25.x = 850;
+        note25.y = 1280;
+        note25.vx = 0;
+        note25.vy = 0;
+        //note25.killedby = 'gum';
+        note25.interactive = true;
+        note25.scale = new PIXI.ObservablePoint(()=>{},note25,NOTE_SCALE,NOTE_SCALE);
+        note25.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);
+        app.stage.addChild(note25);
+        jammers.push(note25);
 
         //Create the `knot_31` sprite
         knot_31 = new Sprite(resources["images/knot_1.png"].texture);
@@ -1340,20 +1514,30 @@
 
     function resetJammers(){
         for (var i = 0; i < jammers.length; i++) {
-            jammers[i].x = 580+randomInt(0,600);
-            jammers[i].y = 1080+randomInt(50,1600);
-            jammers[i].vy = 0;
+                 // fold
+                jammers[i].flying = false;
+                jammers[i].x = -2000;
+                jammers[i].y = -2000;
+                jammers[i].vx = 0;
+                jammers[i].vy = 0;
         }
     }
 
     function placeNewJammers(){
-        var difficulty = 1; // 0 easy to 9 hardcore
+        var difficulty =3; // 0 easy to 9 hardcore
         for (var i = 0; i < jammers.length; i++) {
             if(i<=3+difficulty){
                 jammers[i].flying = true;
-                jammers[i].x = 200+randomInt(0,1600);
+                jammers[i].x = 20+randomInt(0,1820);
                 //jammers[i].y = 100+randomInt(50,600);
-                jammers[i].y = 200+randomInt(1,100);
+                jammers[i].y = 180+randomInt(1,500);
+                jammers[i].vx = (randomInt(0,5)-1)/10;
+                jammers[i].vy = (randomInt(0,5)-1)/10;
+            } else {
+                 // fold
+                jammers[i].flying = false;
+                jammers[i].x = -2000;
+                jammers[i].y = -2000;
                 jammers[i].vx = 0;
                 jammers[i].vy = 0;
             }
@@ -1361,13 +1545,12 @@
     }
 
     function moveJammers(speed){
-        var difficulty = 1; // 0 easy to 9 hardcore
-        /*for (var i = 0; i < jammers.length; i++) {
-            if(i<=3+difficulty){
-                jammers[i].y -= speed;
-                jammers[i].vy = 0;
-                }
-        }*/
+        for (var i = 0; i < jammers.length; i++) {
+            if(jammers[i].flying){
+                jammers[i].y += jammers[i].vy;
+                jammers[i].x += jammers[i].vx;
+            }
+        }
     }
 
     function moveBullets(speed){
