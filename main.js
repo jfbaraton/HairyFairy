@@ -124,6 +124,9 @@
     .add("images/Note_3.png")
     .add("images/Note_4.png")
     .add("images/Note_5.png")
+    .add("images/Badnote_1.png")
+    .add("images/Badnote_2.png")
+    .add("images/Badnote_3.png")
     .add("images/chibi_cry1.png")
     .add("images/chibi_happy1.png")
     .add("images/chibi_oups1.png")
@@ -201,7 +204,7 @@
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
     let MENU_MAX = 2 ;
     //let LVL_MAX = 20 ;
-    let LVL_MAX = 3 ;
+    let LVL_MAX = 10 ;
     let CURRENT_LVL = 0 ;
     let MENU_X0 = 100;
     let MENU_Y0 = 300;
@@ -509,6 +512,7 @@
         instrunote1.y = 1080;
         instrunote1.vx = 0;
         instrunote1.vy = 0;
+        instrunote1.amountCpt = 0;
         //instrunote1.killedby = 'knot';
         instrunote1.interactive = true;
         instrunote1.scale = new PIXI.ObservablePoint(()=>{},instrunote1,NOTE_SCALE,NOTE_SCALE);
@@ -526,6 +530,7 @@
         instrunote2.y = 1280;
         instrunote2.vx = 0;
         instrunote2.vy = 0;
+        instrunote2.amountCpt = 0;
         //instrunote2.killedby = 'gum';
         instrunote2.interactive = true;
         instrunote2.scale = new PIXI.ObservablePoint(()=>{},instrunote2,NOTE_SCALE,NOTE_SCALE);
@@ -543,6 +548,7 @@
         instrunote3.y = 1280;
         instrunote3.vx = 0;
         instrunote3.vy = 0;
+        instrunote3.amountCpt = 0;
         //instrunote3.killedby = 'sax';
         instrunote3.interactive = true;
         instrunote3.scale = new PIXI.ObservablePoint(()=>{},instrunote3,NOTE_SCALE,NOTE_SCALE);
@@ -560,6 +566,7 @@
         instrunote4.y = 1080;
         instrunote4.vx = 0;
         instrunote4.vy = 0;
+        instrunote4.amountCpt = 0;
         //instrunote4.killedby = 'knot';
         instrunote4.interactive = true;
         instrunote4.scale = new PIXI.ObservablePoint(()=>{},instrunote4,NOTE_SCALE,NOTE_SCALE);
@@ -577,6 +584,7 @@
         instrunote5.y = 1280;
         instrunote5.vx = 0;
         instrunote5.vy = 0;
+        instrunote5.amountCpt = 0;
         //instrunote5.killedby = 'gum';
         instrunote5.interactive = true;
         instrunote5.scale = new PIXI.ObservablePoint(()=>{},instrunote5,NOTE_SCALE,NOTE_SCALE);
@@ -593,6 +601,7 @@
         note1 = new Sprite(resources["images/Note_1.png"].texture);
         note1.x = 700;
         note1.y = 1080;
+        note1.instru = instrunote1;
         note1.vx = 0;
         note1.vy = 0;
         //note1.killedby = 'knot';
@@ -610,6 +619,7 @@
         note2 = new Sprite(resources["images/Note_2.png"].texture);
         note2.x = 850;
         note2.y = 1280;
+        note2.instru = instrunote2;
         note2.vx = 0;
         note2.vy = 0;
         //note2.killedby = 'gum';
@@ -627,6 +637,7 @@
         note3 = new Sprite(resources["images/Note_3.png"].texture);
         note3.x = 950;
         note3.y = 1280;
+        note3.instru = instrunote3;
         note3.vx = 0;
         note3.vy = 0;
         //note3.killedby = 'sax';
@@ -644,6 +655,7 @@
         note4 = new Sprite(resources["images/Note_4.png"].texture);
         note4.x = 700;
         note4.y = 1080;
+        note4.instru = instrunote4;
         note4.vx = 0;
         note4.vy = 0;
         //note4.killedby = 'knot';
@@ -661,6 +673,7 @@
         note5 = new Sprite(resources["images/Note_5.png"].texture);
         note5.x = 850;
         note5.y = 1280;
+        note5.instru = instrunote5;
         note5.vx = 0;
         note5.vy = 0;
         //note5.killedby = 'gum';
@@ -678,6 +691,7 @@
         note21 = new Sprite(resources["images/Note_1.png"].texture);
         note21.x = 700;
         note21.y = 1080;
+        note21.instru = instrunote1;
         note21.vx = 0;
         note21.vy = 0;
         //note21.killedby = 'knot';
@@ -695,6 +709,7 @@
         note22 = new Sprite(resources["images/Note_2.png"].texture);
         note22.x = 850;
         note22.y = 1280;
+        note22.instru = instrunote2;
         note22.vx = 0;
         note22.vy = 0;
         //note22.killedby = 'gum';
@@ -712,6 +727,7 @@
         note23 = new Sprite(resources["images/Note_3.png"].texture);
         note23.x = 950;
         note23.y = 1280;
+        note23.instru = instrunote3;
         note23.vx = 0;
         note23.vy = 0;
         //note23.killedby = 'sax';
@@ -729,6 +745,7 @@
         note24 = new Sprite(resources["images/Note_4.png"].texture);
         note24.x = 700;
         note24.y = 1080;
+        note24.instru = instrunote4;
         note24.vx = 0;
         note24.vy = 0;
         //note24.killedby = 'knot';
@@ -746,6 +763,7 @@
         note25 = new Sprite(resources["images/Note_5.png"].texture);
         note25.x = 850;
         note25.y = 1280;
+        note25.instru = instrunote5;
         note25.vx = 0;
         note25.vy = 0;
         //note25.killedby = 'gum';
@@ -760,7 +778,7 @@
         jammers.push(note25);
 
         //Create the `knot_31` sprite
-        knot_31 = new Sprite(resources["images/knot_1.png"].texture);
+        knot_31 = new Sprite(resources["images/Badnote_1.png"].texture);
         knot_31.x = 950;
         knot_31.y = 1280;
         knot_31.vx = 0;
@@ -776,7 +794,7 @@
         app.stage.addChild(knot_31);
         jammers.push(knot_31);
         //Create the `knot_12` sprite
-        knot_12 = new Sprite(resources["images/knot.png"].texture);
+        knot_12 = new Sprite(resources["images/Badnote_2.png"].texture);
         knot_12.x = 700;
         knot_12.y = 1080;
         knot_12.vx = 0;
@@ -793,7 +811,7 @@
         jammers.push(knot_12);
 
         //Create the `knot_22` sprite
-        knot_22 = new Sprite(resources["images/gum1.png"].texture);
+        knot_22 = new Sprite(resources["images/Badnote_3.png"].texture);
         knot_22.x = 850;
         knot_22.y = 1280;
         knot_22.vx = 0;
@@ -1144,10 +1162,23 @@
         fontSize: 35,
         fill: "brown",
         });
-        butt_sound = new Text("Sounds On/Off", style3);
+        butt_sound = new Text("Sounds On", style3);
         butt_sound.position.set(8, 8);
         butt_sound.interactive = true;
-        butt_sound.on('pointerdown', () => {sound = !sound; music = sound;})
+        butt_sound.on('pointerdown', () => {
+            sound = !sound;
+            music = sound;
+            if(sound){
+                if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.play){
+                    BGmusicSprite.baseTexture.source.play();
+                }
+            } else {
+                if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
+                    BGmusicSprite.baseTexture.source.pause();
+                }
+            }
+            butt_sound.text = sound ? 'Sounds On' :"Sounds Off";
+        });
         app.stage.addChild(butt_sound);
 
         //Create the text sprite
@@ -1155,10 +1186,23 @@
         fontFamily: "Bodoni MT", // "chalkduster"
         fontSize: 190,
         //fontStyle: 'underline',
-        fill: "pink",
+        fill: "brown",
         });
-        msg_status = new Text("                                     .", style4);
-        msg_status.position.set(100, 300);
+        msg_status = new Text("                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n"+
+        "                                        .\n", style4);
+        msg_status.position.set(30, 30);
         msg_status.interactive = true;
         msg_status.on('pointerdown', onStartGame)
         app.stage.addChild(msg_status);
@@ -1259,7 +1303,7 @@
         msg_menu_2.y = msg_menu_2.y + 1080;
         hamster.progress = 0;
         hamster.moving = true;
-        hamster.vx = 1;
+        hamster.vx = 0.35;
 
         setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
@@ -1271,18 +1315,19 @@
         welcome_princess.y = 1080;
         //chibi.y = 1080-771;
         //onPlayVideo('claps_end_of_level', true);
-        onPlayVideo('musique_game', true);
+        onPlayVideo('Countdown_Start_Race', true);
+        //onPlayVideo('musique_game', true);
         mode = 'normal';
     }
 
     function onWinGame() {
         resetJammers();
         msg_status.text = 'Click here to restart';
-        msg_status.y = 300;
-        msg_status.x = 1100;
+        msg_status.y = 750;
+        msg_status.x = 500;
 
         hamster.moving = false;
-        hamster.vx = 1;
+        hamster.vx = 0;
 
         setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
@@ -1298,12 +1343,24 @@
 
     function onLoseGame() {
         resetJammers();
-        msg_status.text = '            ';
-        msg_status.y = 400;
-        msg_status.x = 1130;
+        msg_status.text = '                                             .\n'+
+        '                                        don\'t miss notes\n'+
+        '                                        don\'t hit black notes\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              .\n'+
+        '                                                              OK?';
+        msg_status.y = 40;
+        msg_status.x = 40;
 
         hamster.moving = false;
-        hamster.vx = 1;
+        hamster.vx = 0;
 
         setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
@@ -1339,8 +1396,9 @@
         } else {
             var targetX = param.data.global.x;
             var targetY = param.data.global.y;
-
-            shoot(targetX,targetY);
+            if(mode == 'normal') {
+                shoot(targetX,targetY);
+            }
 
             //console.log('click ',param.data.global);
             //var mousePosition = app.renderer.interaction.mouse.global;
@@ -1476,7 +1534,7 @@
                 }
                 BGmusicSprite = PIXI.Texture.from('sounds/'+sound_bank[sound_name]);
                 if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source){
-                    BGmusicSprite.baseTexture.source.loop = 'claps_end_of_level' != sound_name;
+                    BGmusicSprite.baseTexture.source.loop = 'claps_end_of_level' != sound_name && 'Countdown_Start_Race' != sound_name;
                     console.log('music T2 ',BGmusicSprite.baseTexture.source);
                     //BGmusicSprite.baseTexture.source.play();
                 }
@@ -1538,18 +1596,46 @@
         }
     }
 
+    function resetInstru(instruToReset) {
+        instruToReset.x = 3000;
+        instruToReset.y = 3000;
+        instruToReset.amountCpt = 0;
+    }
+
+    function addInstru(instruToAdd) {
+
+        if(instruToAdd.amountCpt == 0){
+            instruToAdd.x = randomInt(300,1820);
+            instruToAdd.y = randomInt(1,120);
+        }
+
+        instruToAdd.amountCpt++;
+    }
+
     function placeNewJammers(){
-        CURRENT_LVL++;
-        var difficulty = (CURRENT_LVL)/2 % 6 ; // 0 easy to 9 hardcore
+        if(0 == CURRENT_LVL++){
+            onPlayVideo('musique_game', true);
+        }
+
+        resetInstru(instrunote1);
+        resetInstru(instrunote2);
+        resetInstru(instrunote3);
+        resetInstru(instrunote4);
+        resetInstru(instrunote5);
+
+        var difficulty = (CURRENT_LVL/2) % 8 ; // 0 easy to 9 hardcore
         var badNotesCpt = 0;
         for (var i = 0; i < jammers.length; i++) {
-            if(i<=3+difficulty){
+            if(i<=2+difficulty){
                 jammers[i].flying = true;
                 jammers[i].x = 20+randomInt(0,1820);
-                //jammers[i].y = 100+randomInt(50,600);
                 jammers[i].y = 180+randomInt(1,500);
                 jammers[i].vx = (randomInt(0,5)-1)/10;
                 jammers[i].vy = (randomInt(0,5)-1)/10;
+
+                addInstru(jammers[i].instru);
+
+
             } else if(jammers[i].isBad && badNotesCpt+1 < CURRENT_LVL/(LVL_MAX/3)){
                 badNotesCpt++
                 jammers[i].flying = true;
@@ -1891,6 +1977,10 @@
                                 jammers[j].y = -200;
                                 jammers[j].vx = 0;
                                 jammers[j].vy = 0;
+
+                                if(jammers[j].isBad){
+                                    onLoseGame();
+                                }
                             }
                         }
                     }
