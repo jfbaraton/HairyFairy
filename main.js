@@ -158,6 +158,7 @@
     .add("images/Weapons/slingshot charged 1.png")
     .add("images/Weapons/Weapon2.png")
     .add("images/Weapons/Weapon3.png")
+    .add("images/Weapons/Weapon2 - Lazer 123 .png")
     .add("sounds/"+sound_bank["Catch_gold"])
     .add("sounds/"+sound_bank["Gun_switch"])
     .add("sounds/"+sound_bank["signal_10sec_left"])
@@ -206,6 +207,7 @@
     // create a texture from an image path
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
+    const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
@@ -485,6 +487,7 @@
         //app.stage.addChild(sax_fairy);
 
         jammers = [];
+        var NOTE_SCALE = 0.7;
         //Create the `knot_1` sprite
         knot_1 = new Sprite(resources["images/Note_1.png"].texture);
         knot_1.x = 700;
@@ -493,6 +496,7 @@
         knot_1.vy = 0;
         knot_1.killedby = 'knot';
         knot_1.interactive = true;
+        knot_1.scale = new PIXI.ObservablePoint(()=>{},knot_1,NOTE_SCALE,NOTE_SCALE);
         knot_1.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -509,6 +513,7 @@
         knot_2.vy = 0;
         knot_2.killedby = 'gum';
         knot_2.interactive = true;
+        knot_2.scale = new PIXI.ObservablePoint(()=>{},knot_2,NOTE_SCALE,NOTE_SCALE);
         knot_2.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -525,6 +530,7 @@
         knot_3.vy = 0;
         knot_3.killedby = 'sax';
         knot_3.interactive = true;
+        knot_3.scale = new PIXI.ObservablePoint(()=>{},knot_3,NOTE_SCALE,NOTE_SCALE);
         knot_3.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -540,6 +546,7 @@
         knot_11.vy = 0;
         knot_11.killedby = 'knot';
         knot_11.interactive = true;
+        knot_11.scale = new PIXI.ObservablePoint(()=>{},knot_11,NOTE_SCALE,NOTE_SCALE);
         knot_11.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -556,6 +563,7 @@
         knot_21.vy = 0;
         knot_21.killedby = 'gum';
         knot_21.interactive = true;
+        knot_21.scale = new PIXI.ObservablePoint(()=>{},knot_21,NOTE_SCALE,NOTE_SCALE);
         knot_21.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
             .on('pointerupoutside', onButtonUp)
@@ -719,7 +727,12 @@
         bullets.push(bullet4_peanut1);
 
         //Create the `bullet` sprite
-        bullet_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        //bullet_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet_lazer1 = new PIXI.TilingSprite(
+            textureLazer,
+            100,
+            100
+        );
         bullet_lazer1.x = 950;
         bullet_lazer1.y = 1280;
         bullet_lazer1.vx = 0;
@@ -730,7 +743,11 @@
 
 
         //Create the `bullet` sprite
-        bullet2_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
+        bullet2_lazer1 = new PIXI.TilingSprite(
+           textureLazer,
+           100,
+           100
+        );
         bullet2_lazer1.x = 950;
         bullet2_lazer1.y = 1280;
         bullet2_lazer1.vx = 0;
@@ -931,6 +948,7 @@
             500,
             459
         );
+
         hamster.x = MENU_X0;
         hamster.y = 1900+MENU_Y0;
         hamster.progress=0;
@@ -1098,11 +1116,11 @@
         }
 
         if(this.tool){
-            tool = this.tool;
+            /*tool = this.tool;
             onPlayVideo('tool_select');
             updateToolTxt(goo_fairy);
             updateToolTxt(sailor_fairy);
-            updateToolTxt(sax_fairy);
+            updateToolTxt(sax_fairy);*/
         } else {
             var targetX = param.data.global.x;
             var targetY = param.data.global.y;
@@ -1678,7 +1696,7 @@
 
     function animate_BG(time) {
         if(time % 15 == 1) {
-            var max_delta = 10;
+            var max_delta = 30;
             var isGoingUp = ( BG_baloons1.y <= max_delta &&  BG_baloons1.x == 0 ) || BG_baloons1.y <= 0;
             if( BG_baloons1.y >= max_delta) {
                 BG_baloons1.x = 1;
@@ -1686,7 +1704,7 @@
             if( BG_baloons1.y <= 0) {
                 BG_baloons1.x = 0;
             }
-            var dy = isGoingUp ? 1 : -1;
+            var dy = isGoingUp ? 2 : -2;
 
             BG_baloons1.y += dy;
             BG_baloons2.y -= dy;
