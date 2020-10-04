@@ -117,6 +117,7 @@
     .add("images/rollerCoaster1.png")
     .add("images/blob.png")
     .add("images/wand.png")
+    .add("images/Crosshair_lazer_weaponQUARTER-NO-BG.png")
     .add("images/knot.png")
     .add("images/Note_1.png")
     .add("images/Note_2.png")
@@ -150,7 +151,8 @@
     .add("images/partition.png")
     .add("images/assault_crosshair_gun3.png")
     .add("images/curseur_Menu.png")
-    .add("images/2ndloop.png")
+    .add("images/BG_2ndloop.png")
+    .add("images/OuterMagicGates.png")
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("images/Weapons/Weapon2 - Lazer3.3.png")
     .add("images/portee vide3.png")
@@ -189,7 +191,7 @@
     let msg_menu_2;
     let hamster, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
     let skills_bar, weapon1,weapon2,weapon3;
-    let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping, box, message, message2, state, tilingSprite, jammers;
+    let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping,outer_gates, box, message, message2, state, tilingSprite, jammers;
     let knot_1, knot_2, knot_3, knot_11, knot_21, knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
     let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
     let bullets;
@@ -200,7 +202,7 @@
     let MENU_Y0 = 300;
     let MENU_OFFSET = 170;
     let menu_cursor = 0;
-    let ROLLER_COASTER_LEFT = 400;
+    let ROLLER_COASTER_LEFT = 150;
     let ROLLER_COASTER_RIGHT = 1760;
     let ROLLER_COASTER_LOW = 900;
 
@@ -226,8 +228,8 @@
 
 
     // Css style for icons
-    const defaultIcon = "url('images/wand.png'),auto";
-    const hoverIcon = "url('images/wand.png'),auto";
+    const defaultIcon = "url('images/Crosshair_lazer_weaponQUARTER-NO-BG.png'),auto";
+    const hoverIcon = "url('images/Crosshair_lazer_weaponQUARTER-NO-BG.png'),auto";
 
     // Add custom cursor styles
     app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
@@ -302,22 +304,24 @@
 
 
         //Create the `BG` sprite
-        looping = new Sprite(resources["images/2ndloop.png"].texture);
+        looping = new Sprite(resources["images/BG_2ndloop.png"].texture);
         looping.x = 0;
-        looping.y = 0;
+        looping.y = 280;
         looping.vx = 0;
         looping.vy = 0;
         looping.interactive = true;
         looping.on('pointerdown', onButtonDown);
+        looping.scale = new PIXI.ObservablePoint(()=>{},looping,1,0.75);
         app.stage.addChild(looping);
+
 
         //Create the 'weapon selection' sprite
 
-        var WEAPON_SCALE = 0.2;
-        var WEAPON_MENU_SCALE = 1;
+        var WEAPON_SCALE = 0.3;
+        var WEAPON_MENU_SCALE = 0.8;
         weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
-        weapon1.x = 15;
-        weapon1.y = ROLLER_COASTER_LOW;
+        weapon1.x = 150+580;
+        weapon1.y = 920+10;
         weapon1.vx = 0;
         weapon1.vy = 0;
         weapon1.interactive = true;
@@ -325,10 +329,10 @@
         weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon1);
 
-        var WEAPON_SPACING = 50;
+        var WEAPON_SPACING = 200;
         weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
         weapon2.x = weapon1.x+ WEAPON_SPACING;
-        weapon2.y = ROLLER_COASTER_LOW;
+        weapon2.y = 920+10;
         weapon2.vx = 0;
         weapon2.vy = 0;
         weapon2.interactive = true;
@@ -338,7 +342,7 @@
 
         weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
         weapon3.x = weapon2.x+ WEAPON_SPACING;
-        weapon3.y = ROLLER_COASTER_LOW;
+        weapon3.y = 920+10;
         weapon3.vx = 0;
         weapon3.vy = 0;
         weapon3.interactive = true;
@@ -347,8 +351,8 @@
         app.stage.addChild(weapon3);
 
         skills_bar = new Sprite(resources["images/Skills_bar.png"].texture);
-        skills_bar.x = 8;
-        skills_bar.y = ROLLER_COASTER_LOW;
+        skills_bar.x = 150+580;
+        skills_bar.y = 920;
         skills_bar.vx = 0;
         skills_bar.vy = 0;
         skills_bar.interactive = true;
@@ -827,6 +831,44 @@
         //app.stage.addChild(Warning_red2);
 
 
+        //Create the `hamster` sprite
+        //hamster = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
+
+        hamster = new PIXI.TilingSprite(
+            textureHamster,
+            500,
+            459
+        );
+
+        hamster.x = MENU_X0;
+        hamster.y = 1900+MENU_Y0;
+        hamster.progress=0;
+        hamster.vx = 0;
+        hamster.vy = 0;
+        hamster.moving = false;
+        hamster.toolIcon = defaultIcon;
+        hamster.interactive = true;
+        hamster.scale = new PIXI.ObservablePoint(()=>{},hamster,0.3,0.3);
+        /*hamster.on('pointerdown', onButtonDown)
+            .on('pointerup', onButtonUp)
+            .on('pointerupoutside', onButtonUp)
+            .on('pointerover', onButtonOver)
+            .on('pointerout', onButtonOut);*/
+        app.stage.addChild(hamster);
+
+
+        //Create the `BG` sprite
+        outer_gates = new Sprite(resources["images/OuterMagicGates.png"].texture);
+        outer_gates.x = 0;
+        outer_gates.y = 280;
+        outer_gates.vx = 0;
+        outer_gates.vy = 0;
+        outer_gates.interactive = true;
+        outer_gates.on('pointerdown', onButtonDown);
+        outer_gates.scale = new PIXI.ObservablePoint(()=>{},outer_gates,1,0.75);
+        app.stage.addChild(outer_gates);
+
+
         const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
         /*musicSprite = new PIXI.Sprite(sound_init_texture);
 
@@ -940,30 +982,6 @@
         //app.stage.addChild(msg_menu_2);
 
 
-        //Create the `hamster` sprite
-        //hamster = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
-
-        hamster = new PIXI.TilingSprite(
-            textureHamster,
-            500,
-            459
-        );
-
-        hamster.x = MENU_X0;
-        hamster.y = 1900+MENU_Y0;
-        hamster.progress=0;
-        hamster.vx = 0;
-        hamster.vy = 0;
-        hamster.moving = false;
-        hamster.toolIcon = defaultIcon;
-        hamster.interactive = true;
-        hamster.scale = new PIXI.ObservablePoint(()=>{},hamster,0.5,0.5);
-        /*hamster.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);*/
-        app.stage.addChild(hamster);
 
         //Capture the keyboard arrow keys
         let left = keyboard(37),
@@ -1595,13 +1613,13 @@
         //          180 =>         looks to the left   (upside down)
         //          270 =>         looks to the bottom (upside down)
 
-        { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
+        { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW -215    ,  rotation:0 },// initial point, at enter gate
 
 
-        { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 800  ,  rotation:0 },// middle point, at enter gate
+        { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 440  ,  rotation:0 },// middle point, at enter gate
 
 
-        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
+        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW - 120  ,  rotation: 0 } // final point, at exit gate
     ];
 
     function checkBulletCollision(){
