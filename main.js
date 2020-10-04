@@ -1556,7 +1556,7 @@
         /*hamster.x += hamster.vx;
         hamster.y += hamster.vy;*/
         //hamster.tilePosition.x += hamster.tilePosition.vy;
-        hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
+        //hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
         tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
         rollerCoaster1.y += tilingSpriteMessyHair.vy;
         nice_hair.y += tilingSpriteMessyHair.vy;
