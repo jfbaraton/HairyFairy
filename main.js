@@ -1624,15 +1624,24 @@
         //          270 =>         looks to the bottom (upside down)
 
         { progress: 0,    x: 300 ,                             y: 752       ,  rotation:0 },// initial point, at enter gate
+	{ progress: 1,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:-45 },// initial point, at enter gate
 	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 12.5,    x: 500 ,                             y: 975      ,  rotation:45 },// initial point, at enter gate
+	{ progress: 15.25,    x: 575 ,                             y: 895      ,  rotation:45 },// initial point, at enter gate
 	{ progress: 30,    x: 800 ,                             y: 600      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 32,    x: 825 ,                             y: 625      ,  rotation:-45 },// initial point, at enter gate
+	{ progress: 33.9,    x: 850 ,                             y: 700      ,  rotation:-45 },// initial point, at enter gate
 	{ progress: 46.4,    x: 1000 ,                             y: 900      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 48,    x: 1025 ,                             y: 925      ,  rotation:45 },// initial point, at enter gate
     //{ progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: 675  ,  rotation:0 },// middle point, at enter gate
 	{ progress: 56.6,    x: 1200 ,                             y: 675      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 58,    x: 1225 ,                             y: 700      ,  rotation:-45 },// initial point, at enter gate
 	{ progress: 74,    x: 1350 ,                             y: 1025      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 77,    x: 1375 ,                             y: 1050      ,  rotation:45 },// initial point, at enter gate
 	{ progress: 88.8,    x: 1540 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 95.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 100,  x: 1750 ,                            y: 875  ,  rotation: 0 } // final point, at exit gate
+	{ progress: 93.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 95.8,    x: 1650 ,                             y: 775      ,  rotation:-45 },// initial point, at enter gate
+	{ progress: 100,  x: 1750 ,                            y: 875  ,  rotation: -45 } // final point, at exit gate
     ];
 
     function checkBulletCollision(){
