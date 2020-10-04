@@ -213,8 +213,8 @@
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
     let bullet_gun1,  bullet2_gun1, bullet3_gun1, bullet4_gun1;
     let MENU_MAX = 2 ;
-    //let LVL_MAX = 20 ;
-    let LVL_MAX = 10 ;
+    let LVL_MAX = 20 ;
+    //let LVL_MAX = 10 ;
     let CURRENT_LVL = 0 ;
     let MENU_X0 = 100;
     let MENU_Y0 = 300;
@@ -255,14 +255,15 @@
     app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
     app.renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
     const progress_offset = 100;
-
+    const WEAPON_2_Y = 920+15;
+    const WEAPON_3_Y = 915;
     let count = 0;
 
     function setup() {
         mode = 'start';
-        tool = 'lazer';
-        music = true;
-        sound = true;
+        tool = 'peanut';
+        music = false;
+        sound = false;
         progress = 0;
         //Create the box
         box = new PIXI.Graphics();
@@ -344,6 +345,7 @@
         weapon1.y = 920+15;
         weapon1.vx = 0;
         weapon1.vy = 0;
+        weapon1.tilingPosition = 0;
         weapon1.weaponSwitch = 'slingshot_charging';
         weapon1.weaponShoot = 'short_slingshot_sound';
         weapon1.tool = 'peanut';
@@ -354,11 +356,13 @@
         app.stage.addChild(weapon1);
 
         var WEAPON_SPACING = 190;
+
         weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
-        weapon2.x = weapon1.x+ WEAPON_SPACING -20;
-        weapon2.y = 920+15;
+        weapon2.x = weapon1.x+ WEAPON_SPACING -5;
+        weapon2.y = 3000; // 920+15
         weapon2.vx = 0;
         weapon2.vy = 0;
+        weapon2.tilingPosition = 1324;
         weapon2.weaponSwitch = 'shot_lazer_weapon_2';
         weapon2.weaponShoot = 'shot_lazer_weapon_2';
         weapon2.tool = 'lazer';
@@ -369,10 +373,11 @@
         app.stage.addChild(weapon2);
 
         weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
-        weapon3.x = weapon2.x+ WEAPON_SPACING;
-        weapon3.y = 920+10;
+        weapon3.x = weapon2.x+ WEAPON_SPACING - 30;
+        weapon3.y = 3000// 915
         weapon3.vx = 0;
         weapon3.vy = 0;
+        weapon3.tilingPosition = 659;
         weapon3.weaponSwitch = 'gun_charging';
         weapon3.weaponShoot = 'Shot_Deagle_Weapon_1';
         weapon3.tool = 'gun';
@@ -385,7 +390,7 @@
         //skills_bar = new Sprite(resources["images/Skills_bar2.png"].texture);
         skills_bar = new PIXI.TilingSprite(
             textureSkillbar,
-            1992/3+1,
+            1992/3,
             340
         );
         skills_bar.x = 150+580;
@@ -1343,19 +1348,6 @@
 
         };
 
-        function swapWeapon (oneWeapon){
-
-            if(oneWeapon.available) {
-                if(tool != oneWeapon.tool) {
-                    tool = oneWeapon.tool;
-
-                    onPlayVideo(oneWeapon.weaponSwitch,false);
-                }
-
-            } else {
-                // play sound for unavailable
-            }
-        }
 
         //Left arrow key `release` method
         left.release = function() {
@@ -1412,9 +1404,30 @@
         app.ticker.add(delta => gameLoop(delta));
     }
 
+    function swapWeapon (oneWeapon){
+
+        if(oneWeapon.available) {
+            if(tool != oneWeapon.tool) {
+                tool = oneWeapon.tool;
+                skills_bar.tilePosition.x = oneWeapon.tilingPosition;
+                onPlayVideo(oneWeapon.weaponSwitch,false);
+            }
+
+        } else {
+            // play sound for unavailable
+        }
+    }
+
     function onStartGame() {
         CURRENT_LVL = 0;
         resetJammers();
+
+        swapWeapon(weapon1);
+        weapon2.available = false;
+        weapon2.y = 3000;
+        weapon3.available = false;
+        weapon3.y = 3000;
+
         msg_status.y = 1080;
         msg_menu_1.y = msg_menu_1.y + 1080;
         msg_menu_2.y = msg_menu_2.y + 1080;
@@ -1734,6 +1747,18 @@
             onPlayVideo('musique_game', true);
         }
 
+        if(CURRENT_LVL > LVL_MAX/3){
+            weapon2.available = true;
+            weapon2.y = WEAPON_2_Y;
+            swapWeapon(weapon2);
+        }
+
+
+        if(CURRENT_LVL > 2*LVL_MAX/3){
+            weapon3.available = true;
+            weapon3.y = WEAPON_3_Y;
+            swapWeapon(weapon3);
+        }
 
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].flying = false;
@@ -1741,7 +1766,8 @@
             bullets[i].y = -200;
         }
 
-        weapon1
+        // TODO unjam guns
+        //weapon1.un
 
         resetInstru(instrunote1);
         resetInstru(instrunote2);
@@ -2030,9 +2056,9 @@
                 //console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
                 //console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
                 sprite.x = (sprite.curve_offsetX || 0) + previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                sprite.y = (sprite.curve_offsetY || 0) + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
-                sprite.curve_offsetX
+                sprite.y = (sprite.curve_offsetY -10 || 0) + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                //sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
+                sprite.rotation = 0;
 
                 return;
             }
