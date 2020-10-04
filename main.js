@@ -115,14 +115,14 @@
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
     .add("images/BG_start.png")
-    .add("images/comb_again.png")
-    .add("images/messy_hair.png")
-    .add("images/nice_hair.png")
+    //.add("images/comb_again.png")
+    //.add("images/messy_hair.png")
+    //.add("images/nice_hair.png")
     .add("images/rollerCoaster1.png")
-    .add("images/blob.png")
-    .add("images/wand.png")
+    //.add("images/blob.png")
+    //.add("images/wand.png")
     .add("images/Crosshair_lazer_weaponQUARTER-NO-BG.png")
-    .add("images/knot.png")
+    //.add("images/knot.png")
     .add("images/Note_1.png")
     .add("images/Note_2.png")
     .add("images/Note_3.png")
@@ -131,32 +131,32 @@
     .add("images/Badnote_1.png")
     .add("images/Badnote_2.png")
     .add("images/Badnote_3.png")
-    .add("images/chibi_cry1.png")
-    .add("images/chibi_happy1.png")
-    .add("images/chibi_oups1.png")
-    .add("images/knot_1.png")
-    .add("images/knot_2.png")
-    .add("images/gum1.png")
-    .add("images/gum2.png")
-    .add("images/Warning-yellow.png")
-    .add("images/Warning-orange.png")
-    .add("images/Warning-red.png")
-    .add("images/Warning-orange2.png")
-    .add("images/Warning-red2.png")
-    .add("images/goo_fairy.png")
-    .add("images/goo_fairy_selected.png")
-    .add("images/sailor_fairy.png")
-    .add("images/sailor_fairy_selected.png")
-    .add("images/split_fairy.png")
-    .add("images/split_fairy_selected.png")
-    .add("images/cat.png")
+    //.add("images/chibi_cry1.png")
+    //.add("images/chibi_happy1.png")
+    //.add("images/chibi_oups1.png")
+    //.add("images/knot_1.png")
+    //.add("images/knot_2.png")
+    //.add("images/gum1.png")
+    //.add("images/gum2.png")
+    ///.add("images/Warning-yellow.png")
+    //.add("images/Warning-orange.png")
+    //.add("images/Warning-red.png")
+    //.add("images/Warning-orange2.png")
+    //.add("images/Warning-red2.png")
+    //.add("images/goo_fairy.png")
+    //.add("images/goo_fairy_selected.png")
+    //.add("images/sailor_fairy.png")
+    //.add("images/sailor_fairy_selected.png")
+    //.add("images/split_fairy.png")
+    //.add("images/split_fairy_selected.png")
+    //.add("images/cat.png")
     .add("images/static_ham_wheel.png")
     .add("images/dynamic_ham_wheel.png")
-    .add("images/progress_comb.png")
-    .add("images/progress_dirty.png")
-    .add("images/welcome_princess.png")
+    //.add("images/progress_comb.png")
+    //.add("images/progress_dirty.png")
+    //.add("images/welcome_princess.png")
     //.add("images/partition.png")
-    .add("images/assault_crosshair_gun3.png")
+    //.add("images/assault_crosshair_gun3.png")
     .add("images/curseur_Menu.png")
     .add("images/BG_2ndloop.png")
     .add("images/OuterMagicGates.png")
@@ -169,21 +169,21 @@
     .add("images/Weapons/Weapon3.png")
     .add("images/Weapons/Weapon2 - Lazer 123 .png")
     .add("images/Weapons/Weapon3 - Bullet1.png")
-    .add("sounds/"+sound_bank["Catch_gold"])
-    .add("sounds/"+sound_bank["Gun_switch"])
-    .add("sounds/"+sound_bank["signal_10sec_left"])
+    //.add("sounds/"+sound_bank["Catch_gold"])
+    //.add("sounds/"+sound_bank["Gun_switch"])
+    //.add("sounds/"+sound_bank["signal_10sec_left"])
     .add("sounds/"+sound_bank["claps_end_of_level"])
-    .add("sounds/"+sound_bank["Menu_musique"])
-    .add("sounds/"+sound_bank["take_a_bonus"])
+    //.add("sounds/"+sound_bank["Menu_musique"])
+    //.add("sounds/"+sound_bank["take_a_bonus"])
     .add("sounds/"+sound_bank["Countdown_Start_Race"])
     .add("sounds/"+sound_bank["musique_game"])
     .add("sounds/"+sound_bank["tool_select"])
-    .add("sounds/"+sound_bank["Crash_on_the_roller_coaster"])
+    //.add("sounds/"+sound_bank["Crash_on_the_roller_coaster"])
     .add("sounds/"+sound_bank["oh_no"])
-    .add("sounds/"+sound_bank["upgrade_weapon"])
-    .add("sounds/"+sound_bank["Cross_finish_line"])
+    //.add("sounds/"+sound_bank["upgrade_weapon"])
+    //.add("sounds/"+sound_bank["Cross_finish_line"])
     .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
-    .add("sounds/"+sound_bank["when_lose_because_no_time"])
+    //.add("sounds/"+sound_bank["when_lose_because_no_time"])
     .add("sounds/"+sound_bank["ending"])
     .add("sounds/"+sound_bank["slingshot_charging"])
     .add("sounds/"+sound_bank["shot_no_weapon"])
@@ -196,18 +196,17 @@
     //Define any variables that are used in more than one function
     let timeInSec = 0;
     let mode, tool, music, sound, BGmusicSprite, musicSprite, progress;
-    let butt_start, butt_restart, butt_music, butt_sound;
+    let butt_music, butt_sound;
     let BG_start, BG_win, BG_lose;
     let msg_status;
     let msg_menu_1;
     let msg_menu_2;
-    let hamster, goo_fairy, goo_fairy_selected, sailor_fairy, sailor_fairy_selected, sax_fairy, sax_fairy_selected, chibi, welcome_princess;
+    let hamster;
     let skills_bar, weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping,outer_gates, box, message, message2, state, tilingSprite, jammers;
     let instructions, instrunote1, instrunote2, instrunote3, instrunote4, instrunote5;
     let note1, note2, note3, note4, note5,note21, note22, note23, note24, note25;
-    let knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33, progress_comb, progress_dirty;
-    let Warning_yellow, Warning_orange, Warning_red, Warning_yellow2, Warning_orange2, Warning_red2;
+    let knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33,  progress_dirty;
     let bullets;
     let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
@@ -225,26 +224,26 @@
     let ROLLER_COASTER_LOW = 900;
 
     // create a texture from an image path
-    const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
+    //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
     const textureSkillbar= PIXI.Texture.from('images/Skills_bar2.png');
-    const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
-    const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
-    const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
-    const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
-    const sax_fairy_txt = PIXI.Texture.from('images/split_fairy.png');
-    const sax_fairy_selected_txt = PIXI.Texture.from('images/split_fairy_selected.png');
-    const chibi_cry_txt = PIXI.Texture.from('images/chibi_cry1.png');
-    const chibi_happy_txt = PIXI.Texture.from('images/chibi_happy1.png');
-    const chibi_oups_txt = PIXI.Texture.from('images/chibi_oups1.png');
-    const warning_yellow1_txt = PIXI.Texture.from('images/Warning-yellow.png');
-    const warning_yellow2_txt = PIXI.Texture.from('images/Warning-yellow.png');
-    const warning_orange1_txt = PIXI.Texture.from('images/Warning-orange.png');
-    const warning_orange2_txt = PIXI.Texture.from('images/Warning-orange2.png');
-    const warning_red1_txt = PIXI.Texture.from('images/Warning-red.png');
-    const warning_red2_txt = PIXI.Texture.from('images/Warning-red2.png');
+    //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
+    //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
+    //const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
+    //const sailor_fairy_selected_txt = PIXI.Texture.from('images/sailor_fairy_selected.png');
+    //const sax_fairy_txt = PIXI.Texture.from('images/split_fairy.png');
+    //const sax_fairy_selected_txt = PIXI.Texture.from('images/split_fairy_selected.png');
+    //const chibi_cry_txt = PIXI.Texture.from('images/chibi_cry1.png');
+    //const chibi_happy_txt = PIXI.Texture.from('images/chibi_happy1.png');
+    //const chibi_oups_txt = PIXI.Texture.from('images/chibi_oups1.png');
+    //const warning_yellow1_txt = PIXI.Texture.from('images/Warning-yellow.png');
+    //const warning_yellow2_txt = PIXI.Texture.from('images/Warning-yellow.png');
+    ////const warning_orange1_txt = PIXI.Texture.from('images/Warning-orange.png');
+    //const warning_orange2_txt = PIXI.Texture.from('images/Warning-orange2.png');
+    //const warning_red1_txt = PIXI.Texture.from('images/Warning-red.png');
+    //const warning_red2_txt = PIXI.Texture.from('images/Warning-red2.png');
 
 
     // Css style for icons
@@ -409,36 +408,14 @@
         skills_bar.scale = new PIXI.ObservablePoint(()=>{},skills_bar,WEAPON_MENU_SCALE,WEAPON_MENU_SCALE);
         app.stage.addChild(skills_bar);
 
-        //Create the `messy_hair` sprite
-        messy_hair = new Sprite(resources["images/messy_hair.png"].texture);
-        messy_hair.x = 540;
-        messy_hair.y = 370;
-        messy_hair.vx = 0;
-        messy_hair.vy = 0;
-        //app.stage.addChild(messy_hair);
-        tilingSpriteMessyHair = new PIXI.TilingSprite(
-            textureMessyHair,
-            961,
-            2160,
-        );
-        tilingSpriteMessyHair.x=540;
-        tilingSpriteMessyHair.y=370;
-        //app.stage.addChild(tilingSpriteMessyHair);
-
-        //Create the `nice_hair` sprite
-        nice_hair = new Sprite(resources["images/nice_hair.png"].texture);
-        nice_hair.x = 540;
-        nice_hair.y = 370-1080;
-        nice_hair.vx = 0;
-        nice_hair.vy = 0;
-        //app.stage.addChild(nice_hair);
-
         //Create the `rollerCoaster1` sprite
         rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
         rollerCoaster1.x = 521;
         rollerCoaster1.y = 650;
         rollerCoaster1.vx = 0;
         rollerCoaster1.vy = 0;
+        rollerCoaster1.interactive = true;
+        rollerCoaster1.on('pointerdown', onButtonDown);
         rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
         //app.stage.addChild(rollerCoaster1);
 
@@ -453,16 +430,6 @@
         progress_dirty.on('pointerdown', onButtonDown);
         //progress_dirty.rotation = 3.1415/2.;
         app.stage.addChild(progress_dirty);
-
-        //Create the `progress_comb` sprite
-        progress_comb = new Sprite(resources["images/progress_comb.png"].texture);
-        progress_comb.x = 1600;
-        progress_comb.y = 176-progress_offset;
-        progress_comb.vx = 0;
-        progress_comb.vy = 0;
-        progress_comb.interactive = true;
-        progress_comb.on('pointerdown', onButtonDown);
-        //app.stage.addChild(progress_comb);
 
         //text for progression
         let style = new TextStyle({
@@ -482,63 +449,6 @@
         message2.position.set(1700, 180-progress_offset);
         //app.stage.addChild(message2);
 
-
-        //Create the `goo_fairy` sprite
-        goo_fairy = new Sprite(goo_fairy_txt);
-        goo_fairy.x = 50;
-        goo_fairy.y = 50;
-        goo_fairy.vx = 0;
-        goo_fairy.vy = 0;
-        goo_fairy.tool = 'gum';
-        goo_fairy.toolIcon = defaultIcon;
-        goo_fairy.sel_txt = goo_fairy_selected_txt;
-        goo_fairy.unsel_txt = goo_fairy_txt;
-        goo_fairy.interactive = true;
-        goo_fairy.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        //app.stage.addChild(goo_fairy);
-
-
-        //Create the `sailor_fairy` sprite
-        sailor_fairy = new Sprite(sailor_fairy_txt);
-        sailor_fairy.x = 50;
-        sailor_fairy.y = 400;
-        sailor_fairy.vx = 0;
-        sailor_fairy.vy = 0;
-        sailor_fairy.tool = 'knot';
-        sailor_fairy.toolIcon = defaultIcon;
-        sailor_fairy.sel_txt = sailor_fairy_selected_txt;
-        sailor_fairy.unsel_txt = sailor_fairy_txt;
-        sailor_fairy.interactive = true;
-        sailor_fairy.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        //app.stage.addChild(sailor_fairy);
-
-
-        //Create the `sax_fairy` sprite
-        sax_fairy = new Sprite(sax_fairy_txt);
-        sax_fairy.x = 50;
-        sax_fairy.y = 750;
-        sax_fairy.vx = 0;
-        sax_fairy.vy = 0;
-        sax_fairy.tool = 'sax';
-        sax_fairy.toolIcon = defaultIcon;
-        sax_fairy.sel_txt = sax_fairy_selected_txt;
-        sax_fairy.unsel_txt = sax_fairy_txt;
-        sax_fairy.interactive = true;
-        sax_fairy.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        //app.stage.addChild(sax_fairy);
-
         var NOTE_SCALE = 0.7;
         instructions = [];
         //Create the `instrunote1` sprite
@@ -551,11 +461,7 @@
         //instrunote1.killedby = 'knot';
         instrunote1.interactive = true;
         instrunote1.scale = new PIXI.ObservablePoint(()=>{},instrunote1,NOTE_SCALE,NOTE_SCALE);
-        instrunote1.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        instrunote1.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote1);
         instructions.push(instrunote1);
 
@@ -569,11 +475,7 @@
         //instrunote2.killedby = 'gum';
         instrunote2.interactive = true;
         instrunote2.scale = new PIXI.ObservablePoint(()=>{},instrunote2,NOTE_SCALE,NOTE_SCALE);
-        instrunote2.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        instrunote2.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote2);
         instructions.push(instrunote2);
 
@@ -587,11 +489,7 @@
         //instrunote3.killedby = 'sax';
         instrunote3.interactive = true;
         instrunote3.scale = new PIXI.ObservablePoint(()=>{},instrunote3,NOTE_SCALE,NOTE_SCALE);
-        instrunote3.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        instrunote3.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote3);
         instructions.push(instrunote3);
 
@@ -605,11 +503,7 @@
         //instrunote4.killedby = 'knot';
         instrunote4.interactive = true;
         instrunote4.scale = new PIXI.ObservablePoint(()=>{},instrunote4,NOTE_SCALE,NOTE_SCALE);
-        instrunote4.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        instrunote4.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote4);
         instructions.push(instrunote4);
 
@@ -623,11 +517,7 @@
         //instrunote5.killedby = 'gum';
         instrunote5.interactive = true;
         instrunote5.scale = new PIXI.ObservablePoint(()=>{},instrunote5,NOTE_SCALE,NOTE_SCALE);
-        instrunote5.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        instrunote5.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote5);
         instructions.push(instrunote5);
 
@@ -642,11 +532,7 @@
         //note1.killedby = 'knot';
         note1.interactive = true;
         note1.scale = new PIXI.ObservablePoint(()=>{},note1,NOTE_SCALE,NOTE_SCALE);
-        note1.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note1.on('pointerdown', onButtonDown);
         app.stage.addChild(note1);
         jammers.push(note1);
 
@@ -660,11 +546,7 @@
         //note2.killedby = 'gum';
         note2.interactive = true;
         note2.scale = new PIXI.ObservablePoint(()=>{},note2,NOTE_SCALE,NOTE_SCALE);
-        note2.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note2.on('pointerdown', onButtonDown);
         app.stage.addChild(note2);
         jammers.push(note2);
 
@@ -678,11 +560,7 @@
         //note3.killedby = 'sax';
         note3.interactive = true;
         note3.scale = new PIXI.ObservablePoint(()=>{},note3,NOTE_SCALE,NOTE_SCALE);
-        note3.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note3.on('pointerdown', onButtonDown);
         app.stage.addChild(note3);
         jammers.push(note3);
 
@@ -696,11 +574,7 @@
         //note4.killedby = 'knot';
         note4.interactive = true;
         note4.scale = new PIXI.ObservablePoint(()=>{},note4,NOTE_SCALE,NOTE_SCALE);
-        note4.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note4.on('pointerdown', onButtonDown);
         app.stage.addChild(note4);
         jammers.push(note4);
 
@@ -714,11 +588,7 @@
         //note5.killedby = 'gum';
         note5.interactive = true;
         note5.scale = new PIXI.ObservablePoint(()=>{},note5,NOTE_SCALE,NOTE_SCALE);
-        note5.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note5.on('pointerdown', onButtonDown);
         app.stage.addChild(note5);
         jammers.push(note5);
 
@@ -732,11 +602,7 @@
         //note21.killedby = 'knot';
         note21.interactive = true;
         note21.scale = new PIXI.ObservablePoint(()=>{},note21,NOTE_SCALE,NOTE_SCALE);
-        note21.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note21.on('pointerdown', onButtonDown);
         app.stage.addChild(note21);
         jammers.push(note21);
 
@@ -750,11 +616,7 @@
         //note22.killedby = 'gum';
         note22.interactive = true;
         note22.scale = new PIXI.ObservablePoint(()=>{},note22,NOTE_SCALE,NOTE_SCALE);
-        note22.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note22.on('pointerdown', onButtonDown);
         app.stage.addChild(note22);
         jammers.push(note22);
 
@@ -768,11 +630,7 @@
         //note23.killedby = 'sax';
         note23.interactive = true;
         note23.scale = new PIXI.ObservablePoint(()=>{},note23,NOTE_SCALE,NOTE_SCALE);
-        note23.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note23.on('pointerdown', onButtonDown);
         app.stage.addChild(note23);
         jammers.push(note23);
 
@@ -786,11 +644,7 @@
         //note24.killedby = 'knot';
         note24.interactive = true;
         note24.scale = new PIXI.ObservablePoint(()=>{},note24,NOTE_SCALE,NOTE_SCALE);
-        note24.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note24.on('pointerdown', onButtonDown);
         app.stage.addChild(note24);
         jammers.push(note24);
 
@@ -804,11 +658,7 @@
         //note25.killedby = 'gum';
         note25.interactive = true;
         note25.scale = new PIXI.ObservablePoint(()=>{},note25,NOTE_SCALE,NOTE_SCALE);
-        note25.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        note25.on('pointerdown', onButtonDown);
         app.stage.addChild(note25);
         jammers.push(note25);
 
@@ -821,11 +671,7 @@
         knot_31.killedby = 'sax';
         knot_31.interactive = true;
         knot_31.isBad = true;
-        knot_31.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        knot_31.on('pointerdown', onButtonDown);
         app.stage.addChild(knot_31);
         jammers.push(knot_31);
         //Create the `knot_12` sprite
@@ -837,11 +683,7 @@
         knot_12.killedby = 'knot';
         knot_12.interactive = true;
         knot_12.isBad = true;
-        knot_12.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        knot_12.on('pointerdown', onButtonDown);
         app.stage.addChild(knot_12);
         jammers.push(knot_12);
 
@@ -854,76 +696,9 @@
         knot_22.killedby = 'gum';
         knot_22.isBad = true;
         knot_22.interactive = true;
-        knot_22.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
+        knot_22.on('pointerdown', onButtonDown);
         app.stage.addChild(knot_22);
         jammers.push(knot_22);
-
-        //Create the `knot_32` sprite
-        knot_32 = new Sprite(resources["images/knot_1.png"].texture);
-        knot_32.x = 950;
-        knot_32.y = 1280;
-        knot_32.vx = 0;
-        knot_32.vy = 0;
-        knot_32.killedby = 'sax';
-        knot_32.interactive = true;
-        knot_32.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_32);
-        jammers.push(knot_32);
-        //Create the `knot_13` sprite
-        knot_13 = new Sprite(resources["images/knot.png"].texture);
-        knot_13.x = 700;
-        knot_13.y = 1080;
-        knot_13.vx = 0;
-        knot_13.vy = 0;
-        knot_13.killedby = 'knot';
-        knot_13.interactive = true;
-        knot_13.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_13);
-        jammers.push(knot_13);
-
-        //Create the `knot_2` sprite
-        knot_23 = new Sprite(resources["images/gum2.png"].texture);
-        knot_23.x = 850;
-        knot_23.y = 1280;
-        knot_23.vx = 0;
-        knot_23.vy = 0;
-        knot_23.killedby = 'gum';
-        knot_23.interactive = true;
-        knot_23.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_23);
-        jammers.push(knot_23);
-
-        //Create the `knot_3` sprite
-        knot_33 = new Sprite(resources["images/knot_1.png"].texture);
-        knot_33.x = 950;
-        knot_33.y = 1280;
-        knot_33.vx = 0;
-        knot_33.vy = 0;
-        knot_33.killedby = 'sax';
-        knot_33.interactive = true;
-        knot_33.on('pointerdown', onButtonDown)
-            .on('pointerup', onButtonUp)
-            .on('pointerupoutside', onButtonUp)
-            .on('pointerover', onButtonOver)
-            .on('pointerout', onButtonOut);
-        app.stage.addChild(knot_33);
-        jammers.push(knot_33);
 
 
         bullets = [];
@@ -935,6 +710,8 @@
         bullet_peanut1.vy = 0;
         bullet_peanut1.weaponType = 'peanut';
         bullet_peanut1.weapon = weapon1;
+        bullet_peanut1.interactive = true;
+        bullet_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet_peanut1);
         bullets.push(bullet_peanut1);
 
@@ -947,6 +724,8 @@
         bullet2_peanut1.vy = 0;
         bullet2_peanut1.weaponType = 'peanut';
         bullet2_peanut1.weapon = weapon1;
+        bullet2_peanut1.interactive = true;
+        bullet2_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet2_peanut1);
         bullets.push(bullet2_peanut1);
 
@@ -959,6 +738,8 @@
         bullet3_peanut1.vy = 0;
         bullet3_peanut1.weaponType = 'peanut';
         bullet3_peanut1.weapon = weapon1;
+        bullet3_peanut1.interactive = true;
+        bullet3_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet3_peanut1);
         bullets.push(bullet3_peanut1);
 
@@ -970,6 +751,8 @@
         bullet4_peanut1.vy = 0;
         bullet4_peanut1.weaponType = 'peanut';
         bullet4_peanut1.weapon = weapon1;
+        bullet4_peanut1.interactive = true;
+        bullet4_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet4_peanut1);
         bullets.push(bullet4_peanut1);
 
@@ -986,6 +769,8 @@
         bullet_lazer1.vy = 0;
         bullet_lazer1.weaponType = 'lazer';
         bullet_lazer1.weapon = weapon2;
+        bullet_lazer1.interactive = true;
+        bullet_lazer1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet_lazer1);
         bullets.push(bullet_lazer1);
 
@@ -1002,6 +787,8 @@
         bullet2_lazer1.vy = 0;
         bullet2_lazer1.weaponType = 'lazer';
         bullet2_lazer1.weapon = weapon2;
+        bullet2_lazer1.interactive = true;
+        bullet2_lazer1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet2_lazer1);
         bullets.push(bullet2_lazer1);
 
@@ -1018,6 +805,8 @@
         bullet3_lazer1.vy = 0;
         bullet3_lazer1.weaponType = 'lazer';
         bullet3_lazer1.weapon = weapon2;
+        bullet3_lazer1.interactive = true;
+        bullet3_lazer1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet3_peanut1);
         bullets.push(bullet3_peanut1);
 
@@ -1033,6 +822,8 @@
         bullet4_lazer1.vy = 0;
         bullet4_lazer1.weaponType = 'lazer';
         bullet4_lazer1.weapon = weapon2;
+        bullet4_lazer1.interactive = true;
+        bullet4_lazer1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet4_lazer1);
         bullets.push(bullet4_lazer1);
 
@@ -1047,6 +838,8 @@
         bullet_gun1.vy = 0;
         bullet_gun1.weaponType = 'gun';
         bullet_gun1.weapon = weapon3;
+        bullet_gun1.interactive = true;
+        bullet_gun1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet_gun1);
         bullets.push(bullet_gun1);
 
@@ -1063,6 +856,8 @@
         bullet2_gun1.vy = 0;
         bullet2_gun1.weaponType = 'gun';
         bullet2_gun1.weapon = weapon3;
+        bullet2_gun1.interactive = true;
+        bullet2_gun1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet2_gun1);
         bullets.push(bullet2_gun1);
 
@@ -1079,6 +874,8 @@
         bullet3_gun1.vy = 0;
         bullet3_gun1.weaponType = 'gun';
         bullet3_gun1.weapon = weapon3;
+        bullet3_gun1.interactive = true;
+        bullet3_gun1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet3_gun1);
         bullets.push(bullet3_gun1);
 
@@ -1094,57 +891,11 @@
         bullet4_gun1.vy = 0;
         bullet4_gun1.weaponType = 'gun';
         bullet4_gun1.weapon = weapon3;
+        bullet4_gun1.interactive = true;
+        bullet4_gun1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet4_gun1);
         bullets.push(bullet4_gun1);
 
-
-        //Create the `Warning_yellow` sprite
-        Warning_yellow = new Sprite(resources["images/Warning-yellow.png"].texture);
-        Warning_yellow.x = 480;
-        Warning_yellow.y = 1080;
-        Warning_yellow.vx = 0;
-        Warning_yellow.vy = 0;
-        //app.stage.addChild(Warning_yellow);
-
-        //Create the `Warning_orange` sprite
-        Warning_orange = new Sprite(resources["images/Warning-orange.png"].texture);
-        Warning_orange.x = 480;
-        Warning_orange.y = 1080;
-        Warning_orange.vx = 0;
-        Warning_orange.vy = 0;
-        //app.stage.addChild(Warning_orange);
-
-        //Create the `Warning_red` sprite
-        Warning_red = new Sprite(resources["images/Warning-red.png"].texture);
-        Warning_red.x = 480;
-        Warning_red.y = 1080;
-        Warning_red.vx = 0;
-        Warning_red.vy = 0;
-        //app.stage.addChild(Warning_red);
-
-        //Create the `Warning_yellow2` sprite
-        Warning_yellow2 = new Sprite(resources["images/Warning-yellow.png"].texture);
-        Warning_yellow2.x = 1460;
-        Warning_yellow2.y = 1080;
-        Warning_yellow2.vx = 0;
-        Warning_yellow2.vy = 0;
-        //app.stage.addChild(Warning_yellow2);
-
-        //Create the `Warning_orange2` sprite
-        Warning_orange2 = new Sprite(resources["images/Warning-orange.png"].texture);
-        Warning_orange2.x = 1460;
-        Warning_orange2.y = 1080;
-        Warning_orange2.vx = 0;
-        Warning_orange2.vy = 0;
-        //app.stage.addChild(Warning_orange2);
-
-        //Create the `Warning_red2` sprite
-        Warning_red2 = new Sprite(resources["images/Warning-red.png"].texture);
-        Warning_red2.x = 1460;
-        Warning_red2.y = 1080;
-        Warning_red2.vx = 0;
-        Warning_red2.vy = 0;
-        //app.stage.addChild(Warning_red2);
 
 
         //Create the `hamster` sprite
@@ -1166,6 +917,7 @@
         hamster.moving = false;
         hamster.toolIcon = defaultIcon;
         hamster.interactive = true;
+        hamster.on('pointerdown', onButtonDown);
         hamster.scale = new PIXI.ObservablePoint(()=>{},hamster,0.3,0.3);
         /*hamster.on('pointerdown', onButtonDown)
             .on('pointerup', onButtonUp)
@@ -1198,11 +950,6 @@
 
         app.stage.addChild(musicSprite);*/
 
-        //Create the `chibi` sprite
-        chibi = new Sprite(chibi_happy_txt);
-        chibi.x = 1350;
-        chibi.y = 1080;
-        //app.stage.addChild(chibi);
 
         //Create the `BG_start` sprite
         BG_start = new Sprite(resources["images/BG_start.png"].texture);
@@ -1212,13 +959,6 @@
         BG_start.vy = 0;
         app.stage.addChild(BG_start);
 
-        //Create the `welcome_princess` sprite
-        welcome_princess = new Sprite(resources["images/welcome_princess.png"].texture);
-        welcome_princess.x = 0;
-        welcome_princess.y = 0;
-        welcome_princess.vx = 0;
-        welcome_princess.vy = 0;
-        //app.stage.addChild(welcome_princess);
 
 
         //Create the `BG_lose` sprite
@@ -1237,15 +977,6 @@
         BG_win.vx = 0;
         BG_win.vy = 0;
         app.stage.addChild(BG_win);
-
-
-        butt_restart = new Sprite(resources["images/comb_again.png"].texture);
-        butt_restart.x = 950;
-        butt_restart.y = 1280;
-        //butt_restart.y = 1280;
-        butt_restart.interactive = true;
-        butt_restart.on('pointerdown', onStartGame);
-
 
         //Create the text sprite
         let style2 = new TextStyle({
@@ -1328,13 +1059,7 @@
 
 
         //Capture the keyboard arrow keys
-        let left = keyboard(37),
-          up = keyboard(38),
-          right = keyboard(39),
-          down = keyboard(40),
-          enter = keyboard(13),
-          space = keyboard(32),
-          keyLetterS = keyboard(83),
+        let keyLetterS = keyboard(83),
           keyLetterD = keyboard(68),
           keyLetterF = keyboard(70)
           ;
@@ -1355,54 +1080,6 @@
 
         };
 
-
-        //Left arrow key `release` method
-        left.release = function() {
-
-            //If the left arrow has been released, and the right arrow isn't down,
-            //and the hamster isn't moving vertically:
-            //Stop the hamster
-            /*if (!right.isDown && hamster.vy === 0) {
-              hamster.vx = 0;
-            }*/
-        };
-
-        //Up
-        up.press = function() {
-
-            if(mode == 'start') {
-                //menu_cursor = (menu_cursor +1)% MENU_MAX;
-
-            } else {
-                //hamster.vy = -5;
-                //hamster.vx = 0;
-            }
-        };
-        up.release = function() {
-            /*if(mode == 'start') {
-                menu_cursor = (menu_cursor +1)% MENU_MAX;
-                hamster.x = MENU_X0;
-                hamster.y = MENU_Y0 +80 + menu_cursor*MENU_OFFSET;
-            } else {
-                if (!down.isDown && hamster.vx === 0) {
-                  hamster.vy = 0;
-                }
-            }*/
-        };
-
-        //Right
-        right.press = function() {
-
-        };
-        right.release = function() {
-
-        };
-
-        //Down
-        down.press = function() {
-        };
-        down.release = function() {
-        };
 
         //Set the game state
         state = play;
@@ -1452,9 +1129,7 @@
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 1080;
-        butt_restart.y=1080;
         progress = 0;
-        welcome_princess.y = 1080;
         //chibi.y = 1080-771;
         //onPlayVideo('claps_end_of_level', true);
         onPlayVideo('Countdown_Start_Race', true);
@@ -1476,7 +1151,6 @@
         msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
         BG_start.y = 1080;
-        chibi.y=1080;
         BG_win.y = 0;
         BG_lose.y = 1080;
         onPlayVideo('claps_end_of_level', true);
@@ -1504,11 +1178,9 @@
 
             msg_menu_1.y = msg_menu_1.y - 1080;
             msg_menu_2.y = msg_menu_2.y - 1080;
-            chibi.y=1080
             BG_start.y = 1080;
             BG_win.y = 1080;
             BG_lose.y = 0;
-            butt_restart.y = 800;
             onPlayVideo('oh_no', false);
             onPlayVideo('ending', true);
             mode = 'lose';
@@ -1621,13 +1293,6 @@
         }
     }
 
-    function updateToolTxt(fairy) {
-        if(tool === fairy.tool){
-            fairy.texture = fairy.sel_txt;
-        } else {
-            fairy.texture = fairy.unsel_txt;
-        }
-    }
 
     function onButtonUp() {
         this.isdown = false;
@@ -1705,33 +1370,6 @@
 
         //Update the current game state:
         state(delta);
-    }
-
-    function isJammersTouchingComb() {
-        for(jammer in jammers){
-            if(jammer.y <= tilingSpriteMessyHair.y){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function isJammersTouchingComb() {
-        for (var i = 0; i < jammers.length; i++) {
-            if(jammers[i].y <= tilingSpriteMessyHair.y){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function isJammersTouchingTop() {
-        for (var i = 0; i < jammers.length; i++) {
-            if(jammers[i].y <= 10){
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -1896,142 +1534,22 @@
                 }
 
                 break;
-            case 'danger':
-                if(!isJammersTouchingComb()) {
-                    mode = 'recover';
-                    chibi.texture = chibi_oups_txt;
-                }
-                break;
-            case 'recover':
-                if(isJammersTouchingComb()) {
-                    onPlayVideo('oh_no', false);
-                    chibi.texture = chibi_oups_txt;
-                    mode = 'danger';
-                }
-                if(370 <= tilingSpriteMessyHair.y) {
-                    mode = 'normal';
-                    chibi.texture = chibi_happy_txt;
-                    tilingSpriteMessyHair.y = 370;
-                    nice_hair.y = 370-1080;
-                    rollerCoaster1.y=176;
-                }
-                if (progress_comb.y >= 660-progress_offset){
-                    progress_comb.y = 174-progress_offset;
-                    onWinGame();
-                }
-                break;
         }
 
         // action
         switch (mode) {
             case 'normal':
                 hamster.tilePosition.vy = 500;
-                tilingSpriteMessyHair.vy = 0;
                 rollerCoaster1.vy=0;
-                Warning_yellow.y = 1080;
-                Warning_orange.y = 1080;
-                Warning_red.y = 1080;
-                Warning_yellow2.y = 1080;
-                Warning_orange2.y = 1080;
-                Warning_red2.y = 1080;
                 progress++;
-                break;
-            case 'danger':
-                hamster.tilePosition.vy = 500;
-                tilingSpriteMessyHair.vy = -moveSpeed;
-                Warning_yellow.y = 0;
-                Warning_yellow2.y = 0;
-                if(tilingSpriteMessyHair.y <= 200){
-                    Warning_red.y = 0;
-                    Warning_red2.y = 0;
-                    chibi.texture = chibi_cry_txt;
-                    switch (tilingSpriteMessyHair.y % 60){
-                        case 0:
-                            Warning_red.texture = warning_red1_txt;
-                            Warning_red2.texture = warning_red1_txt;
-                        break;
-                        case 10:
-                            Warning_red.texture = warning_orange1_txt;
-                            Warning_red2.texture = warning_orange1_txt;
-                        break;
-                        case 20:
-                            Warning_red.texture = warning_yellow1_txt;
-                            Warning_red2.texture = warning_yellow1_txt;
-                        break;
-                        case 30:
-                            Warning_red.texture = warning_red2_txt;
-                            Warning_red2.texture = warning_red2_txt;
-                        break;
-                        case 40:
-                            Warning_red.texture = warning_orange2_txt;
-                            Warning_red2.texture = warning_orange2_txt;
-                        break;
-                        case 50:
-                            Warning_red.texture = warning_yellow2_txt;
-                            Warning_red2.texture = warning_yellow2_txt;
-                        break;
-                    }
-                } else {
-                    chibi.texture = chibi_oups_txt;
-                    Warning_red.y = 1080;
-                    Warning_red2.y = 1080;
-                    switch (tilingSpriteMessyHair.y % 40){
-                        case 0:
-                            Warning_yellow.texture = warning_orange1_txt;
-                            Warning_yellow2.texture = warning_orange1_txt;
-                        break;
-                        case 10:
-                            Warning_yellow.texture = warning_yellow1_txt;
-                            Warning_yellow2.texture = warning_yellow1_txt;
-                        break;
-                        break;
-                        case 20:
-                            Warning_yellow.texture = warning_orange2_txt;
-                            Warning_yellow2.texture = warning_orange2_txt;
-                        break;
-                        case 30:
-                            Warning_yellow.texture = warning_yellow2_txt;
-                            Warning_yellow2.texture = warning_yellow2_txt;
-                        break;
-                    }
-                }
-                break;
-
-            case 'recover':
-                tilingSpriteMessyHair.tilePosition.vy = -moveSpeed;
-                tilingSpriteMessyHair.vy = recoverSpeed;
-                Warning_yellow.y = 1080;
-                Warning_orange.y = 1080;
-                Warning_red.y = 1080;
-                Warning_yellow2.y = 1080;
-                Warning_orange2.y = 1080;
-                Warning_red2.y = 1080;
-                progress++;
-
                 break;
 
              default:
                 moveSpeed =0;
                 recoverSpeed =0;
-                tilingSpriteMessyHair.vy = 0;
-                tilingSpriteMessyHair.tilePosition.vy = 0;
                 rollerCoaster1.vy=0;
-                tilingSpriteMessyHair.y = 370;
-                nice_hair.y = 370-1080;
                 //rollerCoaster1.y=176;
-                Warning_yellow.y = 1080;
-                Warning_orange.y = 1080;
-                Warning_red.y = 1080;
-                Warning_yellow2.y = 1080;
-                Warning_orange2.y = 1080;
-                Warning_red2.y = 1080;
 
-        }
-
-        progress_comb.y = 174+(progress/10)-progress_offset;
-
-        if(isJammersTouchingTop()) {
-            //onLoseGame();
         }
 
 
@@ -2045,9 +1563,7 @@
         bullet3_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
         bullet4_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
 
-        tilingSpriteMessyHair.y += tilingSpriteMessyHair.vy;
-        rollerCoaster1.y += tilingSpriteMessyHair.vy;
-        nice_hair.y += tilingSpriteMessyHair.vy;
+        //rollerCoaster1.y += tilingSpriteMessyHair.vy;
 
         hamster.progress += hamster.vx;
         setPositionOnCurve(hamster, hamster.progress, hamsterControlPoints);
@@ -2055,7 +1571,7 @@
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
         moveBullets(1);
         //check for a collision between the hamster and the box
-        if (hitTestRectangle(hamster, box)) {
+        /*if (hitTestRectangle(hamster, box)) {
 
             //if there's a collision, change the message text
             //and tint the box red
@@ -2067,7 +1583,7 @@
             //text and the box's color
             //message.text = "No collision...("+hamster.x+", "+hamster.y+")";
             box.tint = 0xccff99;
-        }
+        }*/
         animate_BG(timeInSec);
     }
 
