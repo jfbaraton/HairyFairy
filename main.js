@@ -1103,6 +1103,9 @@
     }
 
     function onStartGame() {
+        if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
+            BGmusicSprite.baseTexture.source.pause();
+        }
         CURRENT_LVL = 0;
         resetJammers();
 
@@ -1139,6 +1142,10 @@
 
     function onWinGame() {
         resetJammers();
+        if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
+            BGmusicSprite.baseTexture.source.pause();
+        }
+        onPlayVideo('claps_end_of_level', true);
         msg_status.text = 'Click here to restart';
         msg_status.y = 850;
         msg_status.x = 200;
@@ -1153,13 +1160,17 @@
         BG_start.y = 1080;
         BG_win.y = 0;
         BG_lose.y = 1080;
-        onPlayVideo('claps_end_of_level', true);
         mode = 'win';
     }
 
     function onLoseGame() {
-        if(mode != 'lose') {
             resetJammers();
+        if(mode != 'lose') {
+            if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
+                BGmusicSprite.baseTexture.source.pause();
+            }
+            onPlayVideo('oh_no', false);
+            onPlayVideo('ending', true);
             msg_status.text = '                                             .\n'+
             '                                                              .\n'+
             '                                                              .\n'+
@@ -1181,8 +1192,6 @@
             BG_start.y = 1080;
             BG_win.y = 1080;
             BG_lose.y = 0;
-            onPlayVideo('oh_no', false);
-            onPlayVideo('ending', true);
             mode = 'lose';
         }
     }
@@ -1557,6 +1566,8 @@
         /*hamster.x += hamster.vx;
         hamster.y += hamster.vy;*/
         //hamster.tilePosition.x += hamster.tilePosition.vy;
+        hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
+
         bullet_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
        // bullet1_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
         bullet2_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
