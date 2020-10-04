@@ -213,7 +213,7 @@
     let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
     let bullet_gun1,  bullet2_gun1, bullet3_gun1, bullet4_gun1;
     let MENU_MAX = 2 ;
-    let LVL_MAX = 20 ;
+    let LVL_MAX = 12 ;
     //let LVL_MAX = 10 ;
     let CURRENT_LVL = 0 ;
     let MENU_X0 = 100;
@@ -349,6 +349,8 @@
         weapon1.weaponSwitch = 'slingshot_charging';
         weapon1.weaponShoot = 'short_slingshot_sound';
         weapon1.tool = 'peanut';
+        weapon1.weapon_speed = 10;
+        weapon1.bulletAngle = 3.1416/8;
         weapon1.interactive = true;
         weapon1.available = true;
         weapon1.on('pointerdown', onButtonDown);
@@ -366,6 +368,8 @@
         weapon2.weaponSwitch = 'shot_lazer_weapon_2';
         weapon2.weaponShoot = 'shot_lazer_weapon_2';
         weapon2.tool = 'lazer';
+        weapon2.weapon_speed = 50;
+        weapon2.bulletAngle = 0;
         weapon2.interactive = true;
         weapon2.available = true;
         weapon2.on('pointerdown', onButtonDown);
@@ -381,6 +385,9 @@
         weapon3.weaponSwitch = 'gun_charging';
         weapon3.weaponShoot = 'Shot_Deagle_Weapon_1';
         weapon3.tool = 'gun';
+        weapon3.weapon_speed = 20;
+        weapon3.bulletAngle =  0;
+        weapon3.isGoesThrough = true;
         weapon3.interactive = true;
         weapon3.available = true;
         weapon3.on('pointerdown', onButtonDown);
@@ -1422,7 +1429,12 @@
         CURRENT_LVL = 0;
         resetJammers();
 
-        swapWeapon(weapon1);
+        resetInstru(instrunote1);
+        resetInstru(instrunote2);
+        resetInstru(instrunote3);
+        resetInstru(instrunote4);
+        resetInstru(instrunote5);
+
         weapon2.available = false;
         weapon2.y = 3000;
         weapon3.available = false;
@@ -1545,18 +1557,24 @@
                 bullets[i].x = hamster.x+80;
                 bullets[i].y = hamster.y+80;
 
-                onPlayVideo(bullets[i].weapon.weaponShoot, false);
 
-                var curr_weapon_speed = bullets[i].weapon_speed || 10;
-                var oppositeSz = targetY > bullets[i].y ? 0 : (targetY - bullets[i].y );
+                var curr_weapon_speed = bullets[i].weapon.weapon_speed || 10;
+                console.log('shoot speed ',bullets[i].weapon,' ',curr_weapon_speed, 3.1416/16);
+                var oppositeSz = targetY > bullets[i].y ? ( bullets[i].y -targetY ) :(targetY - bullets[i].y );
+                var goes_down = targetY > bullets[i].y ? true : false;
                 var adjacentSz = (targetX - bullets[i].x);
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
+                bullets[i].rotation = bullets[i].weapon.bulletAngle || 0 ;
+                console.log('shoot base angle',bullets[i].rotation);
                 if(adjacentSz == 0){
                     bullets[i].vx = 0;
                     bullets[i].vy = -curr_weapon_speed;
+                    bullets[i].rotation -= 3.1416/4;
                 } else {
                     bullets[i].vx =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed / (oppositeSz / adjacentSz) : curr_weapon_speed ;
-                    bullets[i].vy =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed: curr_weapon_speed * (oppositeSz / adjacentSz) ;
+                    bullets[i].vy =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed                             : curr_weapon_speed * (oppositeSz / adjacentSz) ;
+
+                    bullets[i].rotation += adjacentSz < 0 ? 3.1416+Math.atan(oppositeSz / adjacentSz ) : Math.atan(oppositeSz / adjacentSz ) ;
                     /*if(adjacentSz > 0) {
                         if (oppositeSz > 0) {
                             console.log('++ ',(oppositeSz / adjacentSz));
@@ -1579,10 +1597,11 @@
 
                     }*/
                 }
+                console.log('shoot final angle',bullets[i].rotation);
 
 
                 bullets[i].vx = bullets[i].vx > 0 != adjacentSz >0 ? - bullets[i].vx : bullets[i].vx;
-                bullets[i].vy = bullets[i].vy > 0 ? -bullets[i].vy : bullets[i].vy;
+                bullets[i].vy = bullets[i].vy > 0 != goes_down ? -bullets[i].vy : bullets[i].vy;
 
                 //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
 
@@ -1593,11 +1612,12 @@
                 //console.log('shooted ',adjacentSz,oppositeSz ,(oppositeSz / adjacentSz), ' ',bullets[i].vx,bullets[i].vy);
                 //console.log('shooted ',bullets[i]);
 
+                onPlayVideo(bullets[i].weapon.weaponShoot, false);
             }
 
         }
         if(!found) {
-            console.log('shoot in CD');
+            //console.log('shoot in CD');
         }
     }
 
@@ -1665,7 +1685,7 @@
                 BGmusicSprite = PIXI.Texture.from('sounds/'+sound_bank[sound_name]);
                 if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source){
                     BGmusicSprite.baseTexture.source.loop = 'claps_end_of_level' != sound_name && 'Countdown_Start_Race' != sound_name;
-                    console.log('music T2 ',BGmusicSprite.baseTexture.source);
+                    //console.log('music T2 ',BGmusicSprite.baseTexture.source);
                     //BGmusicSprite.baseTexture.source.play();
                 }
                 /*console.log('music ',BGmusicSprite);
@@ -1735,7 +1755,7 @@
     function addInstru(instruToAdd) {
 
         if(instruToAdd.amountCpt == 0){
-            instruToAdd.x = randomInt(300,1820);
+            instruToAdd.x = randomInt(300,1720);
             instruToAdd.y = randomInt(1,120);
         }
 
@@ -1744,20 +1764,22 @@
 
     function placeNewJammers(){
         if(0 == CURRENT_LVL++){
+            hamster.vx = 0.35;
             onPlayVideo('musique_game', true);
         }
 
-        if(CURRENT_LVL > LVL_MAX/3){
+        if(CURRENT_LVL > LVL_MAX/3 && !weapon2.available){
             weapon2.available = true;
             weapon2.y = WEAPON_2_Y;
             swapWeapon(weapon2);
         }
 
 
-        if(CURRENT_LVL > 2*LVL_MAX/3){
+        if(CURRENT_LVL > 2*LVL_MAX/3 && !weapon3.available){
             weapon3.available = true;
             weapon3.y = WEAPON_3_Y;
             swapWeapon(weapon3);
+            hamster.vx = 0.5;
         }
 
         for (var i = 0; i < bullets.length; i++) {
@@ -1778,7 +1800,7 @@
         var difficulty = (CURRENT_LVL/2) % 8 ; // 0 easy to 9 hardcore
         var badNotesCpt = 0;
         for (var i = 0; i < jammers.length; i++) {
-            if(i<=2+difficulty){
+            if(i<=2+difficulty && !jammers[i].isBad){
                 jammers[i].flying = true;
                 jammers[i].x = 20+randomInt(0,1820);
                 jammers[i].y = 180+randomInt(1,500);
@@ -1811,7 +1833,19 @@
         for (var i = 0; i < jammers.length; i++) {
             if(jammers[i].flying){
                 jammers[i].y += jammers[i].vy;
+                if(jammers[i].y <= 0 && jammers[i].vy < 0){
+                    jammers[i].vy = -jammers[i].vy;
+                }
+                if(jammers[i].y >= size[1]-150 && jammers[i].vy > 0){
+                    jammers[i].vy = -jammers[i].vy;
+                }
                 jammers[i].x += jammers[i].vx;
+                if(jammers[i].x <= 0 || jammers[i].vx <0){
+                    jammers[i].vx = -jammers[i].vx;
+                }
+                if(jammers[i].x >= size[0]-600 && jammers[i].vx >0){
+                    jammers[i].vx = -jammers[i].vx;
+                }
             }
         }
     }
@@ -1843,25 +1877,22 @@
                 if(hamster.progress >=  100 && hamster.vx >0) { // touch right
                     // check if there are still notes
 
+                    for (var i = 0; i < jammers.length; i++) {
+                        if(!jammers[i].isBad && jammers[i].flying){
+                            resetJammers();
+                            onLoseGame();
+                        }
+                    }
 
                     // teleport back
                     hamster.progress=0;
                     //hamster.x = ROLLER_COASTER_LEFT;
 
-                    hamster.vx = 0.5;
                     if(CURRENT_LVL >LVL_MAX){
                         onWinGame();
                     }
 
                     placeNewJammers();
-                }
-
-
-                if(hamster.x <=  ROLLER_COASTER_LEFT && hamster.vx <0) { // touch left
-                    // end of cycle
-
-                    // go towards right
-                    //hamster.vx = -hamster.vx;
                 }
 
                 break;
@@ -2055,10 +2086,14 @@
             if(nextPoint.progress >= curveProgress){
                 //console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
                 //console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
-                sprite.x = (sprite.curve_offsetX || 0) + previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                sprite.y = (sprite.curve_offsetY -10 || 0) + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                //sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
                 sprite.rotation = 0;
+                //sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
+
+                var curve_offsetX = (sprite.curve_offsetX || 0)
+                var curve_offsetY = (sprite.curve_offsetY -10 || 0)
+                sprite.x =  Math.cos(sprite.rotation)*curve_offsetX + previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+                sprite.y =  Math.cos(sprite.rotation)*curve_offsetY  + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
+
 
                 return;
             }
@@ -2104,7 +2139,7 @@
         for (var i = 0; i < bullets.length; i++) {
             if(bullets[i].flying){
                 // check if out of screen
-                if(bullets[i].y < -200 || bullets[i].y > size[0] +200 || bullets[i].x < -200 || bullets[i].y > size[1] +200){
+                if(bullets[i].y < -100 || bullets[i].y > size[0] + 20 || bullets[i].x < -100 || bullets[i].y > size[1] +20){
                     bullets[i].flying = false;
                     bullets[i].x = -200;
                     bullets[i].y = -200;
@@ -2121,9 +2156,18 @@
                                 // TODO impact FX
 
                                 // reset note and bullet
-                                bullets[i].flying = false;
-                                bullets[i].x = -200;
-                                bullets[i].y = -200;
+                                if(!bullets[i].weapon.isGoesThrough){
+                                    bullets[i].flying = false;
+                                    bullets[i].x = -200;
+                                    bullets[i].y = -200;
+                                }
+
+                                // clear note instruction?
+                                jammers[j].instru && jammers[j].instru.amountCpt --;
+                                if(jammers[j].instru && jammers[j].instru.amountCpt <=0){
+                                    resetInstru(jammers[j].instru);
+                                }
+
                                 jammers[j].flying = false;
                                 jammers[j].x = -200;
                                 jammers[j].y = -200;
