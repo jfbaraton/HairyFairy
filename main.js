@@ -156,7 +156,7 @@
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("images/Weapons/Weapon2 - Lazer3.3.png")
     .add("images/portee vide3.png")
-    .add("images/Skills_bar.png")
+    .add("images/Skills_bar2.png")
     .add("images/Weapons/slingshot charged 1.png")
     .add("images/Weapons/Weapon2.png")
     .add("images/Weapons/Weapon3.png")
@@ -210,6 +210,7 @@
     const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
+    const textureSkillbar= PIXI.Texture.from('images/Skills_bar2.png');
     const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
@@ -317,10 +318,10 @@
 
         //Create the 'weapon selection' sprite
 
-        var WEAPON_SCALE = 0.3;
+        var WEAPON_SCALE = 0.5;
         var WEAPON_MENU_SCALE = 0.8;
         weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
-        weapon1.x = 150+580;
+        weapon1.x = 160+580;
         weapon1.y = 920+10;
         weapon1.vx = 0;
         weapon1.vy = 0;
@@ -329,7 +330,7 @@
         weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon1);
 
-        var WEAPON_SPACING = 200;
+        var WEAPON_SPACING = 190;
         weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
         weapon2.x = weapon1.x+ WEAPON_SPACING;
         weapon2.y = 920+10;
@@ -350,9 +351,14 @@
         weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE,WEAPON_SCALE);
         app.stage.addChild(weapon3);
 
-        skills_bar = new Sprite(resources["images/Skills_bar.png"].texture);
+        //skills_bar = new Sprite(resources["images/Skills_bar2.png"].texture);
+        skills_bar = new PIXI.TilingSprite(
+                    textureSkillbar,
+                    1992/3+1,
+                    340
+                );
         skills_bar.x = 150+580;
-        skills_bar.y = 920;
+        skills_bar.y = 807;
         skills_bar.vx = 0;
         skills_bar.vy = 0;
         skills_bar.interactive = true;
@@ -1590,8 +1596,8 @@
         for (var i = 1; i < controlPoints.length; i++) {
             var nextPoint = controlPoints[i];
             if(nextPoint.progress >= curveProgress){
-                console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
-                console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
+                //console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
+                //console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
                 sprite.x = previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
                 sprite.y = previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
                 sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
