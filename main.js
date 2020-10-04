@@ -1596,12 +1596,15 @@
         //          270 =>         looks to the bottom (upside down)
 
         { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
-
-
+	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 30,    x: 800 ,                             y: 600      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 46.4,    x: 1000 ,                             y: 900      ,  rotation:0 },// initial point, at enter gate
         { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 800  ,  rotation:0 },// middle point, at enter gate
-
-
-        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
+	{ progress: 56.6,    x: 1200 ,                             y: 675      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 74,    x: 1350 ,                             y: 1025      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 88.8,    x: 1540 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 95.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
+	{ progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
     ];
 
     function checkBulletCollision(){
