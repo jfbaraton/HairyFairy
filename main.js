@@ -148,7 +148,7 @@
     .add("images/progress_comb.png")
     .add("images/progress_dirty.png")
     .add("images/welcome_princess.png")
-    .add("images/partition.png")
+    //.add("images/partition.png")
     .add("images/assault_crosshair_gun3.png")
     .add("images/curseur_Menu.png")
     .add("images/BG_2ndloop.png")
@@ -400,12 +400,12 @@
         //app.stage.addChild(rollerCoaster1);
 
         //Create the `progress_dirty` sprite
-        progress_dirty = new Sprite(resources["images/partition.png"].texture);
+        progress_dirty = new Sprite(resources["images/portee vide3.png"].texture);
         progress_dirty.x = 280;
-        progress_dirty.y = -160;
+        progress_dirty.y = 10;
         progress_dirty.vx = 0;
         progress_dirty.vy = 0;
-        progress_dirty.scale = new PIXI.ObservablePoint(()=>{},progress_dirty,0.92,0.92);
+        progress_dirty.scale = new PIXI.ObservablePoint(()=>{},progress_dirty,1,0.7);
         progress_dirty.interactive = true;
         progress_dirty.on('pointerdown', onButtonDown);
         //progress_dirty.rotation = 3.1415/2.;
