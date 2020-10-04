@@ -1619,7 +1619,6 @@
         //          180 =>         looks to the left   (upside down)
         //          270 =>         looks to the bottom (upside down)
 
-<<<<<<< HEAD
         { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW       ,  rotation:0 },// initial point, at enter gate
 	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 30,    x: 800 ,                             y: 600      ,  rotation:0 },// initial point, at enter gate
@@ -1630,15 +1629,6 @@
 	{ progress: 88.8,    x: 1540 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 95.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
 	{ progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW -500  ,  rotation: 0 } // final point, at exit gate
-=======
-        { progress: 0,    x: ROLLER_COASTER_LEFT ,                             y: ROLLER_COASTER_LOW -215    ,  rotation:0 },// initial point, at enter gate
-
-
-        { progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: ROLLER_COASTER_LOW - 440  ,  rotation:0 },// middle point, at enter gate
-
-
-        { progress: 100,  x: ROLLER_COASTER_RIGHT ,                            y: ROLLER_COASTER_LOW - 120  ,  rotation: 0 } // final point, at exit gate
->>>>>>> 24fb1f00f0b45fb596c15de896b7510ab72be7e8
     ];
 
     function checkBulletCollision(){
