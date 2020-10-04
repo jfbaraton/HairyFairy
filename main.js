@@ -102,7 +102,8 @@
         'slingshot_charging' : 'slingshot_charging.mp4',
         'gun_charging' : 'gun_charging.mp4',
         'shot_no_weapon' : 'shot_no_weapon.mp4',
-        'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4'
+        'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4',
+        'short_slingshot_sound' : 'short_slingshot_sound.mp4'
     };
 
     loader
@@ -186,7 +187,8 @@
     .add("sounds/"+sound_bank["ending"])
     .add("sounds/"+sound_bank["slingshot_charging"])
     .add("sounds/"+sound_bank["shot_no_weapon"])
-    //.add("sounds/"+sound_bank["gun_charging"])
+    .add("sounds/"+sound_bank["gun_charging"])
+    .add("sounds/"+sound_bank["short_slingshot_sound"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 
     .load(setup);
@@ -339,11 +341,11 @@
         var WEAPON_MENU_SCALE = 0.8;
         weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
         weapon1.x = 160+580;
-        weapon1.y = 920+10;
+        weapon1.y = 920+15;
         weapon1.vx = 0;
         weapon1.vy = 0;
         weapon1.weaponSwitch = 'slingshot_charging';
-        weapon1.weaponShoot = 'shot_no_weapon';
+        weapon1.weaponShoot = 'short_slingshot_sound';
         weapon1.tool = 'peanut';
         weapon1.interactive = true;
         weapon1.available = true;
@@ -353,11 +355,11 @@
 
         var WEAPON_SPACING = 190;
         weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
-        weapon2.x = weapon1.x+ WEAPON_SPACING;
-        weapon2.y = 920+10;
+        weapon2.x = weapon1.x+ WEAPON_SPACING -20;
+        weapon2.y = 920+15;
         weapon2.vx = 0;
         weapon2.vy = 0;
-        weapon2.weaponSwitch = 'slingshot_charging';
+        weapon2.weaponSwitch = 'shot_lazer_weapon_2';
         weapon2.weaponShoot = 'shot_lazer_weapon_2';
         weapon2.tool = 'lazer';
         weapon2.interactive = true;
@@ -371,13 +373,13 @@
         weapon3.y = 920+10;
         weapon3.vx = 0;
         weapon3.vy = 0;
-        weapon2.weaponSwitch = 'slingshot_charging';
-        weapon2.weaponShoot = 'Shot_Deagle_Weapon_1';
+        weapon3.weaponSwitch = 'gun_charging';
+        weapon3.weaponShoot = 'Shot_Deagle_Weapon_1';
         weapon3.tool = 'gun';
         weapon3.interactive = true;
         weapon3.available = true;
         weapon3.on('pointerdown', onButtonDown);
-        weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE,WEAPON_SCALE);
+        weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE*1.5,WEAPON_SCALE*1.5);
         app.stage.addChild(weapon3);
 
         //skills_bar = new Sprite(resources["images/Skills_bar2.png"].texture);
@@ -1173,7 +1175,7 @@
         app.stage.addChild(outer_gates);
 
 
-        const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
+        //const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
         /*musicSprite = new PIXI.Sprite(sound_init_texture);
 
         // out of screen
@@ -1457,37 +1459,35 @@
     }
 
     function onLoseGame() {
-        resetJammers();
-        msg_status.text = '                                             .\n'+
-        '                                        don\'t miss notes\n'+
-        '                                        don\'t hit black notes\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              .\n'+
-        '                                                              OK?';
-        msg_status.y = 40;
-        msg_status.x = 40;
+        if(mode != 'lose') {
+            resetJammers();
+            msg_status.text = '                                             .\n'+
+            '                                                              .\n'+
+            '                                                              .\n'+
+            '             don\'t miss notes                                            \n'+
+            '       don\'t hit black notes                                       \n'+
+            '                                                              .\n'+
+            '                                                              .\n'+
+            '                         OK?';
+            msg_status.y = 40;
+            msg_status.x = 40;
 
-        hamster.moving = false;
-        hamster.vx = 0;
+            hamster.moving = false;
+            hamster.vx = 0;
 
-        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
+            setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
-        msg_menu_1.y = msg_menu_1.y - 1080;
-        msg_menu_2.y = msg_menu_2.y - 1080;
-        chibi.y=1080
-        BG_start.y = 1080;
-        BG_win.y = 1080;
-        BG_lose.y = 0;
-        butt_restart.y = 800;
-        onPlayVideo('ending', true);
-        mode = 'lose';
+            msg_menu_1.y = msg_menu_1.y - 1080;
+            msg_menu_2.y = msg_menu_2.y - 1080;
+            chibi.y=1080
+            BG_start.y = 1080;
+            BG_win.y = 1080;
+            BG_lose.y = 0;
+            butt_restart.y = 800;
+            onPlayVideo('oh_no', false);
+            onPlayVideo('ending', true);
+            mode = 'lose';
+        }
     }
 
     function onButtonDown(param) {
@@ -1532,7 +1532,7 @@
                 bullets[i].x = hamster.x+80;
                 bullets[i].y = hamster.y+80;
 
-                onPlayVideo(bullets[i].weapon.weaponShoot);
+                onPlayVideo(bullets[i].weapon.weaponShoot, false);
 
                 var curr_weapon_speed = bullets[i].weapon_speed || 10;
                 var oppositeSz = targetY > bullets[i].y ? 0 : (targetY - bullets[i].y );
@@ -1847,7 +1847,7 @@
                 break;
             case 'recover':
                 if(isJammersTouchingComb()) {
-                    onPlayVideo('oh_no');
+                    onPlayVideo('oh_no', false);
                     chibi.texture = chibi_oups_txt;
                     mode = 'danger';
                 }
@@ -2107,7 +2107,7 @@
                                 if(jammers[j].isBad){
                                     onLoseGame();
                                 } else {
-                                    onPlayVideo('Catch_gold',false);
+                                    onPlayVideo('tool_select',false);
                                 }
                             }
                         }
