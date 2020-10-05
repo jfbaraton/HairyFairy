@@ -1103,6 +1103,7 @@
     }
 
     function onStartGame() {
+        msg_status.y = 1080;
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
@@ -1121,7 +1122,6 @@
         weapon3.y = 3000;
         swapWeapon(weapon1);
 
-        msg_status.y = 1080;
         msg_menu_1.y = msg_menu_1.y + 1080;
         msg_menu_2.y = msg_menu_2.y + 1080;
         hamster.progress = 0;
@@ -1172,15 +1172,10 @@
             }
             onPlayVideo('oh_no', false);
             onPlayVideo('ending', true);
-            msg_status.text = '                                             .\n'+
-            '                                                              .\n'+
-            '                                                              .\n'+
-            '             don\'t miss notes                                            \n'+
-            '       don\'t hit black notes                                       \n'+
-            '                                                              .\n'+
-            '                                                              .\n'+
-            '                         OK?';
-            msg_status.y = 40;
+            msg_status.text = 
+            '             don\'t miss notes \n'+
+            '       don\'t hit black notes \n';
+            msg_status.y = 700;
             msg_status.x = 40;
 
             hamster.moving = false;
