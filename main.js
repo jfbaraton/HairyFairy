@@ -1119,6 +1119,7 @@
         weapon2.y = 3000;
         weapon3.available = false;
         weapon3.y = 3000;
+        swapWeapon(weapon1);
 
         msg_status.y = 1080;
         msg_menu_1.y = msg_menu_1.y + 1080;
@@ -1127,12 +1128,12 @@
         hamster.moving = true;
         hamster.vx = 0.35;
 
+        progress = 0;
         setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
         BG_start.y = 1080;
         BG_win.y = 1080;
         BG_lose.y = 1080;
-        progress = 0;
         //chibi.y = 1080-771;
         //onPlayVideo('claps_end_of_level', true);
         onPlayVideo('Countdown_Start_Race', true);
@@ -1450,7 +1451,7 @@
             if(i<=2+difficulty && !jammers[i].isBad){
                 jammers[i].flying = true;
                 jammers[i].x = 20+randomInt(0,1820);
-                jammers[i].y = 180+randomInt(1,500);
+                jammers[i].y = 180+randomInt(1,400);
                 jammers[i].vx = (randomInt(0,5)-1)/10;
                 jammers[i].vy = (randomInt(0,5)-1)/10;
 
@@ -1462,7 +1463,7 @@
                 jammers[i].flying = true;
                 jammers[i].x = 20+randomInt(0,1820);
                 //jammers[i].y = 100+randomInt(50,600);
-                jammers[i].y = 180+randomInt(1,500);
+                jammers[i].y = 180+randomInt(1,300);
                 jammers[i].vx = (randomInt(0,5)-1)/10;
                 jammers[i].vy = (randomInt(0,5)-1)/10;
             } else {
@@ -1480,17 +1481,17 @@
         for (var i = 0; i < jammers.length; i++) {
             if(jammers[i].flying){
                 jammers[i].y += jammers[i].vy;
-                if(jammers[i].y <= 0 && jammers[i].vy < 0){
+                if(jammers[i].y <= 250 && jammers[i].vy < 0){
                     jammers[i].vy = -jammers[i].vy;
                 }
-                if(jammers[i].y >= size[1]-150 && jammers[i].vy > 0){
+                if(jammers[i].y >= size[1]-650 && jammers[i].vy > 0){
                     jammers[i].vy = -jammers[i].vy;
                 }
                 jammers[i].x += jammers[i].vx;
                 if(jammers[i].x <= 0 || jammers[i].vx <0){
                     jammers[i].vx = -jammers[i].vx;
                 }
-                if(jammers[i].x >= size[0]-600 && jammers[i].vx >0){
+                if(jammers[i].x >= size[0]-150 && jammers[i].vx >0){
                     jammers[i].vx = -jammers[i].vx;
                 }
             }
@@ -1528,6 +1529,7 @@
                         if(!jammers[i].isBad && jammers[i].flying){
                             resetJammers();
                             onLoseGame();
+                            return;
                         }
                     }
 
