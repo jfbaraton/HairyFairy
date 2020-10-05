@@ -114,7 +114,7 @@
     .add("images/HotairbaloonSOLO.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
-    .add("images/BG_start.png")
+    .add("images/BG_start2.png")
     //.add("images/comb_again.png")
     //.add("images/messy_hair.png")
     //.add("images/nice_hair.png")
@@ -952,7 +952,7 @@
 
 
         //Create the `BG_start` sprite
-        BG_start = new Sprite(resources["images/BG_start.png"].texture);
+        BG_start = new Sprite(resources["images/BG_start2.png"].texture);
         BG_start.x = 0;
         BG_start.y = 0;
         BG_start.vx = 0;
