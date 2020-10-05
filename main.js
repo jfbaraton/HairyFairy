@@ -163,7 +163,7 @@
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("images/Weapons/Weapon2 - Lazer3.3.png")
     .add("images/portee vide3.png")
-    .add("images/Skills_bar2.png")
+    .add("images/Skills_bar3.png")
     .add("images/Weapons/slingshot charged 1.png")
     .add("images/Weapons/Weapon2.png")
     .add("images/Weapons/Weapon3.png")
@@ -228,7 +228,7 @@
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
-    const textureSkillbar= PIXI.Texture.from('images/Skills_bar2.png');
+    const textureSkillbar= PIXI.Texture.from('images/Skills_bar3.png');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     //const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
