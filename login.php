@@ -46,9 +46,9 @@ if(!empty($playeravatar) && !empty($playername)) {
             if(mysqli_num_rows($result) >0) {
                 $playerid = mysqli_fetch_assoc($result)["id"];
                 $return = [ 'action' => 'created', 'id' => $playerid ];
-            } /*else {
+            } else {
                 $return = [ 'action' => 'FAILED to create', 'id' => -1 ];
-            }*/
+            }
 
             mysqli_free_result($result);
         } else {
