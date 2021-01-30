@@ -130,28 +130,7 @@
     .add("images/Badnote_1.png")
     .add("images/Badnote_2.png")
     .add("images/Badnote_3.png")
-<<<<<<< HEAD
-    //.add("images/chibi_cry1.png")
-    //.add("images/chibi_happy1.png")
-    //.add("images/chibi_oups1.png")
-    //.add("images/knot_1.png")
-    //.add("images/knot_2.png")
-    //.add("images/gum1.png")
     .add("images/gum2.png")
-    ///.add("images/Warning-yellow.png")
-    //.add("images/Warning-orange.png")
-    //.add("images/Warning-red.png")
-    //.add("images/Warning-orange2.png")
-    //.add("images/Warning-red2.png")
-    //.add("images/goo_fairy.png")
-    //.add("images/goo_fairy_selected.png")
-    //.add("images/sailor_fairy.png")
-    //.add("images/sailor_fairy_selected.png")
-    //.add("images/split_fairy.png")
-    //.add("images/split_fairy_selected.png")
-    //.add("images/cat.png")
-=======
->>>>>>> 340b2074da809d495bb8c4a89786fe46a107493d
     .add("images/static_ham_wheel.png")
     .add("images/dynamic_ham_wheel.png")
     .add("images/curseur_Menu.png")
@@ -188,6 +167,8 @@
     .add("sounds/"+sound_bank["short_slingshot_sound"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 	.add("images/TESTBG.png")
+	.add("images/newPictures/lostAndFound.png")
+	.add("images/newPictures/party.png")
 
     .load(setup);
 
@@ -275,8 +256,13 @@
 			playScreenBG: {},
 			BG_start: {},
 			BG_win: {},
-			BG_lose: {}			
+			BG_lose: {},
+			LostAndFound: {},
+			party: {},
 		};
+		
+		
+		fetchBackgroundSprites()
 		
 		// BG for the play screen
 		screenSprites.playScreenBG = new Sprite(resources["images/TESTBG.png"].texture)
@@ -518,8 +504,7 @@
 		
 		
 		//new sprites
-		fetchItemSprites()
-			
+		fetchItemSprites()		
 			
         //Create the `BG_start` sprite
         screenSprites.BG_start = new Sprite(resources["images/BG_start2.png"].texture);
@@ -615,8 +600,6 @@
         msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
         console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
         msg_menu_2.interactive = true;
-        //msg_menu_2.on('pointerdown', onStartGame)
-        //app.stage.addChild(msg_menu_2);
 
 
 
@@ -751,6 +734,35 @@
 		}
 	}
 	
+	const BGfiles = {
+		"lostAndFound": "images/newPictures/lostAndFound.png",
+		"party": "images/newPictures/party.png"
+	}
+	
+	const fetchBackgroundSprites = () => {
+		for (key of Object.keys(BGfiles)) {
+			let tmpItem = {};
+			tmpItem = new Sprite(resources[BGfiles[key]].texture)
+			tmpItem.x = 0
+			tmpItem.y = 1080
+			screenSprites[key] = tmpItem
+			app.stage.addChild(screenSprites[key]);
+		}
+	}
+	
+	const setBGactive = (BGtype) => {
+		console.log(BGtype)
+		console.log(Object.keys(screenSprites))
+		for (key of Object.keys(screenSprites)) {
+			if(key === BGtype) {
+				screenSprites[key].y = 0
+				console.log(key)
+			} else {
+				screenSprites[key].y = 1080
+			}
+		}
+	}
+	
 	
 	const fetchItemSprites = () => {
 		
@@ -822,6 +834,7 @@
 	const playScreen = () => {
 		//set the background
 		
+	
 		
 	}
 	
@@ -831,11 +844,16 @@
             BGmusicSprite.baseTexture.source.pause();
         }
 		
-		Object.keys(itemSprites).forEach(k => console.log(k))
-		Object.values(itemSprites).forEach(v => console.log(v))
+		console.log("we got this far")
+		
 		
 		itemSprites["0"].x = 150
 		itemSprites["0"].y = 150
+		
+		console.log("further?")
+		
+		setBGactive("party")
+		
 		
         CURRENT_LVL = 0;
         resetJammers();
