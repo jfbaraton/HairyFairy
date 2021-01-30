@@ -16,7 +16,7 @@ $gametype = $_GET["gametype"];
 $gameid = $_GET["gameid"];
 $action = $_GET["action"];
 $description = $_GET["description"];
-$actionParameter = $_GET["actionParameter"];
+$actionParameter = json_decode(stripslashes(base64_decode($_GET["actionParameter"])),JSON_UNESCAPED_SLASHES);
 $granted = false;
 $return = [ 'error' => 'nothing happened', 'id' => -1];
     // will encode to JSON object: {"error":"nothing happened","id":-1}
@@ -107,11 +107,15 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                 }
 
                 if($granted) {
-                    $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),".$playerid.",".$gameid.",'".description."',".$phase_before.",".$phase_after.",JSON_OBJECT('data','".$actionParameter."')) ";
+                    //$sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),".$playerid.",".$gameid.",'".$description."',".$phase_before.",".$phase_after.",JSON_OBJECT('data','".$actionParameter."')) ";
+                    $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),".$playerid.",".$gameid.",'".$description."',".$phase_before.",".$phase_after.",'".json_encode($actionParameter,JSON_UNESCAPED_SLASHES)."') ";
                     if(mysqli_query($conn,$sql)) {
 
                     } else {
-                        $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
+                        $return = [ 'action' => 'FAILED to " write 1##'.$sql.'##'
+                                    , 'id' => -1
+                                    , 'debug' => json_encode($actionParameter,JSON_UNESCAPED_SLASHES)
+                                    ];
                     }
 
                     //TODO, check gamemaster action
@@ -137,7 +141,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 
 
 } else {
-    $return = [ 'error' => 'wrong arguments '.$playername.', '.$playerid.', '.$gametype, 'id' => -1];
+    $return = [ 'error' => 'wrong arguments '.$playername.', '.$playerid.', '.$gametype.', '.$action.', '.$description.', '.$actionParameter, 'id' => -1];
 }
 
 

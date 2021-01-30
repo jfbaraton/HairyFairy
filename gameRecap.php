@@ -52,7 +52,8 @@ if(!empty($playerid) && !empty($playername) && !empty($gameid)) {
                         'phase_after' => $row['phase_after'],
                         'action_parameters' => $row['action_parameters'],
                         'nickname' => $row['nickname'],
-                        'avatar' => $row['avatar']
+                        'avatar' => $row['avatar'],
+                        'encoded_avatar' => base64_encode('{"data": "Jeff_or_NOT", "is_empty": false}')
                     ];
                 }
                 //$return[ 'action2'] = 'happy';

@@ -37,10 +37,10 @@
       <br> http://localhost/HairyFairy/callGameMaster.php?playername=jeff&playerid=2&gametype=lajam&gameid=4
       <br>
       <br>game action
-      <br>http://localhost/HairyFairy/doGameAction.php?playername=jeff&playerid=2&gametype=lajam&action=100&description=oneAction&actionParameter=garbage_parameter&gameid=4
-      <br>http://localhost/HairyFairy/doGameAction.php?playername=ira&playerid=1&gametype=lajam&action=100&description=oneAction&actionParameter=garbage_parameter&gameid=4
-      <br>http://localhost/HairyFairy/doGameAction.php?playername=jouko&playerid=3&gametype=lajam&action=100&description=oneAction&actionParameter=garbage_parameter&gameid=4
-      <br>http://localhost/HairyFairy/doGameAction.php?playername=anu&playerid=4&gametype=lajam&action=100&description=oneAction&actionParameter=garbage_parameter&gameid=4
+      <br>http://localhost/HairyFairy/doGameAction.php?playername=jeff&playerid=2&gametype=lajam&action=100&description=oneAction&actionParameter=eyJkYXRhIjogIkplZmZfb3JfTk9UIiwgImlzX2VtcHR5IjogZmFsc2V9&gameid=4
+      <br>http://localhost/HairyFairy/doGameAction.php?playername=ira&playerid=1&gametype=lajam&action=100&description=oneAction&actionParameter=eyJkYXRhIjogIkplZmZfb3JfTk9UIiwgImlzX2VtcHR5IjogZmFsc2V9&gameid=4
+      <br>http://localhost/HairyFairy/doGameAction.php?playername=jouko&playerid=3&gametype=lajam&action=100&description=oneAction&actionParameter=eyJkYXRhIjogIkplZmZfb3JfTk9UIiwgImlzX2VtcHR5IjogZmFsc2V9&gameid=4
+      <br>http://localhost/HairyFairy/doGameAction.php?playername=anu&playerid=4&gametype=lajam&action=100&description=oneAction&actionParameter=eyJkYXRhIjogIkplZmZfb3JfTk9UIiwgImlzX2VtcHR5IjogZmFsc2V9&gameid=4
       <br>
       <br>
       <br> game recap
