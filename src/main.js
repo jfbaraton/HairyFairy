@@ -261,7 +261,6 @@
 			party: {},
 		};
 		
-		
 		fetchBackgroundSprites()
 		
 		// BG for the play screen
@@ -272,45 +271,6 @@
         screenSprites.playScreenBG.on('pointerdown', onButtonDown);
         app.stage.addChild(screenSprites.playScreenBG);
 		
-		//Create hot air balloons for the `BG` sprite
-        BG_baloons1 = new Sprite(resources["images/Hotairbaloon2SOLO.png"].texture);
-        BG_baloons1.x = 0;
-        BG_baloons1.y = 0;
-        BG_baloons1.vx = 0;
-        BG_baloons1.vy = 0;
-        BG_baloons1.interactive = true;
-        BG_baloons1.on('pointerdown', onButtonDown);
-        app.stage.addChild(BG_baloons1);
-
-        BG_baloons2 = new Sprite(resources["images/HotairbaloonSOLO.png"].texture);
-        BG_baloons2.x = 0;
-        BG_baloons2.y = 0;
-        BG_baloons2.vx = 0;
-        BG_baloons2.vy = 0;
-        BG_baloons2.interactive = true;
-        BG_baloons2.on('pointerdown', onButtonDown);
-        app.stage.addChild(BG_baloons2);
-
-        //Create flags for the `BG` sprite
-        BG_flags1 = new Sprite(resources["images/FlagsSolo1.3.png"].texture);
-        BG_flags1.x = 0;
-        BG_flags1.y = 0;
-        BG_flags1.vx = 0;
-        BG_flags1.vy = 0;
-        BG_flags1.interactive = true;
-        BG_flags1.on('pointerdown', onButtonDown);
-        app.stage.addChild(BG_flags1);
-
-        BG_flags2 = new Sprite(resources["images/FlagsSolo2.3.png"].texture);
-        BG_flags2.x = 3;
-        BG_flags2.y = size[1];
-        BG_flags2.vx = 0;
-        BG_flags2.vy = 0;
-        BG_flags2.interactive = true;
-        BG_flags2.on('pointerdown', onButtonDown);
-        app.stage.addChild(BG_flags2);
-
-
         //Create the 'weapon selection' sprite
 
         var WEAPON_SCALE = 0.5;
@@ -1233,7 +1193,6 @@
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
         moveBullets(1);
 
-        animate_BG(timeInSec);
     }
 
     function checkBulletCollision(){
@@ -1341,25 +1300,6 @@
         //`hit` will be either `true` or `false`
         return hit;
     };
-
-    function animate_BG(time) {
-        if(time % 15 == 1) {
-            var max_delta = 30;
-            var isGoingUp = ( BG_baloons1.y <= max_delta &&  BG_baloons1.x == 0 ) || BG_baloons1.y <= 0;
-            if( BG_baloons1.y >= max_delta) {
-                BG_baloons1.x = 1;
-            }
-            if( BG_baloons1.y <= 0) {
-                BG_baloons1.x = 0;
-            }
-            var dy = isGoingUp ? 2 : -2;
-
-            BG_baloons1.y += dy;
-            BG_baloons2.y -= dy;
-            BG_flags1.y = size[1]- BG_flags1.y;
-            BG_flags2.y = size[1]- BG_flags2.y;
-        }
-    }
 
     //The `keyboard` helper function
     function keyboard(keyCode) {
