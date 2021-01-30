@@ -1,3 +1,7 @@
+-- CREATE DATABASE gamejam;
+-- GRANT ALL PRIVILEGES ON gamejam.* TO 'gamemaster'@'localhost';
+-- FLUSH PRIVILEGES;
+
 use gamejam;
 
 CREATE TABLE IF NOT EXISTS game_instance (
