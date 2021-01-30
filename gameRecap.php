@@ -12,11 +12,11 @@ if (!$conn) {
 
 $playername = $_GET["playername"];
 $playerid = $_GET["playerid"];
-$gametype = $_GET["gametype"];
+$gameid = $_GET["gameid"];
 $return = [ 'error' => 'nothing happened', 'id' => -1];
     // will encode to JSON object: {"error":"nothing happened","id":-1}
     // accessed as example in JavaScript like: result.name or result['error'] (returns "nothing happened")
-if(!empty($playerid) && !empty($playername) && !empty($gametype)) {
+if(!empty($playerid) && !empty($playername) && !empty($gameid)) {
     /* Select queries return a resultset */
     $sql = "SELECT id FROM player WHERE nickname = '".$playername."' and id = '".$playerid."' LIMIT 10";
     if ($result = mysqli_query($conn, $sql)) {
@@ -35,34 +35,36 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype)) {
     }
 
     if ($playerid >0 ) {
-        $sql = "INSERT INTO game_instance (recordtime,creator,gametype,status) VALUES (CURRENT_TIMESTAMP(),".$playerid.",'".$gametype."',0) ";
-        if(mysqli_query($conn,$sql)) {
-            $return = [ 'action' => 'INSERT', 'id' => -1 ];
-
-        } else {
-            $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
-        }
-
-        if ($result = mysqli_query($conn, "SELECT max(id) as id FROM game_instance WHERE creator = ".$playerid." and gametype = '".$gametype."' and status = 0 LIMIT 1")) {
+        $sql = "select action.id, action.player, action.recordtime, action.description, action.phase_before, action.phase_after, action.action_parameters, player.nickname, player.avatar ".
+                       "from player_game_action as action join player on player.id = action.player  ".
+                       "where action.game = ".$gameid." order by action.id asc";
+        if ($result = mysqli_query($conn, $sql)) {
             if(mysqli_num_rows($result) >0) {
-                $gameid = mysqli_fetch_assoc($result)["id"];
-                $return = [ 'action' => 'created', 'id' => $gameid ];
+                $return = [ 'action' => 'found', 'count' => mysqli_num_rows($result) ];
+                $rescpt = 0;
+                while($row = mysqli_fetch_assoc($result)) {
+                    $return['data'][''.$rescpt++] = [
+                        'id' => $row['id'],
+                        'player' => $row['player'],
+                        'recordtime' => $row['recordtime'],
+                        'description' => $row['description'],
+                        'phase_before' => $row['phase_before'],
+                        'phase_after' => $row['phase_after'],
+                        'action_parameters' => $row['action_parameters'],
+                        'nickname' => $row['nickname'],
+                        'avatar' => $row['avatar'],
+                        'encoded_avatar' => base64_encode('{"data": "Jeff_or_NOT", "is_empty": false}')
+                    ];
+                }
+                //$return[ 'action2'] = 'happy';
             } /*else {
                 $return = [ 'action' => 'FAILED to create', 'id' => -1 ];
             }*/
 
             mysqli_free_result($result);
         } else {
-             $return = [ 'action' => 'FAILED to read 2', 'id' => -1 ];
+             $return = [ 'action' => 'FAILED to read 2  ##'.$sql, 'id' => -1 ];
         }
-
-        $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),".$playerid.",".$gameid.",'join',0,1,JSON_OBJECT('is_empty',true)) ";
-        if(mysqli_query($conn,$sql)) {
-
-        } else {
-            $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
-        }
-
 
     }
 

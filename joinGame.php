@@ -39,7 +39,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
     if ($playerid >0 ) {
         $sql = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
                "join player_game_action as participant on game.id = participant.game ".
-               "where game.phase >0 and game.phase <100 and game.id = ".$gameid." and participant.player = ".$playerid." and game.gametype = '".$gametype."' LIMIT 1";
+               "where participant.phase_after >0 and participant.phase_after <100 and game.id = ".$gameid." and participant.player = ".$playerid." and game.gametype = '".$gametype."' LIMIT 1";
         // if game exists, is in setup phase (0-99) and this player is not already a participant
         if ($result = mysqli_query($conn, $sql)) {
             if(mysqli_num_rows($result) > 0) {
@@ -57,7 +57,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
         if($granted) {
             $sql = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
                    "join player_game_action as participant on game.id = participant.game ".
-                   "where game.phase >0 and game.phase <=4 and game.id = ".$gameid." order by participant.phase_after desc LIMIT 1";
+                   "where participant.phase_after >0 and participant.phase_after <=4 and game.id = ".$gameid." order by participant.phase_after desc LIMIT 1";
             if ($result = mysqli_query($conn, $sql)) {
                 if(mysqli_num_rows($result) == 1) {
                     $previous_joiner_seq = mysqli_fetch_assoc($result)["phase_after"];
@@ -85,12 +85,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                 } else {
                     $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
                 }
-                $sql = "UPDATE game_instance SET phase = ".$player_seq." WHERE id = ".$gameid." and phase = ".$previous_joiner_seq." ";
-                if(mysqli_query($conn,$sql)) {
 
-                } else {
-                    $return = [ 'action' => 'FAILED to write 2##'.$sql.'##', 'id' => -1 ];
-                }
             }
         }
 
