@@ -24,21 +24,31 @@
       <br>
       <br>Connected successfully
       <br>";
-      ?>
-
-      $sql = "SELECT id FROM player LIMIT 10";
-          if ($result = mysqli_query($link, $sql)) {
+	  $sql = "SELECT id FROM player LIMIT 10";
+          if ($result = mysqli_query($conn, $sql)) {
               if(mysqli_num_rows($result) >0) {
-                  $playerid = mysqli_fetch_assoc($result)["id"];
-                  $return = [ 'action' => 'found', 'id' => $playerid ];
+                  echo "
+				  <br>
+				  <br>several results
+				  <br>";
               } else {
-                  $return = [ 'action' => 'NOT found', 'id' => -1 ];
+                  echo "
+				  <br>
+				  <br>NO results
+				  <br>";
               }
 
               mysqli_free_result($result);
           } else {
-               $return = [ 'action' => 'FAILED to read 1 ##'.$sql.'##', 'id' => -1 ];
+                  echo "
+				  <br>
+				  <br> CONNNECT FAIL
+				  <br>";
           }
+	  
+      ?>
+
+      
       <br>
           </body>
 </html>
