@@ -35,7 +35,7 @@ if(!empty($playerid) && !empty($playername)) {
 
     if ($playerid >0 ) {
 
-        if ($result = mysqli_query($conn, "select game.id, game.gametype, participant.player, participant.phase_after, player.nickname, player.avatar from game_instance as game join player_game_action as participant on game.id = participant.game join player on player.id = participant.player  where game.phase >0 and game.phase <100  limit 100")) {
+        if ($result = mysqli_query($conn, "select game.id, game.gametype, participant.player, participant.phase_after, player.nickname, player.avatar from game_instance as game join player_game_action as participant on game.id = participant.game join player on player.id = participant.player  where participant.phase_after >0 and participant.phase_after <100  limit 100")) {
             if(mysqli_num_rows($result) >0) {
                 $return = [ 'action' => 'found', 'count' => mysqli_num_rows($result) ];
                 $rescpt = 0;

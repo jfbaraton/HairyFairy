@@ -35,7 +35,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype)) {
     }
 
     if ($playerid >0 ) {
-        $sql = "INSERT INTO game_instance (recordtime,creator,gametype,phase) VALUES (CURRENT_TIMESTAMP(),".$playerid.",'".$gametype."',0) ";
+        $sql = "INSERT INTO game_instance (recordtime,creator,gametype,status) VALUES (CURRENT_TIMESTAMP(),".$playerid.",'".$gametype."',0) ";
         if(mysqli_query($conn,$sql)) {
             $return = [ 'action' => 'INSERT', 'id' => -1 ];
 
@@ -43,7 +43,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype)) {
             $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
         }
 
-        if ($result = mysqli_query($conn, "SELECT max(id) as id FROM game_instance WHERE creator = ".$playerid." and gametype = '".$gametype."' and phase = 0 LIMIT 1")) {
+        if ($result = mysqli_query($conn, "SELECT max(id) as id FROM game_instance WHERE creator = ".$playerid." and gametype = '".$gametype."' and status = 0 LIMIT 1")) {
             if(mysqli_num_rows($result) >0) {
                 $gameid = mysqli_fetch_assoc($result)["id"];
                 $return = [ 'action' => 'created', 'id' => $gameid ];
@@ -62,12 +62,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype)) {
         } else {
             $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
         }
-        $sql = "UPDATE game_instance SET phase = 1 WHERE creator = ".$playerid." and gametype = '".$gametype."' and phase = 0 ";
-        if(mysqli_query($conn,$sql)) {
 
-        } else {
-            $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
-        }
 
     }
 

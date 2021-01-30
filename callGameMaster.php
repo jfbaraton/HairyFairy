@@ -14,14 +14,11 @@ $playername = $_GET["playername"];
 $playerid = $_GET["playerid"];
 $gametype = $_GET["gametype"];
 $gameid = $_GET["gameid"];
-$action = $_GET["action"];
-$description = $_GET["description"];
-$actionParameter = $_GET["actionParameter"];
 $granted = false;
 $return = [ 'error' => 'nothing happened', 'id' => -1];
     // will encode to JSON object: {"error":"nothing happened","id":-1}
     // accessed as example in JavaScript like: result.name or result['error'] (returns "nothing happened")
-if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($gameid) && !empty($action) && !empty($description) && !empty($actionParameter)) {
+if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($gameid)) {
     /* Select queries return a resultset */
     $sql = "SELECT id FROM player WHERE nickname = '".$playername."' and id = '".$playerid."' LIMIT 10";
     if ($result = mysqli_query($conn, $sql)) {
@@ -57,7 +54,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
         } else {
              $return = [ 'action' => 'FAILED to read 2 ##'.$sql.'##', 'id' => -1 ];
         }
-        if($granted) {
+        if($granted && $player_seq == 1) {
             $sql = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
                    "join player_game_action as participant on game.id = participant.game ".
                    "where (participant.phase_after >".$action."+10 or (participant.phase_after >".$action." and participant.phase_after <".$action."+10 and participant.player = ".$playerid.")) ".
@@ -79,25 +76,22 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 
 
             if($granted) {
-                $sql2 = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
-                       "join player_game_action as participant on game.id = participant.game ".
-                       "where participant.phase_after >=".$action." and game.id = ".$gameid." order by participant.phase_after desc LIMIT 1";
+                $sql2 = "select participant.phase_after from player_game_action as participant ".
+                       "where participant.game = ".$gameid." order by participant.phase_after desc LIMIT 1";
                 if ($result = mysqli_query($conn, $sql2)) {
                     if(mysqli_num_rows($result) == 1) {
                         $phase_before = mysqli_fetch_assoc($result)["phase_after"];
-                        $phase_after = $phase_before+1;
-                        $return = [ 'action' => 'accepted OK', 'phase' => $phase_after ];
-                        /* //TODO, check gamemaster action
-                        if($phase_before <4) {
-                            $phase_after = $phase_before+1;
-                            $return = [ 'action' => 'accepted OK', 'phase' => $phase_after ];
+                        // check gamemaster action needed
+                        if($phase_before % 10 == 4) {
+                            $phase_after = $phase_before;
+                            $return = [ 'action' => 'i shall help', 'phase' => $phase_after ];
                         } else {
                             $granted = false;
-                            $return = [ 'action' => 'FAILED game already full', 'id' => -1 ];
-                        }*/
+                            $return = [ 'action' => 'nothing to be done', 'id' => -1 ];
+                        }
                     } else {
                         $granted = false;
-                         $return = [ 'action' => 'FAILED phase not open '//.$sql2
+                         $return = [ 'action' => 'FAILED no game'//.$sql2
                                     , 'id' => -1 ];
                     }
 
@@ -107,30 +101,21 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                 }
 
                 if($granted) {
-                    $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),".$playerid.",".$gameid.",'".description."',".$phase_before.",".$phase_after.",JSON_OBJECT('data','".$actionParameter."')) ";
+
+                    // 4 players have played this turn, open the next one
+                    $phase_after_player = $phase_after;
+                    $phase_after = $phase_before-($phase_before%100)+100;
+                    $return = [ 'action' => 'accepted OK', 'phase' => $phase_after ];
+                    $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),0,".$gameid.",'new round',".$phase_after_player.",".$phase_after.",JSON_OBJECT('is_empty',true)) ";
                     if(mysqli_query($conn,$sql)) {
 
                     } else {
                         $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
                     }
-
-                    //TODO, check gamemaster action
-                    if($phase_after % 10 == 4) {
-                        // 4 players have played this turn, open the next one
-                        $phase_after_player = $phase_after;
-                        $phase_after = $phase_before-($phase_before%100)+100;
-                        $return = [ 'action' => 'accepted OK', 'phase' => $phase_after ];
-                        $sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),0,".$gameid.",'new round',".$phase_after_player.",".$phase_after.",JSON_OBJECT('is_empty',true)) ";
-                        if(mysqli_query($conn,$sql)) {
-
-                        } else {
-                            $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
-                        }
-
-                    }
-
                 }
             }
+        } else {
+            $return = [ 'action' => 'wait...', 'id' => -1 ];
         }
 
     }
