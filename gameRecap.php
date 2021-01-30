@@ -62,7 +62,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gameid)) {
 
             mysqli_free_result($result);
         } else {
-             $return = [ 'action' => 'FAILED to read 2  ##'.$sql.', 'id' => -1 ];
+             $return = [ 'action' => 'FAILED to read 2  ##'.$sql, 'id' => -1 ];
         }
 
     }
