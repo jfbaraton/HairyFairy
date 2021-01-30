@@ -576,7 +576,7 @@
         "                                        .\n"+
         "                                        .\n"+
         "                                        .\n"+
-        "                                        .\n"+
+        "                ALLLåååå                .\n"+
         "                                        .\n"+
         "                                        .\n"+
         "                                        .\n"+
@@ -589,12 +589,12 @@
         msg_status.on('pointerdown', onStartGame)
         app.stage.addChild(msg_status);
 
-        msg_menu_1 = new Text("Start game", style4);
-        msg_menu_1.position.set(MENU_X0+80, MENU_Y0);
-        console.log('pos1 ',MENU_X0+80, ' ', MENU_Y0);
+        msg_menu_1 = new Text("Start game", style3);
+        msg_menu_1.position.set(300,80);
         msg_menu_1.interactive = true;
-        msg_menu_1.on('pointerdown', onStartGame)
-        //app.stage.addChild(msg_menu_1);
+        msg_menu_1.isJeff = true;
+        msg_menu_1.on('pointerdown', onButtonDown)
+        app.stage.addChild(msg_menu_1);
 
         msg_menu_2 = new Text("Settings", style4);
         msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
@@ -610,18 +610,18 @@
           ;
 
         keyLetterS.press = function() {
-            swapWeapon(weapon1);
+            //swapWeapon(weapon1);
         };
 
         keyLetterD.press = function() {
 
-            swapWeapon(weapon2);
+            //swapWeapon(weapon2);
 
         };
 
         keyLetterF.press = function() {
 
-            swapWeapon(weapon3);
+            //swapWeapon(weapon3);
 
         };
 
@@ -810,26 +810,7 @@
 		gameState.specialCards = initialMessage.specialCards
 		gameState.hands = initialMessage.startingHands
 	}
-	
-	
-	
-	
-	
-	
 
-    function swapWeapon (oneWeapon){
-
-        if(oneWeapon.available) {
-            if(tool != oneWeapon.tool) {
-                tool = oneWeapon.tool;
-                skills_bar.tilePosition.x = oneWeapon.tilingPosition;
-                onPlayVideo(oneWeapon.weaponSwitch,false);
-            }
-
-        } else {
-            // play sound for unavailable
-        }
-    }
 	
 	const playScreen = () => {
 		//set the background
@@ -864,9 +845,8 @@
         weapon2.y = 3000;
         weapon3.available = false;
         weapon3.y = 3000;
-        swapWeapon(weapon1);
 
-        msg_menu_1.y = msg_menu_1.y + 1080;
+        //msg_menu_1.y = msg_menu_1.y + 1080;
         msg_menu_2.y = msg_menu_2.y + 1080;
         hamster.progress = 0;
         hamster.moving = true;
@@ -898,7 +878,7 @@
         hamster.vx = 0;
 
 
-        msg_menu_1.y = msg_menu_1.y - 1080;
+        //msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
         screenSprites.BG_start.y = 1080;
         screenSprites.BG_win.y = 0;
@@ -924,7 +904,7 @@
             hamster.vx = 0;
 
 
-            msg_menu_1.y = msg_menu_1.y - 1080;
+            //msg_menu_1.y = msg_menu_1.y - 1080;
             msg_menu_2.y = msg_menu_2.y - 1080;
             screenSprites.BG_start.y = 1080;
             screenSprites.BG_win.y = 1080;
@@ -945,13 +925,21 @@
             my_string += ' killed!';
         }
 
-        if(this.tool){
-            /*tool = this.tool;
-            onPlayVideo('tool_select');
-            updateToolTxt(goo_fairy);
-            updateToolTxt(sailor_fairy);
-            updateToolTxt(sax_fairy);*/
+        if(this.isJeff){
+            console.log('click jeff',param.data.global);
+            this.text = 'yes you clicked';
+            const userAction = async () => {
+                console.log('async call',param.data.global);
+                const response = await fetch('http://localhost/HairyFairy/gameRecap.php?playername=jeff&playerid=2&gameid=5');
+                const myJson = await response.json(); //extract JSON from the http response
+                console.log('async answer',myJson);
+                this.text = myJson;
+                console.log('async done',myJson);
+                // do something with myJson
+            };
+            userAction();
         } else {
+            console.log('NOT click weapon',param.data.global);
             var targetX = param.data.global.x;
             var targetY = param.data.global.y;
             if(mode == 'normal') {
@@ -1081,14 +1069,12 @@
         if(CURRENT_LVL > LVL_MAX/3 && !weapon2.available){
             weapon2.available = true;
             weapon2.y = WEAPON_2_Y;
-            swapWeapon(weapon2);
         }
 
 
         if(CURRENT_LVL > 2*LVL_MAX/3 && !weapon3.available){
             weapon3.available = true;
             weapon3.y = WEAPON_3_Y;
-            swapWeapon(weapon3);
             hamster.vx = 0.5;
         }
 
