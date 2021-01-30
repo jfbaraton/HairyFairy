@@ -928,16 +928,16 @@
         if(this.isJeff){
             console.log('click jeff',param.data.global);
             this.text = 'yes you clicked';
-            const userAction = async () => {
+            const userAction = async (gameId) => {
                 console.log('async call',param.data.global);
-                const response = await fetch('http://localhost/HairyFairy/gameRecap.php?playername=jeff&playerid=2&gameid=5');
+                const response = await fetch('http://localhost/HairyFairy/gameRecap.php?playername=jeff&playerid=2&gameid='+gameId);
                 const myJson = await response.json(); //extract JSON from the http response
                 console.log('async answer',myJson);
                 this.text = myJson;
-                console.log('async done',myJson);
+                console.log('async done!!!!',myJson);
                 // do something with myJson
             };
-            userAction();
+            userAction(5);
         } else {
             console.log('NOT click weapon',param.data.global);
             var targetX = param.data.global.x;
