@@ -122,7 +122,6 @@
     //.add("images/blob.png")
     //.add("images/wand.png")
     .add("images/Crosshair_lazer_weaponQUARTER-NO-BG.png")
-    //.add("images/knot.png")
     .add("images/Note_1.png")
     .add("images/Note_2.png")
     .add("images/Note_3.png")
@@ -131,6 +130,7 @@
     .add("images/Badnote_1.png")
     .add("images/Badnote_2.png")
     .add("images/Badnote_3.png")
+<<<<<<< HEAD
     //.add("images/chibi_cry1.png")
     //.add("images/chibi_happy1.png")
     //.add("images/chibi_oups1.png")
@@ -150,13 +150,10 @@
     //.add("images/split_fairy.png")
     //.add("images/split_fairy_selected.png")
     //.add("images/cat.png")
+=======
+>>>>>>> 340b2074da809d495bb8c4a89786fe46a107493d
     .add("images/static_ham_wheel.png")
     .add("images/dynamic_ham_wheel.png")
-    //.add("images/progress_comb.png")
-    //.add("images/progress_dirty.png")
-    //.add("images/welcome_princess.png")
-    //.add("images/partition.png")
-    //.add("images/assault_crosshair_gun3.png")
     .add("images/curseur_Menu.png")
     .add("images/BG_2ndloop.png")
     .add("images/OuterMagicGates.png")
@@ -204,13 +201,11 @@
     let hamster;
     let skills_bar, weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , box, message, message2, state, tilingSprite, jammers;
-    let instructions, instrunote1, instrunote2, instrunote3, instrunote4, instrunote5;
-    let note1, note2, note3, note4, note5,note21, note22, note23, note24, note25;
-    let knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33,  progress_dirty;
+    let instructions, instrunote1;
+    let note1;
+    let progress_dirty;
     let bullets;
-    let bullet_peanut1, bullet2_peanut1, bullet3_peanut1, bullet4_peanut1;
-    let bullet_lazer1,  bullet2_lazer1, bullet3_lazer1, bullet4_lazer1;
-    let bullet_gun1,  bullet2_gun1, bullet3_gun1, bullet4_gun1;
+    let bullet_peanut1;
     let MENU_MAX = 2 ;
     let LVL_MAX = 12 ;
     //let LVL_MAX = 10 ;
@@ -460,61 +455,6 @@
         app.stage.addChild(instrunote1);
         instructions.push(instrunote1);
 
-        //Create the `instrunote2` sprite
-        instrunote2 = new Sprite(resources["images/Note_2.png"].texture);
-        instrunote2.x = 850;
-        instrunote2.y = 1280;
-        instrunote2.vx = 0;
-        instrunote2.vy = 0;
-        instrunote2.amountCpt = 0;
-        //instrunote2.killedby = 'gum';
-        instrunote2.interactive = true;
-        instrunote2.scale = new PIXI.ObservablePoint(()=>{},instrunote2,NOTE_SCALE,NOTE_SCALE);
-        instrunote2.on('pointerdown', onButtonDown);
-        app.stage.addChild(instrunote2);
-        instructions.push(instrunote2);
-
-        //Create the `instrunote3` sprite
-        instrunote3 = new Sprite(resources["images/Note_3.png"].texture);
-        instrunote3.x = 950;
-        instrunote3.y = 1280;
-        instrunote3.vx = 0;
-        instrunote3.vy = 0;
-        instrunote3.amountCpt = 0;
-        //instrunote3.killedby = 'sax';
-        instrunote3.interactive = true;
-        instrunote3.scale = new PIXI.ObservablePoint(()=>{},instrunote3,NOTE_SCALE,NOTE_SCALE);
-        instrunote3.on('pointerdown', onButtonDown);
-        app.stage.addChild(instrunote3);
-        instructions.push(instrunote3);
-
-        //Create the `instrunote4` sprite
-        instrunote4 = new Sprite(resources["images/Note_4.png"].texture);
-        instrunote4.x = 700;
-        instrunote4.y = 1080;
-        instrunote4.vx = 0;
-        instrunote4.vy = 0;
-        instrunote4.amountCpt = 0;
-        //instrunote4.killedby = 'knot';
-        instrunote4.interactive = true;
-        instrunote4.scale = new PIXI.ObservablePoint(()=>{},instrunote4,NOTE_SCALE,NOTE_SCALE);
-        instrunote4.on('pointerdown', onButtonDown);
-        app.stage.addChild(instrunote4);
-        instructions.push(instrunote4);
-
-        //Create the `instrunote5` sprite
-        instrunote5 = new Sprite(resources["images/Note_5.png"].texture);
-        instrunote5.x = 850;
-        instrunote5.y = 1280;
-        instrunote5.vx = 0;
-        instrunote5.vy = 0;
-        instrunote5.amountCpt = 0;
-        //instrunote5.killedby = 'gum';
-        instrunote5.interactive = true;
-        instrunote5.scale = new PIXI.ObservablePoint(()=>{},instrunote5,NOTE_SCALE,NOTE_SCALE);
-        instrunote5.on('pointerdown', onButtonDown);
-        app.stage.addChild(instrunote5);
-        instructions.push(instrunote5);
 
         jammers = [];
         //Create the `note1` sprite
@@ -531,170 +471,6 @@
         app.stage.addChild(note1);
         jammers.push(note1);
 
-        //Create the `note2` sprite
-        note2 = new Sprite(resources["images/Note_2.png"].texture);
-        note2.x = 850;
-        note2.y = 1280;
-        note2.instru = instrunote2;
-        note2.vx = 0;
-        note2.vy = 0;
-        //note2.killedby = 'gum';
-        note2.interactive = true;
-        note2.scale = new PIXI.ObservablePoint(()=>{},note2,NOTE_SCALE,NOTE_SCALE);
-        note2.on('pointerdown', onButtonDown);
-        app.stage.addChild(note2);
-        jammers.push(note2);
-
-        //Create the `note3` sprite
-        note3 = new Sprite(resources["images/Note_3.png"].texture);
-        note3.x = 950;
-        note3.y = 1280;
-        note3.instru = instrunote3;
-        note3.vx = 0;
-        note3.vy = 0;
-        //note3.killedby = 'sax';
-        note3.interactive = true;
-        note3.scale = new PIXI.ObservablePoint(()=>{},note3,NOTE_SCALE,NOTE_SCALE);
-        note3.on('pointerdown', onButtonDown);
-        app.stage.addChild(note3);
-        jammers.push(note3);
-
-        //Create the `note4` sprite
-        note4 = new Sprite(resources["images/Note_4.png"].texture);
-        note4.x = 700;
-        note4.y = 1080;
-        note4.instru = instrunote4;
-        note4.vx = 0;
-        note4.vy = 0;
-        //note4.killedby = 'knot';
-        note4.interactive = true;
-        note4.scale = new PIXI.ObservablePoint(()=>{},note4,NOTE_SCALE,NOTE_SCALE);
-        note4.on('pointerdown', onButtonDown);
-        app.stage.addChild(note4);
-        jammers.push(note4);
-
-        //Create the `note5` sprite
-        note5 = new Sprite(resources["images/Note_5.png"].texture);
-        note5.x = 850;
-        note5.y = 1280;
-        note5.instru = instrunote5;
-        note5.vx = 0;
-        note5.vy = 0;
-        //note5.killedby = 'gum';
-        note5.interactive = true;
-        note5.scale = new PIXI.ObservablePoint(()=>{},note5,NOTE_SCALE,NOTE_SCALE);
-        note5.on('pointerdown', onButtonDown);
-        app.stage.addChild(note5);
-        jammers.push(note5);
-
-        //Create the `note21` sprite
-        note21 = new Sprite(resources["images/Note_1.png"].texture);
-        note21.x = 700;
-        note21.y = 1080;
-        note21.instru = instrunote1;
-        note21.vx = 0;
-        note21.vy = 0;
-        //note21.killedby = 'knot';
-        note21.interactive = true;
-        note21.scale = new PIXI.ObservablePoint(()=>{},note21,NOTE_SCALE,NOTE_SCALE);
-        note21.on('pointerdown', onButtonDown);
-        app.stage.addChild(note21);
-        jammers.push(note21);
-
-        //Create the `note22` sprite
-        note22 = new Sprite(resources["images/Note_2.png"].texture);
-        note22.x = 850;
-        note22.y = 1280;
-        note22.instru = instrunote2;
-        note22.vx = 0;
-        note22.vy = 0;
-        //note22.killedby = 'gum';
-        note22.interactive = true;
-        note22.scale = new PIXI.ObservablePoint(()=>{},note22,NOTE_SCALE,NOTE_SCALE);
-        note22.on('pointerdown', onButtonDown);
-        app.stage.addChild(note22);
-        jammers.push(note22);
-
-        //Create the `note23` sprite
-        note23 = new Sprite(resources["images/Note_3.png"].texture);
-        note23.x = 950;
-        note23.y = 1280;
-        note23.instru = instrunote3;
-        note23.vx = 0;
-        note23.vy = 0;
-        //note23.killedby = 'sax';
-        note23.interactive = true;
-        note23.scale = new PIXI.ObservablePoint(()=>{},note23,NOTE_SCALE,NOTE_SCALE);
-        note23.on('pointerdown', onButtonDown);
-        app.stage.addChild(note23);
-        jammers.push(note23);
-
-        //Create the `note24` sprite
-        note24 = new Sprite(resources["images/Note_4.png"].texture);
-        note24.x = 700;
-        note24.y = 1080;
-        note24.instru = instrunote4;
-        note24.vx = 0;
-        note24.vy = 0;
-        //note24.killedby = 'knot';
-        note24.interactive = true;
-        note24.scale = new PIXI.ObservablePoint(()=>{},note24,NOTE_SCALE,NOTE_SCALE);
-        note24.on('pointerdown', onButtonDown);
-        app.stage.addChild(note24);
-        jammers.push(note24);
-
-        //Create the `note25` sprite
-        note25 = new Sprite(resources["images/Note_5.png"].texture);
-        note25.x = 850;
-        note25.y = 1280;
-        note25.instru = instrunote5;
-        note25.vx = 0;
-        note25.vy = 0;
-        //note25.killedby = 'gum';
-        note25.interactive = true;
-        note25.scale = new PIXI.ObservablePoint(()=>{},note25,NOTE_SCALE,NOTE_SCALE);
-        note25.on('pointerdown', onButtonDown);
-        app.stage.addChild(note25);
-        jammers.push(note25);
-
-        //Create the `knot_31` sprite
-        knot_31 = new Sprite(resources["images/Badnote_1.png"].texture);
-        knot_31.x = 950;
-        knot_31.y = 1280;
-        knot_31.vx = 0;
-        knot_31.vy = 0;
-        knot_31.killedby = 'sax';
-        knot_31.interactive = true;
-        knot_31.isBad = true;
-        knot_31.on('pointerdown', onButtonDown);
-        app.stage.addChild(knot_31);
-        jammers.push(knot_31);
-        //Create the `knot_12` sprite
-        knot_12 = new Sprite(resources["images/Badnote_2.png"].texture);
-        knot_12.x = 700;
-        knot_12.y = 1080;
-        knot_12.vx = 0;
-        knot_12.vy = 0;
-        knot_12.killedby = 'knot';
-        knot_12.interactive = true;
-        knot_12.isBad = true;
-        knot_12.on('pointerdown', onButtonDown);
-        app.stage.addChild(knot_12);
-        jammers.push(knot_12);
-
-        //Create the `knot_22` sprite
-        knot_22 = new Sprite(resources["images/Badnote_3.png"].texture);
-        knot_22.x = 850;
-        knot_22.y = 1280;
-        knot_22.vx = 0;
-        knot_22.vy = 0;
-        knot_22.killedby = 'gum';
-        knot_22.isBad = true;
-        knot_22.interactive = true;
-        knot_22.on('pointerdown', onButtonDown);
-        app.stage.addChild(knot_22);
-        jammers.push(knot_22);
-
 
         bullets = [];
         //Create the `bullet` sprite
@@ -709,188 +485,6 @@
         bullet_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet_peanut1);
         bullets.push(bullet_peanut1);
-
-
-        //Create the `bullet` sprite
-        bullet2_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
-        bullet2_peanut1.x = 950;
-        bullet2_peanut1.y = 1280;
-        bullet2_peanut1.vx = 0;
-        bullet2_peanut1.vy = 0;
-        bullet2_peanut1.weaponType = 'peanut';
-        bullet2_peanut1.weapon = weapon1;
-        bullet2_peanut1.interactive = true;
-        bullet2_peanut1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet2_peanut1);
-        bullets.push(bullet2_peanut1);
-
-
-        //Create the `bullet` sprite
-        bullet3_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
-        bullet3_peanut1.x = 950;
-        bullet3_peanut1.y = 1280;
-        bullet3_peanut1.vx = 0;
-        bullet3_peanut1.vy = 0;
-        bullet3_peanut1.weaponType = 'peanut';
-        bullet3_peanut1.weapon = weapon1;
-        bullet3_peanut1.interactive = true;
-        bullet3_peanut1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet3_peanut1);
-        bullets.push(bullet3_peanut1);
-
-        //Create the `bullet` sprite
-        bullet4_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
-        bullet4_peanut1.x = 950;
-        bullet4_peanut1.y = 1280;
-        bullet4_peanut1.vx = 0;
-        bullet4_peanut1.vy = 0;
-        bullet4_peanut1.weaponType = 'peanut';
-        bullet4_peanut1.weapon = weapon1;
-        bullet4_peanut1.interactive = true;
-        bullet4_peanut1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet4_peanut1);
-        bullets.push(bullet4_peanut1);
-
-        //Create the `bullet` sprite
-        //bullet_lazer1 = new Sprite(resources["images/Weapons/Weapon2 - Lazer3.3.png"].texture);
-        bullet_lazer1 = new PIXI.TilingSprite(
-            textureLazer,
-            100,
-            100
-        );
-        bullet_lazer1.x = 950;
-        bullet_lazer1.y = 1280;
-        bullet_lazer1.vx = 0;
-        bullet_lazer1.vy = 0;
-        bullet_lazer1.weaponType = 'lazer';
-        bullet_lazer1.weapon = weapon2;
-        bullet_lazer1.interactive = true;
-        bullet_lazer1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet_lazer1);
-        bullets.push(bullet_lazer1);
-
-
-        //Create the `bullet` sprite
-        bullet2_lazer1 = new PIXI.TilingSprite(
-           textureLazer,
-           100,
-           100
-        );
-        bullet2_lazer1.x = 950;
-        bullet2_lazer1.y = 1280;
-        bullet2_lazer1.vx = 0;
-        bullet2_lazer1.vy = 0;
-        bullet2_lazer1.weaponType = 'lazer';
-        bullet2_lazer1.weapon = weapon2;
-        bullet2_lazer1.interactive = true;
-        bullet2_lazer1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet2_lazer1);
-        bullets.push(bullet2_lazer1);
-
-
-        //Create the `bullet` sprite
-        bullet3_lazer1 = new PIXI.TilingSprite(
-            textureLazer,
-            100,
-            100
-         );
-        bullet3_lazer1.x = 950;
-        bullet3_lazer1.y = 1280;
-        bullet3_lazer1.vx = 0;
-        bullet3_lazer1.vy = 0;
-        bullet3_lazer1.weaponType = 'lazer';
-        bullet3_lazer1.weapon = weapon2;
-        bullet3_lazer1.interactive = true;
-        bullet3_lazer1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet3_peanut1);
-        bullets.push(bullet3_peanut1);
-
-        //Create the `bullet` sprite
-        bullet4_lazer1 = new PIXI.TilingSprite(
-            textureLazer,
-            100,
-            100
-         );
-        bullet4_lazer1.x = 950;
-        bullet4_lazer1.y = 1280;
-        bullet4_lazer1.vx = 0;
-        bullet4_lazer1.vy = 0;
-        bullet4_lazer1.weaponType = 'lazer';
-        bullet4_lazer1.weapon = weapon2;
-        bullet4_lazer1.interactive = true;
-        bullet4_lazer1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet4_lazer1);
-        bullets.push(bullet4_lazer1);
-
-        bullet_gun1 = new PIXI.TilingSprite(
-            textureGun,
-            100,
-            100
-        );
-        bullet_gun1.x = 950;
-        bullet_gun1.y = 1280;
-        bullet_gun1.vx = 0;
-        bullet_gun1.vy = 0;
-        bullet_gun1.weaponType = 'gun';
-        bullet_gun1.weapon = weapon3;
-        bullet_gun1.interactive = true;
-        bullet_gun1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet_gun1);
-        bullets.push(bullet_gun1);
-
-
-        //Create the `bullet` sprite
-        bullet2_gun1 = new PIXI.TilingSprite(
-           textureGun,
-           100,
-           100
-        );
-        bullet2_gun1.x = 950;
-        bullet2_gun1.y = 1280;
-        bullet2_gun1.vx = 0;
-        bullet2_gun1.vy = 0;
-        bullet2_gun1.weaponType = 'gun';
-        bullet2_gun1.weapon = weapon3;
-        bullet2_gun1.interactive = true;
-        bullet2_gun1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet2_gun1);
-        bullets.push(bullet2_gun1);
-
-
-        //Create the `bullet` sprite
-        bullet3_gun1 = new PIXI.TilingSprite(
-            textureGun,
-            100,
-            100
-         );
-        bullet3_gun1.x = 950;
-        bullet3_gun1.y = 1280;
-        bullet3_gun1.vx = 0;
-        bullet3_gun1.vy = 0;
-        bullet3_gun1.weaponType = 'gun';
-        bullet3_gun1.weapon = weapon3;
-        bullet3_gun1.interactive = true;
-        bullet3_gun1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet3_gun1);
-        bullets.push(bullet3_gun1);
-
-        //Create the `bullet` sprite
-        bullet4_gun1 = new PIXI.TilingSprite(
-            textureGun,
-            100,
-            100
-         );
-        bullet4_gun1.x = 950;
-        bullet4_gun1.y = 1280;
-        bullet4_gun1.vx = 0;
-        bullet4_gun1.vy = 0;
-        bullet4_gun1.weaponType = 'gun';
-        bullet4_gun1.weapon = weapon3;
-        bullet4_gun1.interactive = true;
-        bullet4_gun1.on('pointerdown', onButtonDown);
-        app.stage.addChild(bullet4_gun1);
-        bullets.push(bullet4_gun1);
-
 
 
         //Create the `hamster` sprite
@@ -1247,10 +841,6 @@
         resetJammers();
 
         resetInstru(instrunote1);
-        resetInstru(instrunote2);
-        resetInstru(instrunote3);
-        resetInstru(instrunote4);
-        resetInstru(instrunote5);
 
         weapon2.available = false;
         weapon2.y = 3000;
@@ -1265,7 +855,6 @@
         hamster.vx = 0.35;
 
         progress = 0;
-        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
         screenSprites.BG_start.y = 1080;
         screenSprites.BG_win.y = 1080;
@@ -1290,7 +879,6 @@
         hamster.moving = false;
         hamster.vx = 0;
 
-        setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
         msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
@@ -1317,7 +905,6 @@
             hamster.moving = false;
             hamster.vx = 0;
 
-            setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
             msg_menu_1.y = msg_menu_1.y - 1080;
             msg_menu_2.y = msg_menu_2.y - 1080;
@@ -1350,7 +937,7 @@
             var targetX = param.data.global.x;
             var targetY = param.data.global.y;
             if(mode == 'normal') {
-                shoot(targetX,targetY);
+                //shoot(targetX,targetY);
             }
 
             //console.log('click ',param.data.global);
@@ -1360,80 +947,6 @@
         this.alpha = 1;
 
     }
-
-    function shoot(targetX,targetY){
-        var found = false;
-        for (var i = 0; i < bullets.length && !found; i++) {
-            if(!bullets[i].flying && bullets[i].weaponType == tool){
-                bullets[i].flying = true;
-                found = true;
-                bullets[i].x = hamster.x+80;
-                bullets[i].y = hamster.y+80;
-
-
-                var curr_weapon_speed = bullets[i].weapon.weapon_speed || 10;
-                console.log('shoot speed ',bullets[i].weapon,' ',curr_weapon_speed, 3.1416/16);
-                var oppositeSz = targetY > bullets[i].y ? ( bullets[i].y -targetY ) :(targetY - bullets[i].y );
-                var goes_down = targetY > bullets[i].y ? true : false;
-                var adjacentSz = (targetX - bullets[i].x);
-                //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
-                bullets[i].rotation = bullets[i].weapon.bulletAngle || 0 ;
-                console.log('shoot base angle',bullets[i].rotation);
-                if(adjacentSz == 0){
-                    bullets[i].vx = 0;
-                    bullets[i].vy = -curr_weapon_speed;
-                    bullets[i].rotation -= 3.1416/4;
-                } else {
-                    bullets[i].vx =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed / (oppositeSz / adjacentSz) : curr_weapon_speed ;
-                    bullets[i].vy =  oppositeSz / adjacentSz > 1 || oppositeSz / adjacentSz < -1 ? curr_weapon_speed                             : curr_weapon_speed * (oppositeSz / adjacentSz) ;
-
-                    bullets[i].rotation += adjacentSz < 0 ? 3.1416+Math.atan(oppositeSz / adjacentSz ) : Math.atan(oppositeSz / adjacentSz ) ;
-                    /*if(adjacentSz > 0) {
-                        if (oppositeSz > 0) {
-                            console.log('++ ',(oppositeSz / adjacentSz));
-                            bullets[i].vy = -bullets[i].vy;
-                        } else {
-                            console.log('+- ',(oppositeSz / adjacentSz));
-                        }
-                    } else {
-                        if (oppositeSz > 0) {
-                            console.log('-+ ',(oppositeSz / adjacentSz));
-                            bullets[i].vx = -bullets[i].vx;
-
-                        } else {
-                            console.log('-- ',(oppositeSz / adjacentSz));
-                            bullets[i].vy = -bullets[i].vy;
-                            bullets[i].vx = -bullets[i].vx;
-
-                        }
-                        //bullets[i].vx = -bullets[i].vx;
-
-                    }*/
-                }
-                console.log('shoot final angle',bullets[i].rotation);
-
-
-                bullets[i].vx = bullets[i].vx > 0 != adjacentSz >0 ? - bullets[i].vx : bullets[i].vx;
-                bullets[i].vy = bullets[i].vy > 0 != goes_down ? -bullets[i].vy : bullets[i].vy;
-
-                //bullets[i].shoot_angle = adjacentSz == 0 ? 3.1416/2 : adjacentSz <= 0 ? 3.1416/2 + Math.atan(oppositeSz / -adjacentSz ): Math.atan(oppositeSz / adjacentSz );
-
-                //bullets[i].vx = curr_weapon_speed* Math.cos(bullets[i].shoot_angle);
-                //bullets[i].vy = -curr_weapon_speed* Math.sin(bullets[i].shoot_angle);
-                //console.log('shoot ',i, ' ',(bullets[i].shoot_angle*180/3.1416));
-                //console.log('shooted ',oppositeSz,adjacentSz , ' ',(bullets[i].shoot_angle*180/3.1416));
-                //console.log('shooted ',adjacentSz,oppositeSz ,(oppositeSz / adjacentSz), ' ',bullets[i].vx,bullets[i].vy);
-                //console.log('shooted ',bullets[i]);
-
-                onPlayVideo(bullets[i].weapon.weaponShoot, false);
-            }
-
-        }
-        if(!found) {
-            //console.log('shoot in CD');
-        }
-    }
-
 
     function onButtonUp() {
         this.isdown = false;
@@ -1571,10 +1084,6 @@
         //weapon1.un
 
         resetInstru(instrunote1);
-        resetInstru(instrunote2);
-        resetInstru(instrunote3);
-        resetInstru(instrunote4);
-        resetInstru(instrunote5);
 
         var difficulty = (CURRENT_LVL/2) % 8 ; // 0 easy to 9 hardcore
         var badNotesCpt = 0;
@@ -1701,98 +1210,13 @@
         //hamster.tilePosition.x += hamster.tilePosition.vy;
         hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
 
-        bullet_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
-       // bullet1_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
-        bullet2_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
-        bullet3_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
-        bullet4_lazer1.tilePosition.x += (timeInSec % 4 == 0 ) ? 100 : 0;
-
-        //rollerCoaster1.y += tilingSpriteMessyHair.vy;
-
-        hamster.progress += hamster.vx;
-        setPositionOnCurve(hamster, hamster.progress, hamsterControlPoints);
+        hamster.progress = 10 ;
 
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
         moveBullets(1);
-        //check for a collision between the hamster and the box
-        /*if (hitTestRectangle(hamster, box)) {
 
-            //if there's a collision, change the message text
-            //and tint the box red
-            message.text = "hit!";
-            box.tint = 0xff3300;
-        } else {
-
-            //if there's no collision, reset the message
-            //text and the box's color
-            //message.text = "No collision...("+hamster.x+", "+hamster.y+")";
-            box.tint = 0xccff99;
-        }*/
         animate_BG(timeInSec);
     }
-
-    function setPositionOnCurve(sprite, newProgress, controlPoints){
-        if(!sprite.moving) {
-            //console.log('progress ',newProgress, ' not moving ',controlPoints);
-            sprite.x = size[1];
-            sprite.y = size[0];
-            sprite.rotation = 0;
-            return;
-        }
-        var curveProgress = newProgress < 0 ? 0 : newProgress > 100 ? 100 :  newProgress;
-        var previousPoint = controlPoints[0]
-        for (var i = 1; i < controlPoints.length; i++) {
-            var nextPoint = controlPoints[i];
-            if(nextPoint.progress >= curveProgress){
-                //console.log('progress ',curveProgress,' '+i+ ' using point '+(i+1), ' ', nextPoint,previousPoint);
-                //console.log('progress ',curveProgress, (nextPoint.progress-previousPoint.progress));
-                sprite.rotation = 0;
-                //sprite.rotation = (-3.1416/180)*(previousPoint.rotation + (nextPoint.rotation-previousPoint.rotation)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress));
-
-                var curve_offsetX = (sprite.curve_offsetX || 0)
-                var curve_offsetY = (sprite.curve_offsetY -10 || 0)
-                sprite.x =  Math.cos(sprite.rotation)*curve_offsetX + previousPoint.x + (nextPoint.x-previousPoint.x)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-                sprite.y =  Math.cos(sprite.rotation)*curve_offsetY  + previousPoint.y + (nextPoint.y-previousPoint.y)*(curveProgress-previousPoint.progress)/(nextPoint.progress-previousPoint.progress);
-
-
-                return;
-            }
-            previousPoint = nextPoint;
-        }
-        //console.log('progress ',curveProgress, ' no point found');
-    }
-
-    let hamsterControlPoints = [
-        // progress is the % of progression on the complete rollercoaster curve
-        // x and y are the coordinates.
-        //          (x=0   , y=0   )  is at the TOP    left  of the game screen
-        //          (x=1920, y=1080)  is at the BOTTOM right of the game screen
-        // rotation is the angle (in degrees) of the hamster
-        //          0   => normal, looks to the right
-        //          90  =>         looks to the top
-        //          180 =>         looks to the left   (upside down)
-        //          270 =>         looks to the bottom (upside down)
-
-        { progress: 0,    x: 300 ,                             y: 752       ,  rotation:0 },// initial point, at enter gate
-	{ progress: 1,    x: 325 ,                             y: 777       ,  rotation:-45 },// initial point, at enter gate
-	{ progress: 11.8,    x: 475 ,                             y: 950      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 12.5,    x: 500 ,                             y: 975      ,  rotation:45 },// initial point, at enter gate
-	{ progress: 15.25,    x: 575 ,                             y: 895      ,  rotation:45 },// initial point, at enter gate
-	{ progress: 30,    x: 800 ,                             y: 600      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 32,    x: 825 ,                             y: 625      ,  rotation:-45 },// initial point, at enter gate
-	{ progress: 33.9,    x: 850 ,                             y: 700      ,  rotation:-45 },// initial point, at enter gate
-	{ progress: 46.4,    x: 1000 ,                             y: 900      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 48,    x: 1025 ,                             y: 925      ,  rotation:45 },// initial point, at enter gate
-    //{ progress: 50,   x: (ROLLER_COASTER_RIGHT + ROLLER_COASTER_LEFT) / 2 , y: 675  ,  rotation:0 },// middle point, at enter gate
-	{ progress: 56.6,    x: 1200 ,                             y: 675      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 58,    x: 1225 ,                             y: 700      ,  rotation:-45 },// initial point, at enter gate
-	{ progress: 74,    x: 1350 ,                             y: 1025      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 77,    x: 1375 ,                             y: 1050      ,  rotation:45 },// initial point, at enter gate
-	{ progress: 88.8,    x: 1540 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 93.8,    x: 1625 ,                             y: 750      ,  rotation:0 },// initial point, at enter gate
-	{ progress: 95.8,    x: 1650 ,                             y: 775      ,  rotation:-45 },// initial point, at enter gate
-	{ progress: 100,  x: 1750 ,                            y: 875  ,  rotation: -45 } // final point, at exit gate
-    ];
 
     function checkBulletCollision(){
 

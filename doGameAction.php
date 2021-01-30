@@ -119,7 +119,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                     }
 
                     //TODO, check gamemaster action
-                    if($phase_after % 10 == 4) {
+                    /*if($phase_after % 10 == 4) {
                         // 4 players have played this turn, open the next one
                         $phase_after_player = $phase_after;
                         $phase_after = $phase_before-($phase_before%100)+100;
@@ -131,7 +131,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                             $return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
                         }
 
-                    }
+                    }*/
 
                 }
             }
