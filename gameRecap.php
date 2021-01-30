@@ -50,10 +50,10 @@ if(!empty($playerid) && !empty($playername) && !empty($gameid)) {
                         'description' => $row['description'],
                         'phase_before' => $row['phase_before'],
                         'phase_after' => $row['phase_after'],
-                        'action_parameters' => $row['action_parameters'],
+                        'action_parameters' => json_decode($row['action_parameters']),
                         'nickname' => $row['nickname'],
-                        'avatar' => $row['avatar'],
-                        'encoded_avatar' => base64_encode('{"data": "Jeff_or_NOT", "is_empty": false}')
+                        'avatar' => $row['avatar']
+                        //,'encoded_avatar' => base64_encode('{"data": "Jeff_or_NOT", "is_empty": false}')
                     ];
                 }
                 //$return[ 'action2'] = 'happy';
