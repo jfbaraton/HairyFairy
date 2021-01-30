@@ -24,12 +24,12 @@
       <br>
       <br>Connected successfully
       <br>";
-	  $sql = "SELECT id FROM player LIMIT 10";
+	  $sql = "SELECT action_parameters FROM player_game_action LIMIT 10";
           if ($result = mysqli_query($conn, $sql)) {
               if(mysqli_num_rows($result) >0) {
                   echo "
 				  <br>
-				  <br>several results
+				  <br>several resultss
 				  <br>";
               } else {
                   echo "
