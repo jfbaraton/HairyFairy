@@ -137,7 +137,7 @@
     //.add("images/knot_1.png")
     //.add("images/knot_2.png")
     //.add("images/gum1.png")
-    //.add("images/gum2.png")
+    .add("images/gum2.png")
     ///.add("images/Warning-yellow.png")
     //.add("images/Warning-orange.png")
     //.add("images/Warning-red.png")
@@ -223,6 +223,7 @@
     let ROLLER_COASTER_RIGHT = 1760;
     let ROLLER_COASTER_LOW = 900;
 	let screenSprites;
+	let itemSprites = {};
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -919,6 +920,12 @@
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);*/
         app.stage.addChild(hamster);
+		
+		
+		
+		//new sprites
+		fetchItemSprites()
+			
 			
         //Create the `BG_start` sprite
         screenSprites.BG_start = new Sprite(resources["images/BG_start2.png"].texture);
@@ -1048,22 +1055,7 @@
         //Start the game loop
         app.ticker.add(delta => gameLoop(delta));
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	const mockedMessages = {
 		initialMessage: {
 			players: [
@@ -1166,11 +1158,25 @@
 	}
 	
 	
-	
-	
-	
-	
-	
+	const fetchItemSprites = () => {
+		
+		for (key of Object.keys(itemFiles)) {
+			let tmpItem = {};
+			tmpItem = new Sprite(resources[itemFiles[key]].texture)
+			tmpItem.x = 0
+			tmpItem.y = 1080
+			itemSprites[key] = tmpItem
+			app.stage.addChild(itemSprites[key]);
+		}
+	}
+
+	const itemFiles = {
+		"0": "images/gum2.png",
+		"2": "images/gum2.png",
+		"3": "images/gum2.png",
+		"6": "images/gum2.png",
+		"7": "images/gum2.png"
+	}
 	
 	const itemIds = {
 		"0": "lamp",
@@ -1225,13 +1231,17 @@
 		
 	}
 	
-
     function onStartGame() {
         msg_status.y = 1080;
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
 		
+		Object.keys(itemSprites).forEach(k => console.log(k))
+		Object.values(itemSprites).forEach(v => console.log(v))
+		
+		itemSprites["0"].x = 150
+		itemSprites["0"].y = 150
 		
         CURRENT_LVL = 0;
         resetJammers();
