@@ -8,7 +8,7 @@
     Sprite = PIXI.Sprite,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle;
-    
+	    
 	var size = [1920, 1080];
 	var ratio = size[0] / size[1];
 	var newRatio = 0.5;
@@ -190,6 +190,7 @@
     .add("sounds/"+sound_bank["gun_charging"])
     .add("sounds/"+sound_bank["short_slingshot_sound"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
+	.add("images/TESTBG.png")
 
     .load(setup);
 
@@ -197,13 +198,12 @@
     let timeInSec = 0;
     let mode, tool, music, sound, BGmusicSprite, musicSprite, progress;
     let butt_music, butt_sound;
-    let BG_start, BG_win, BG_lose;
     let msg_status;
     let msg_menu_1;
     let msg_menu_2;
     let hamster;
     let skills_bar, weapon1,weapon2,weapon3;
-    let blob, rollerCoaster1, back, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , looping,outer_gates, box, message, message2, state, tilingSprite, jammers;
+    let blob, rollerCoaster1, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , box, message, message2, state, tilingSprite, jammers;
     let instructions, instrunote1, instrunote2, instrunote3, instrunote4, instrunote5;
     let note1, note2, note3, note4, note5,note21, note22, note23, note24, note25;
     let knot_31, knot_12, knot_22, knot_32, knot_13, knot_23, knot_33,  progress_dirty;
@@ -222,6 +222,7 @@
     let ROLLER_COASTER_LEFT = 150;
     let ROLLER_COASTER_RIGHT = 1760;
     let ROLLER_COASTER_LOW = 900;
+	let screenSprites;
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -272,18 +273,24 @@
         box.x = 120;
         box.y = 96;
         app.stage.addChild(box);
-
-        //Create the `BG` sprite
-        back = new Sprite(resources["images/BG_empty.png"].texture);
-        back.x = 0;
-        back.y = 0;
-        back.vx = 0;
-        back.vy = 0;
-        back.interactive = true;
-        back.on('pointerdown', onButtonDown);
-        app.stage.addChild(back);
-
-        //Create hot air balloons for the `BG` sprite
+		
+		// iterable for BG's
+		screenSprites = {
+			playScreenBG: {},
+			BG_start: {},
+			BG_win: {},
+			BG_lose: {}			
+		};
+		
+		// BG for the play screen
+		screenSprites.playScreenBG = new Sprite(resources["images/TESTBG.png"].texture)
+        screenSprites.playScreenBG.x = 0;
+        screenSprites.playScreenBG.y = 0;
+        screenSprites.playScreenBG.interactive = true;
+        screenSprites.playScreenBG.on('pointerdown', onButtonDown);
+        app.stage.addChild(screenSprites.playScreenBG);
+		
+		//Create hot air balloons for the `BG` sprite
         BG_baloons1 = new Sprite(resources["images/Hotairbaloon2SOLO.png"].texture);
         BG_baloons1.x = 0;
         BG_baloons1.y = 0;
@@ -320,19 +327,6 @@
         BG_flags2.interactive = true;
         BG_flags2.on('pointerdown', onButtonDown);
         app.stage.addChild(BG_flags2);
-
-
-
-        //Create the `BG` sprite
-        looping = new Sprite(resources["images/BG_2ndloop.png"].texture);
-        looping.x = 0;
-        looping.y = 280;
-        looping.vx = 0;
-        looping.vy = 0;
-        looping.interactive = true;
-        looping.on('pointerdown', onButtonDown);
-        looping.scale = new PIXI.ObservablePoint(()=>{},looping,1,0.75);
-        app.stage.addChild(looping);
 
 
         //Create the 'weapon selection' sprite
@@ -925,58 +919,25 @@
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);*/
         app.stage.addChild(hamster);
-
-
-        //Create the `BG` sprite
-        outer_gates = new Sprite(resources["images/OuterMagicGates.png"].texture);
-        outer_gates.x = 0;
-        outer_gates.y = 280;
-        outer_gates.vx = 0;
-        outer_gates.vy = 0;
-        outer_gates.interactive = true;
-        outer_gates.on('pointerdown', onButtonDown);
-        outer_gates.scale = new PIXI.ObservablePoint(()=>{},outer_gates,1,0.75);
-        app.stage.addChild(outer_gates);
-
-
-        //const sound_init_texture = PIXI.Texture.from('sounds/tool_select.mp4');
-        /*musicSprite = new PIXI.Sprite(sound_init_texture);
-
-        // out of screen
-        musicSprite.x = app.screen.width+200;
-        musicSprite.y = app.screen.height+200;
-        musicSprite.width = 1;
-        musicSprite.height = 1;
-
-        app.stage.addChild(musicSprite);*/
-
-
+			
         //Create the `BG_start` sprite
-        BG_start = new Sprite(resources["images/BG_start2.png"].texture);
-        BG_start.x = 0;
-        BG_start.y = 0;
-        BG_start.vx = 0;
-        BG_start.vy = 0;
-        app.stage.addChild(BG_start);
-
-
+        screenSprites.BG_start = new Sprite(resources["images/BG_start2.png"].texture);
+        screenSprites.BG_start.x = 0;
+        screenSprites.BG_start.y = 0;
+        app.stage.addChild(screenSprites.BG_start);
 
         //Create the `BG_lose` sprite
-        BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
-        BG_lose.x = 0;
-        BG_lose.y = 1080;
-        BG_lose.vx = 0;
-        BG_lose.vy = 0;
-        app.stage.addChild(BG_lose);
+        screenSprites.BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
+        screenSprites.BG_lose.x = 0;
+        screenSprites.BG_lose.y = 1080;
+        app.stage.addChild(screenSprites.BG_lose);
 
 
         //Create the `BG_win` sprite
-        BG_win = new Sprite(resources["images/BG_win.png"].texture);
-        BG_win.x = 0;
-        BG_win.y = 1080;
-        BG_win.vx = 0;
-        BG_win.vy = 0;
-        app.stage.addChild(BG_win);
+        screenSprites.BG_win = new Sprite(resources["images/BG_win.png"].texture);
+        screenSprites.BG_win.x = 0;
+        screenSprites.BG_win.y = 1080;
+        app.stage.addChild(screenSprites.BG_win);
 
         //Create the text sprite
         let style2 = new TextStyle({
@@ -1087,6 +1048,162 @@
         //Start the game loop
         app.ticker.add(delta => gameLoop(delta));
     }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	const mockedMessages = {
+		initialMessage: {
+			players: [
+				{
+					nickname: "Matti", 
+					avatarId: 0, //refers to filename
+					position: 1 //0-3
+				},
+				{
+					nickname: "Pentti",
+					avatarId: 0,
+					position: 0
+				},
+				{
+					nickname: "Pete",
+					avatarId: 0,
+					position: 3
+				},
+				{
+					nickname: "Ansa",
+					avatarId: 0,
+					position: 2
+				},
+			],
+			// special cards ordered according to position
+			specialCards: [
+				{	
+					category: "souvenirs",
+					id: 0
+				},
+				{
+					category: "accessories",
+					id: 7
+				},
+				{
+					category: "accessories",
+					id: 6
+				}
+			],
+			nextEventType: 0, // 0-2 
+			startingHands: [
+				[
+					{	
+						category: "souvenirs",
+						id: 0
+					},
+					{	
+						category: "souvenirs",
+						id: 2
+					},
+					{	
+						category: "souvenirs",
+						id: 3
+					},
+				],
+				[
+					{	
+						category: "souvenirs",
+						id: 0
+					},
+					{	
+						category: "souvenirs",
+						id: 2
+					},
+					{	
+						category: "souvenirs",
+						id: 3
+					},
+				],
+				[
+					{	
+						category: "souvenirs",
+						id: 0
+					},
+					{	
+						category: "souvenirs",
+						id: 2
+					},
+					{	
+						category: "souvenirs",
+						id: 3
+					},
+				],
+				[
+					{	
+						category: "souvenirs",
+						id: 0
+					},
+					{	
+						category: "souvenirs",
+						id: 2
+					},
+					{	
+						category: "souvenirs",
+						id: 3
+					}
+				]
+			]
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	const itemIds = {
+		"0": "lamp",
+		"2": "bottle",
+		"3": "corkscrew",
+		"6": "salmiakki",
+		"7": "scarf"
+	}
+	
+	let gameState;
+
+	const initializeGameState = () => {
+		gameState.currentDay = 0
+		gameState.ownPosition = 0
+		
+		for (id in itemIds){
+			gameState.itemValues = 0
+		}
+	}
+
+	
+	const parseInitialMessage = (initialMessage) => {
+		gameState.players = initialMessage.players
+		gameState.currentEvent = initialMessage.nextEventType
+		gameState.specialCards = initialMessage.specialCards
+		gameState.hands = initialMessage.startingHands
+	}
+	
+	
+	
+	
+	
+	
 
     function swapWeapon (oneWeapon){
 
@@ -1101,12 +1218,21 @@
             // play sound for unavailable
         }
     }
+	
+	const playScreen = () => {
+		//set the background
+		
+		
+	}
+	
 
     function onStartGame() {
         msg_status.y = 1080;
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
+		
+		
         CURRENT_LVL = 0;
         resetJammers();
 
@@ -1131,9 +1257,9 @@
         progress = 0;
         setPositionOnCurve(hamster, hamster.progress++, hamsterControlPoints);
 
-        BG_start.y = 1080;
-        BG_win.y = 1080;
-        BG_lose.y = 1080;
+        screenSprites.BG_start.y = 1080;
+        screenSprites.BG_win.y = 1080;
+        screenSprites.BG_lose.y = 1080;
         //chibi.y = 1080-771;
         //onPlayVideo('claps_end_of_level', true);
         onPlayVideo('Countdown_Start_Race', true);
@@ -1158,9 +1284,9 @@
 
         msg_menu_1.y = msg_menu_1.y - 1080;
         msg_menu_2.y = msg_menu_2.y - 1080;
-        BG_start.y = 1080;
-        BG_win.y = 0;
-        BG_lose.y = 1080;
+        screenSprites.BG_start.y = 1080;
+        screenSprites.BG_win.y = 0;
+        screenSprites.BG_lose.y = 1080;
         mode = 'win';
     }
 
@@ -1185,9 +1311,9 @@
 
             msg_menu_1.y = msg_menu_1.y - 1080;
             msg_menu_2.y = msg_menu_2.y - 1080;
-            BG_start.y = 1080;
-            BG_win.y = 1080;
-            BG_lose.y = 0;
+            screenSprites.BG_start.y = 1080;
+            screenSprites.BG_win.y = 1080;
+            screenSprites.BG_lose.y = 0;
             mode = 'lose';
         }
     }
