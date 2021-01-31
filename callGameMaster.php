@@ -200,13 +200,13 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                         if($current_round == 0) { // special case of the first round of the whole game
                             //hands
                             $actionParameter['player_hands'] = [
-                                 [1,11,21] // 1st player hand
-                                ,[2,12,22] // 2nd player hand
-                                ,[3,13,23] // 3rd player hand
-                                ,[4,14,24] // 4th player hand
+                                 [0,1,2] // 1st player hand
+                                ,[4,5,6] // 2nd player hand
+                                ,[8,9,10] // 3rd player hand
+                                ,[3,7,11] // 4th player hand
                                 ];
                             // special items
-                            $actionParameter['special_items'] = [1,12,23,4];
+                            $actionParameter['special_items'] = [0,4,8,3];
 
                         }
 

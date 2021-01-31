@@ -20,7 +20,7 @@
       if (!$conn) {
          die("Connection failed: " . mysqli_connect_error());
       }
-      $gameid = 5;
+      $gameid = 6;
       echo "
       <br>Connected successfully
       <br>
