@@ -251,7 +251,37 @@
     const WEAPON_3_Y = 915;
     let count = 0;
 
+    const getUrlParameter = (name) => {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+
     function setup() {
+
+        let rootURL = window.location.href.slice(0,window.location.href.lastIndexOf("/")+1);
+        if(!!getUrlParameter('playername') && !!getUrlParameter('playeravatar')){
+            playername=getUrlParameter('playername');
+            playeravatar=getUrlParameter('playeravatar');
+            if(!!getUrlParameter('playerid')){
+                console.log('everything ok');
+                playerid = getUrlParameter('playerid');
+            } else {
+                console.log('credentials but no id, login in');
+            }
+            login(playername,playeravatar, (readPlayerId => {
+                if(!readPlayerId || readPlayerId != playerid){
+                    window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
+                }
+            }));
+
+        } else {
+            console.log('no credentials, setting random ones');
+            window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+playerid+"";
+        }
+
         mode = 'start';
         tool = 'peanut';
         music = true;
@@ -735,7 +765,7 @@
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
-				console.log(key)
+				//console.log(key)
 			} else {
 				screenSprites[key].y = 1080
 			}
@@ -1041,6 +1071,40 @@
 
     	return actionId;
     }
+
+    const login = async (playername,playeravatar,callBack) => {
+        console.log('async call login');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/login.php?playername='+playername+'&playeravatar='+playeravatar);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('login answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        if(myJson && myJson.id){
+            callBack(myJson.id);
+        } else if(myJson && myJson.data && myJson.data.id){
+            callBack(myJson.data.id);
+        } else {
+            callBack();
+        }
+        console.log('login done!!!!');
+        // do something with myJson
+    };
+
+    const listGames = async (playername,playerid,callBack) => {
+        console.log('async call listGames');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/listGames.php?playername='+playername+'&playerid='+playerid);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('listGames answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        if(myJson && myJson.data && myJson.data.length){
+            // 1 games in progress where i am already
+            // 2 games in progress where i am not yet
+            callBack(myJson.data);
+            //3 no game found. will have to create one
+        } else {
+        }
+        console.log('listGames done!!!!');
+        // do something with myJson
+    };
 
     const gameRecap = async (messageArea) => {
         console.log('async call gameRecap');
