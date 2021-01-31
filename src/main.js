@@ -140,7 +140,6 @@
     .add("images/Weapons/Weapon1 - Peanut1.3.png")
     .add("images/Weapons/Weapon2 - Lazer3.3.png")
     .add("images/portee vide3.png")
-    .add("images/Skills_bar3.png")
     .add("images/Weapons/slingshot charged 1.png")
     .add("images/Weapons/Weapon2.png")
     .add("images/Weapons/Weapon3.png")
@@ -182,11 +181,10 @@
     let msg_menu_1;
     let msg_menu_2;
     let hamster;
-    let skills_bar, weapon1,weapon2,weapon3;
+    let weapon1,weapon2,weapon3;
     let blob, rollerCoaster1, BG_baloons1,BG_baloons2,BG_flags1,BG_flags2 , box, message, message2, state, tilingSprite, jammers;
     let instructions, instrunote1;
     let note1;
-    let progress_dirty;
     let bullets;
     let bullet_peanut1;
     let MENU_MAX = 2 ;
@@ -210,7 +208,6 @@
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
-    const textureSkillbar= PIXI.Texture.from('images/Skills_bar3.png');
 	const textureItems = PIXI.Texture.from('images/newPictures/itemTileMap.jpg');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
@@ -334,21 +331,6 @@
         weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE*1.5,WEAPON_SCALE*1.5);
         app.stage.addChild(weapon3);
 
-        //skills_bar = new Sprite(resources["images/Skills_bar2.png"].texture);
-        skills_bar = new PIXI.TilingSprite(
-            textureSkillbar,
-            1992/3,
-            340
-        );
-        skills_bar.x = 150+580;
-        skills_bar.y = 807;
-        skills_bar.vx = 0;
-        skills_bar.vy = 0;
-        skills_bar.interactive = true;
-        skills_bar.on('pointerdown', onButtonDown);
-        skills_bar.scale = new PIXI.ObservablePoint(()=>{},skills_bar,WEAPON_MENU_SCALE,WEAPON_MENU_SCALE);
-        app.stage.addChild(skills_bar);
-
         //Create the `rollerCoaster1` sprite
         rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
         rollerCoaster1.x = 521;
@@ -359,18 +341,6 @@
         rollerCoaster1.on('pointerdown', onButtonDown);
         rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
         //app.stage.addChild(rollerCoaster1);
-
-        //Create the `progress_dirty` sprite
-        progress_dirty = new Sprite(resources["images/portee vide3.png"].texture);
-        progress_dirty.x = 280;
-        progress_dirty.y = 10;
-        progress_dirty.vx = 0;
-        progress_dirty.vy = 0;
-        progress_dirty.scale = new PIXI.ObservablePoint(()=>{},progress_dirty,1,0.7);
-        progress_dirty.interactive = true;
-        progress_dirty.on('pointerdown', onButtonDown);
-        //progress_dirty.rotation = 3.1415/2.;
-        app.stage.addChild(progress_dirty);
 
         //text for progression
         let style = new TextStyle({
@@ -535,9 +505,9 @@
         //Create the text sprite
         let style4 = new TextStyle({
         fontFamily: "Bodoni MT", // "chalkduster"
-        fontSize: 190,
+        fontSize: 60,
         //fontStyle: 'underline',
-        fill: "brown",
+        fill: "blue",
         });
         msg_status = new Text("                                        .\n"+
         "                                        .\n"+
@@ -545,7 +515,7 @@
         "                                        .\n"+
         "                                        .\n"+
         "                                        .\n"+
-        "                ALLLåååå                .\n"+
+        "                ALLLå   eller           .\n"+
         "                                        .\n"+
         "                                        .\n"+
         "                                        .\n"+
@@ -556,10 +526,10 @@
         msg_status.position.set(30, 30);
         msg_status.interactive = true;
         msg_status.on('pointerdown', onStartGame)
-        app.stage.addChild(msg_status);
+        //app.stage.addChild(msg_status);
 
-        msg_menu_1 = new Text("Start game", style3);
-        msg_menu_1.position.set(10,180);
+        msg_menu_1 = new Text("Jeff Text", style4);
+        msg_menu_1.position.set(10,80);
         msg_menu_1.interactive = true;
         msg_menu_1.isJeff = true;
         msg_menu_1.on('pointerdown', onButtonDown)
