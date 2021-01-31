@@ -8,6 +8,7 @@
     Sprite = PIXI.Sprite,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle;
+    const gameRecap = {'data':{}};
 	    
 	var size = [1920, 1080];
 	var ratio = size[0] / size[1];
@@ -558,7 +559,7 @@
         app.stage.addChild(msg_status);
 
         msg_menu_1 = new Text("Start game", style3);
-        msg_menu_1.position.set(300,80);
+        msg_menu_1.position.set(10,180);
         msg_menu_1.interactive = true;
         msg_menu_1.isJeff = true;
         msg_menu_1.on('pointerdown', onButtonDown)
@@ -928,7 +929,8 @@
                 const response = await fetch('http://localhost/HairyFairy/gameRecap.php?playername=jeff&playerid=2&gameid='+gameId);
                 const myJson = await response.json(); //extract JSON from the http response
                 console.log('async answer',myJson);
-                this.text = myJson;
+                gameRecap.data = myJson;
+                this.text = rendergameRecap(gameRecap.data);
                 console.log('async done!!!!',myJson);
                 // do something with myJson
             };
@@ -947,6 +949,21 @@
         }
         this.alpha = 1;
 
+    }
+
+    function rendergameRecap(gameRecapJSON) {
+        result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
+        console.log('rendergameRecap ',gameRecapJSON);
+        if(gameRecapJSON && gameRecapJSON.data && gameRecapJSON.data.length){
+            result = "here is what happened \n";
+            gameRecapJSON.data.forEach(oneRecord => {
+                //result += "\n"+JSON.stringify(oneRecord);
+                result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
+            });
+
+        }
+
+        return result;
     }
 
     function onButtonUp() {
