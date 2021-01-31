@@ -208,6 +208,7 @@
 	let phaseText;
 	let gameState = { history : []};
 	let gamePhase = "title"
+	let UiProgress = new Array();
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
@@ -463,8 +464,10 @@
 		screenSprites.BG_start.interactive = true;
 		screenSprites.BG_start.on('pointerdown', () => {
 			gamePhase = "play"
+			setBGactive("party")
 			initializeGameState()
 			parseInitialMessage(mockedMessages.initialMessage)
+			console.log("CLICKED")
 		})
         app.stage.addChild(screenSprites.BG_start);
 
@@ -526,6 +529,7 @@
         //fontStyle: 'underline',
         fill: "blue",
         });
+		/*
         msg_status = new Text(
         "                                                                                                                   .\n"+
         "                                                                                                                   .\n"+
@@ -545,13 +549,20 @@
         msg_status.interactive = true;
         msg_status.on('pointerdown', onStartGame)
         app.stage.addChild(msg_status);
-
+		*/
         msg_menu_1 = new Text("Jeff Text", style4);
         msg_menu_1.position.set(10,80);
         msg_menu_1.interactive = true;
         msg_menu_1.isJeff = true;
         msg_menu_1.on('pointerdown', onButtonDown)
         app.stage.addChild(msg_menu_1);
+		
+		debugButton = new Text("debug", style4);
+		debugButton.position.set(1500, 0)
+		debugButton.interactive = true
+		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newRoundmsg)})
+		app.stage.addChild(debugButton)
+		
 
         msg_menu_2 = new Text("Settings", style4);
         msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
@@ -727,7 +738,8 @@
 					}
 				]
 			]
-		}
+		},
+		newRoundmsg: { new_round: 'lost_and_found', is_new_round: true }
 	}
 
 	const BGfiles = {
@@ -747,8 +759,6 @@
 	}
 
 	const setBGactive = (BGtype) => {
-		console.log(BGtype)
-		console.log(Object.keys(screenSprites))
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
@@ -862,6 +872,7 @@
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage) => {
 		gameState.currentRound = newRoundMessage.new_round;
+		UiProgress = new Array()
 	}
 
     // random order: boose, personal items , souvenir& duty free . 100 for theb first, 200 for the second, 300 for the last
@@ -879,13 +890,16 @@
 	}
 
 	function onStartGame() {
-        msg_status.y = 1080;
+        // msg_status.y = 1080;
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
+		
+		/*
 		initializeGameState()
 		parseInitialMessage(mockedMessages.initialMessage)
-
+		*/
+		
 		/*
 		positionItem("0", 0, 200)
 		positionItem("1", 200, 200)
@@ -901,8 +915,7 @@
 		positionItem("11", 1000, 500)
 		*/
 		
-		
-		setBGactive("party")
+		/*
 		drawInventory()
 		createOrUpdatePhaseText("select an item for the event")
 		
@@ -932,6 +945,8 @@
         onPlayVideo('Countdown_Start_Race', true);
         //onPlayVideo('musique_game', true);
         mode = 'normal';
+		
+		*/
     }
 
     function onWinGame() {
@@ -982,7 +997,7 @@
             mode = 'lose';
         }
     }
-
+	
     function onButtonDown(param) {
         let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
         this.isdown = true;
@@ -999,8 +1014,22 @@
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
 		
 		if(clickIdentifier && clickIdentifier.elementType === "item") {
-			console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
-			positionItem(clickIdentifier.id, 1300, 800)
+			switch(gameState.currentRound){
+				case 'brag':
+					console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
+					if(UiProgress.length === 0){
+						UiProgress.push(() => positionItem(clickIdentifier.id, 1300, 800))
+					}
+					break;
+				case 'lost_and_found':
+					console.log("send more actions to server")
+					if(UiProgress.length === 0){
+						UiProgress.push(() => positionItem(clickIdentifier.id, 1200, 800))
+					} else if(UiProgress.length ===1) {
+						UiProgress.push(() => positionItem(clickIdentifier.id, 1400, 800))
+					}
+					break;
+			}
 		}
 
         if(this.isJeff){
@@ -1285,9 +1314,19 @@
 				renderTitleScreen()
 				break;
 			case 'play':
-				setBGactive("party")
-				drawInventory()
-				createOrUpdatePhaseText("select an item for the event")
+				switch (gameState.currentRound){
+					case 'brag':
+						setBGactive("party")
+						drawInventory()
+						UiProgress.forEach(f => f())
+						createOrUpdatePhaseText("select an item for the event")
+						break;
+					case 'lost_and_found':
+						setBGactive("party")
+						drawInventory()
+						UiProgress.forEach(f=> f())
+						break;
+				}
 				break;
 		}
 		
