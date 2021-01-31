@@ -208,13 +208,10 @@
 	let phaseText;
 	let gamePhase = "title"
 	let UiProgress = new Array();
-<<<<<<< HEAD
 	let UiState = {}
-=======
 	let gameState = { history : [], gameId : 6};
 	let waitingForEndOfRound = true;
 	let targetPlayer = null;
->>>>>>> e698dd0385c357ba55f37585c9ffaae796dfe401
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
@@ -773,10 +770,6 @@
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
-<<<<<<< HEAD
-=======
-				//console.log(key)
->>>>>>> e698dd0385c357ba55f37585c9ffaae796dfe401
 			} else {
 				screenSprites[key].y = 1080
 			}
@@ -925,13 +918,7 @@
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage) => {
-<<<<<<< HEAD
-		console.log("parsing new round")
-		gameState.currentRound = newRoundMessage.new_round;
-		console.log(gameState.currentRound)
-=======
 		gameState.currentRound = newRoundMessage.action_parameters.new_round;
->>>>>>> e698dd0385c357ba55f37585c9ffaae796dfe401
 		UiProgress = new Array()
 	}
 
@@ -1069,15 +1056,7 @@
             this.y = 1080+randomInt(50,1600);
             my_string += ' killed!';
         }
-		
-<<<<<<< HEAD
-		console.log("identifyclick" + this.identifyForClick)
-		console.log(UiProgress)
-=======
-		console.log("identifyclick" + !!this.identifyForClick)
->>>>>>> e698dd0385c357ba55f37585c9ffaae796dfe401
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
-		console.log(clickIdentifier)
 		
 		if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
 			switch(gameState.currentRound){
