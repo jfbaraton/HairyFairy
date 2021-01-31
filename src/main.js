@@ -204,11 +204,13 @@
     let ROLLER_COASTER_LOW = 900;
 	let screenSprites;
 	let itemSprites = {};
+	let avatarSprites = {};
 	let suitCaseSprite;
 	let phaseText;
 	let gameState = { history : []};
 	let gamePhase = "title"
 	let UiProgress = new Array();
+	let UiState = {}
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
@@ -455,7 +457,9 @@
 		app.stage.addChild(suitCaseSprite)
 		
 		//new sprites
-		fetchItemSprites()		
+		fetchItemSprites()
+		
+		fetchAvatarSprites()
 			
         //Create the `BG_start` sprite
         screenSprites.BG_start = new Sprite(resources["images/BG_start2.png"].texture);
@@ -560,7 +564,7 @@
 		debugButton = new Text("debug", style4);
 		debugButton.position.set(1500, 0)
 		debugButton.interactive = true
-		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newRoundmsg)})
+		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg)})
 		app.stage.addChild(debugButton)
 		
 
@@ -739,7 +743,8 @@
 				]
 			]
 		},
-		newRoundmsg: { new_round: 'lost_and_found', is_new_round: true }
+		newRoundmsg: { new_round: 'lost_and_found', is_new_round: true },
+		newTradRoundMsg: { new_round: 'trade', is_new_round: true }
 	}
 
 	const BGfiles = {
@@ -762,10 +767,43 @@
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
-				console.log(key)
 			} else {
 				screenSprites[key].y = 1080
 			}
+		}
+	}
+	
+	const AvatarFiles = {
+		"0": "images/gum2.png",
+		"1": "images/gum2.png",
+		"2": "images/gum2.png",
+		"3": "images/gum2.png"
+	}
+	
+	const fetchAvatarSprites = () => {
+		for (let key of Object.keys(AvatarFiles)) {
+			let tmpItem = {};
+			tmpItem = new Sprite(resources[AvatarFiles[key]].texture)
+			tmpItem.x = 0
+			tmpItem.y = 1080
+			tmpItem.interactive = true;
+			tmpItem.on('pointerdown', onButtonDown)
+			avatarSprites[key] = tmpItem
+			app.stage.addChild(avatarSprites[key]);
+			tmpItem.identifyForClick = () => ({elementType: "avatar", id: key})
+			console.log("keytobelogged" + key)
+		}
+	}
+	
+		
+	const drawAvatars = () => {
+		spriteXCoords = [1000, 1300, 1600]
+		for(let id of Object.keys(AvatarFiles)){
+			let targetPos = id
+			if(id > gameState.playerNumber){
+				targetPos -= 1
+			}			
+			avatarSprites[targetPos].position.set(spriteXCoords[targetPos], 300)
 		}
 	}
 
@@ -816,7 +854,7 @@
 		"10": [1075, 300],
 		"11": [600, 300],
 	}
-
+	
 	const positionItem = (itemId, newX, newY) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
@@ -857,6 +895,9 @@
             avatar: joinMessage.avatar,
             position: playerPosition//0-3
         };
+		if(joinMessage.player === playerId){
+			gameState.playerNumber = playerId
+		}
     }
 
 	const parseInitialMessage = (initialMessage) => {
@@ -871,7 +912,9 @@
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage) => {
+		console.log("parsing new round")
 		gameState.currentRound = newRoundMessage.new_round;
+		console.log(gameState.currentRound)
 		UiProgress = new Array()
 	}
 
@@ -1011,7 +1054,9 @@
         }
 		
 		console.log("identifyclick" + this.identifyForClick)
+		console.log(UiProgress)
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
+		console.log(clickIdentifier)
 		
 		if(clickIdentifier && clickIdentifier.elementType === "item") {
 			switch(gameState.currentRound){
@@ -1029,6 +1074,42 @@
 						UiProgress.push(() => positionItem(clickIdentifier.id, 1400, 800))
 					}
 					break;
+				case 'trade':
+					console.log("somewhere here trade actions" + UiProgress.length)
+					if(UiProgress.length === 0){
+						
+						UiState.itemIsBeingTraded = clickIdentifier.id
+					}
+			}
+		}
+		
+		const tradeAvatarSpots = (playerPos, tradePartnerPos) => {
+			let targetPosOnScreen = tradePartnerPos
+			if(playerPos < tradePartnerPos){
+				targetPosOnScreen -= 1
+			}
+			
+			console.log(playerPos, tradePartnerPos)
+			
+			switch (targetPosOnScreen){
+				case 0:
+					return {x: 1000, y: 300};
+				case 1:
+					return {x: 1300, y: 300};
+				case 0:
+					return {x: 1600, y: 300};
+			}
+			
+		}
+		
+		if(clickIdentifier && clickIdentifier.elementType === "avatar") {
+			console.log("avatarClicking" + UiState.itemIsBeingTraded, clickIdentifier.id)
+			if(UiState.itemIsBeingTraded !== undefined){
+				let coordsForItem = tradeAvatarSpots(gameState.playerNumber, parseInt(clickIdentifier.id))
+				console.log("itemCoords" + coordsForItem)
+				let tradeItemNumber = UiState.itemIsBeingTraded
+				UiProgress.push(() => positionItem(tradeItemNumber, coordsForItem.x, coordsForItem.y + 300))
+				UiState.itemIsBeingTraded = undefined
 			}
 		}
 
@@ -1325,6 +1406,14 @@
 						setBGactive("party")
 						drawInventory()
 						UiProgress.forEach(f=> f())
+						createOrUpdatePhaseText("select up to two items to send to lost and found")
+						break;
+					case 'trade':
+						setBGactive("party")
+						drawAvatars()
+						drawInventory()
+						UiProgress.forEach(f => f())
+						createOrUpdatePhaseText("offer a trade")
 						break;
 				}
 				break;
