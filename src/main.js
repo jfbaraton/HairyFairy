@@ -526,7 +526,7 @@
         msg_status.position.set(30, 30);
         msg_status.interactive = true;
         msg_status.on('pointerdown', onStartGame)
-        //app.stage.addChild(msg_status);
+        app.stage.addChild(msg_status);
 
         msg_menu_1 = new Text("Jeff Text", style4);
         msg_menu_1.position.set(10,80);
@@ -680,7 +680,7 @@
 	}
 	
 	const fetchBackgroundSprites = () => {
-		for (key of Object.keys(BGfiles)) {
+		for (let key of Object.keys(BGfiles)) {
 			let tmpItem = {};
 			tmpItem = new Sprite(resources[BGfiles[key]].texture)
 			tmpItem.x = 0
@@ -693,7 +693,7 @@
 	const setBGactive = (BGtype) => {
 		console.log(BGtype)
 		console.log(Object.keys(screenSprites))
-		for (key of Object.keys(screenSprites)) {
+		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
 				console.log(key)
@@ -716,7 +716,7 @@
 	
 	const fetchItemSprites = () => {
 		
-		for (key of Object.keys(itemPositions)) {
+		for (let key of Object.keys(itemPositions)) {
 			let tmpItem = {};
 			tmpItem = new PIXI.TilingSprite(
 				textureItems,
@@ -727,7 +727,10 @@
 			tmpItem.y = 1080
 			tmpItem.tilePosition.x = itemPositions[key][0]
 			tmpItem.tilePosition.y = itemPositions[key][1]
-			tmpItem.identifyForClick = () => ({elementType: "item", id: "key"})
+			tmpItem.interactive = true;
+			tmpItem.on('pointerdown', onButtonDown)
+			console.log("the key for the future: " + key)
+			tmpItem.identifyForClick = () => ({elementType: "item", id: key})
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
 		}
@@ -892,6 +895,7 @@
             my_string += ' killed!';
         }
 		
+		console.log("identifyclick" + this.identifyForClick)
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
 		
 		if(clickIdentifier && clickIdentifier.elementType === "item") {
