@@ -1,3 +1,7 @@
+// server url
+    //let serverURL = '82.181.24.9:81'; // raspberry
+    let serverURL = 'localhost';
+
 //Aliases
     let Application = PIXI.Application,
     Container = PIXI.Container,
@@ -201,8 +205,17 @@
 	let screenSprites;
 	let itemSprites = {};
 	let suitCaseSprite;
+<<<<<<< HEAD
 	let gameState = {};
 	let phaseText;
+=======
+	let gameState = { history : []};
+
+	// user properties
+	let playerid = 2; // server side id, this is not the player position in this game
+	let playername = 'jeff';
+	let playeravatar = 'blob';
+>>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -662,7 +675,9 @@
 					id: 6
 				}
 			],
-			new_event_type: 'boose', // 0-2
+			new_event_type: 'boose',
+			new_round: 'brag',
+			new_country: 'finland', // 0-2
 			player_hands: [
 				[
 					{
@@ -711,12 +726,12 @@
 			]
 		}
 	}
-	
+
 	const BGfiles = {
 		"lostAndFound": "images/newPictures/lostAndFound.png",
 		"party": "images/newPictures/party.png"
 	}
-	
+
 	const fetchBackgroundSprites = () => {
 		for (let key of Object.keys(BGfiles)) {
 			let tmpItem = {};
@@ -727,7 +742,7 @@
 			app.stage.addChild(screenSprites[key]);
 		}
 	}
-	
+
 	const setBGactive = (BGtype) => {
 		console.log(BGtype)
 		console.log(Object.keys(screenSprites))
@@ -740,17 +755,22 @@
 			}
 		}
 	}
-	
+
 	const drawInventory = () => {
 		suitCaseSprite.x = 0
 		suitCaseSprite.y = 300
-		
+
 		hand = gameState.hands[gameState.playerNumber]
 		positionItem(hand[0].id, suitCaseSprite.x + 100, suitCaseSprite.y + 300)
 		positionItem(hand[1].id, suitCaseSprite.x + 300, suitCaseSprite.y + 300)
 		positionItem(hand[2].id, suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 	}
+<<<<<<< HEAD
 	
+=======
+
+
+>>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 	const fetchItemSprites = () => {
 		
 		for (let key of Object.keys(itemPositions)) {
@@ -772,7 +792,7 @@
 			app.stage.addChild(itemSprites[key]);
 		}
 	}
-	
+
 	//2048 * 1748
 	const itemPositions = {
 		"0": [1925, 1650],
@@ -788,7 +808,7 @@
 		"10": [1075, 300],
 		"11": [600, 300],
 	}
-	
+
 	const positionItem = (itemId, newX, newY) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
@@ -817,6 +837,7 @@
 		gameState.currentRound = 'brag';
 		gameState.currentEvent = 'accessories';
 		gameState.currentCountry = 'finland';
+		gameState.history = [];
 		parseInitialMessage(mockedMessages.initialMessage)
 	}
 
@@ -829,7 +850,7 @@
             position: playerPosition//0-3
         };
     }
-	
+
 	const parseInitialMessage = (initialMessage) => {
 		//gameState.playerNumber = initialMessage.playerNumber
 		gameState.players = initialMessage.players
@@ -860,10 +881,16 @@
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
+<<<<<<< HEAD
 				
+=======
+
+		setBGactive("party")
+
+>>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 		initializeGameState()
 		parseInitialMessage(mockedMessages.initialMessage)
-		
+
 		/*
 		positionItem("0", 0, 200)
 		positionItem("1", 200, 200)
@@ -878,12 +905,18 @@
 		positionItem("10", 800, 500)
 		positionItem("11", 1000, 500)
 		*/
+<<<<<<< HEAD
 		
 		
 		setBGactive("party")
 		drawInventory()
 		createOrUpdatePhaseText("select an item for the event")
 		
+=======
+
+		drawInventory()
+
+>>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
         CURRENT_LVL = 0;
         resetJammers();
 
@@ -942,7 +975,7 @@
             }
             onPlayVideo('oh_no', false);
             onPlayVideo('ending', true);
-            msg_status.text = 
+            msg_status.text =
             '             don\'t miss notes \n'+
             '       don\'t hit black notes \n';
             msg_status.y = 700;
@@ -986,7 +1019,7 @@
             this.text = 'yes you clicked';
             const userAction = async (gameId) => {
                 console.log('async call',param.data.global);
-                const response = await fetch('http://localhost/HairyFairy/gameRecap.php?playername=jeff&playerid=2&gameid='+gameId);
+                const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
                 const myJson = await response.json(); //extract JSON from the http response
                 console.log('async answer',myJson);
                 gameRecap.data = myJson;
@@ -1015,34 +1048,35 @@
         result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
         console.log('rendergameRecap ',gameRecapJSON);
         if(gameRecapJSON && gameRecapJSON.data && gameRecapJSON.data.length){
+            if(gameState.history.length != gameRecapJSON.data.length){
+                initializeGameState();
+                result = "here is what happened \n";
+                gameRecapJSON.data.forEach(oneRecord => {
+                    gameState.history.push(oneRecord);
+                    //result += "\n"+JSON.stringify(oneRecord);
+                    result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
+                    if(oneRecord.phase_after == "100") {
+                        parseInitialMessage(oneRecord.action_parameters);
+                    }
+                    switch(oneRecord.description){
+                        case "join": parseJoinMessage(oneRecord); break;
+                    }
+                    if(oneRecord.action_parameters.is_new_round) {
+                        parseNewRoundMessage(oneRecord);
+                    }
+                    if(oneRecord.action_parameters.is_new_event_type) {
+                        parseNewEventTypeMessage(oneRecord);
+                    }
+                    if(oneRecord.action_parameters.is_new_country) {
+                        parseNewCountryMessage(oneRecord);
+                    }
 
-		    initializeGameState();
-            result = "here is what happened \n";
-            gameRecapJSON.data.forEach(oneRecord => {
-                //result += "\n"+JSON.stringify(oneRecord);
-                result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
-                if(oneRecord.phase_after == "100") {
-                    parseInitialMessage(oneRecord.action_parameters);
-                }
-                switch(oneRecord.description){
-                    case "join": parseJoinMessage(oneRecord); break;
-                }
-                if(oneRecord.action_parameters.is_new_round) {
-                    parseNewRoundMessage(oneRecord);
-                }
-                if(oneRecord.action_parameters.is_new_event_type) {
-                    parseNewEventTypeMessage(oneRecord);
-                }
-                if(oneRecord.action_parameters.is_new_country) {
-                    parseNewCountryMessage(oneRecord);
-                }
+                    // other player actions are only parsed if the round is over
+                    /*if() {
 
-                // other player actions are only parsed if the round is over
-                /*if() {
-
-                }*/
-            });
-
+                    }*/
+                });
+            }
         }
 
         return result;
