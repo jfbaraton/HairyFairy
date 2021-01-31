@@ -727,6 +727,7 @@
 			tmpItem.y = 1080
 			tmpItem.tilePosition.x = itemPositions[key][0]
 			tmpItem.tilePosition.y = itemPositions[key][1]
+			tmpItem.identifyForClick = () => ({elementType: "item", id: "key"})
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
 		}
@@ -890,6 +891,12 @@
             this.y = 1080+randomInt(50,1600);
             my_string += ' killed!';
         }
+		
+		let clickIdentifier = this.identifyForClick && this.identifyForClick()
+		
+		if(clickIdentifier && clickIdentifier.elementType === "item") {
+			console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
+		}
 
         if(this.isJeff){
             console.log('click jeff',param.data.global);
