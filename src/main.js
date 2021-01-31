@@ -509,24 +509,25 @@
         //fontStyle: 'underline',
         fill: "blue",
         });
-        msg_status = new Text("                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                ALLLå   eller           .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n"+
-        "                                        .\n", style4);
+        msg_status = new Text(
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n"+
+        "                                                                                                                   .\n", style4);
         msg_status.position.set(30, 30);
         msg_status.interactive = true;
         msg_status.on('pointerdown', onStartGame)
-        //app.stage.addChild(msg_status);
+        app.stage.addChild(msg_status);
 
         msg_menu_1 = new Text("Jeff Text", style4);
         msg_menu_1.position.set(10,80);
@@ -571,106 +572,142 @@
         //Start the game loop
         app.ticker.add(delta => gameLoop(delta));
     }
+
+    const allItems = [
+        {
+            category: "boose",
+            id: 0
+        },
+        {
+            category: "boose",
+            id: 1
+        },
+        {
+            category: "boose",
+            id: 2
+        },
+        {
+            category: "boose",
+            id: 3
+        },
+        {
+            category: "souvenirs",
+            id: 4
+        },
+        {
+            category: "souvenirs",
+            id: 5
+        },
+        {
+            category: "souvenirs",
+            id: 6
+        },
+        {
+            category: "souvenirs",
+            id: 7
+        },
+        {
+            category: "accessories",
+            id: 8
+        },
+        {
+            category: "accessories",
+            id: 9
+        },
+        {
+            category: "accessories",
+            id: 10
+        },
+        {
+            category: "accessories",
+            id: 11
+        }
+
+    ]
 		
 	const mockedMessages = {
 		initialMessage: {
 			players: [
 				{
 					nickname: "Matti", 
-					avatarId: 0, //refers to filename
+					avatar  : "cat", //refers to filename
 					position: 1 //0-3
 				},
 				{
 					nickname: "Pentti",
-					avatarId: 0,
+					avatar  : "cat", //refers to filename
 					position: 0
 				},
 				{
 					nickname: "Pete",
-					avatarId: 0,
+					avatar  : "cat", //refers to filename
 					position: 3
 				},
 				{
 					nickname: "Ansa",
-					avatarId: 0,
+					avatar  : "cat", //refers to filename
 					position: 2
 				},
 			],
-			// special cards ordered according to position
-			specialCards: [
-				{	
-					category: "souvenirs",
+			// special items ordered according to player position
+			special_items: [
+				{
 					id: 0
 				},
 				{
-					category: "accessories",
 					id: 7
 				},
 				{
-					category: "accessories",
 					id: 6
 				}
 			],
-			nextEventType: 0, // 0-2 
-			startingHands: [
+			new_event_type: 'boose', // 0-2
+			player_hands: [
 				[
-					{	
-						category: "souvenirs",
-						id: 0
+					{
+						id: 0 // item id
 					},
-					{	
-						category: "souvenirs",
+					{
+						id: 1
+					},
+					{
 						id: 2
-					},
-					{	
-						category: "souvenirs",
-						id: 3
 					},
 				],
 				[
-					{	
-						category: "souvenirs",
-						id: 0
+					{
+						id: 4
 					},
-					{	
-						category: "souvenirs",
-						id: 2
+					{
+						id: 5
 					},
-					{	
-						category: "souvenirs",
-						id: 3
+					{
+						id: 6
 					},
 				],
 				[
-					{	
-						category: "souvenirs",
-						id: 0
+					{
+						id: 8
 					},
-					{	
-						category: "souvenirs",
-						id: 2
+					{
+						id: 9
 					},
-					{	
-						category: "souvenirs",
-						id: 3
+					{
+						id: 10
 					},
 				],
 				[
-					{	
-						category: "souvenirs",
-						id: 0
-					},
-					{	
-						category: "souvenirs",
-						id: 2
-					},
-					{	
-						category: "souvenirs",
+					{
 						id: 3
+					},
+					{
+						id: 7
+					},
+					{
+						id: 11
 					}
 				]
-			],
-			playerNumber: 0
+			]
 		}
 	}
 	
@@ -752,26 +789,49 @@
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
 	}
-	
-	
 
 	const initializeGameState = () => {
 		gameState["currentDay"] = 0
-		gameState.ownPosition = 0
-		/*
-		for (id in itemIds){
-			gameState.itemValues = 0
-		}
-		*/
+		gameState.playerNumber = 0
+		gameState.currentRound = 'brag';
+		gameState.currentEvent = 'accessories';
+		gameState.currentCountry = 'finland';
+		parseInitialMessage(mockedMessages.initialMessage)
 	}
 
+    // join messages are the 4 first after game creation, they define player numbers
+    const parseJoinMessage = (joinMessage) => {
+        var playerPosition = parseInt(joinMessage.phase_after)-1;
+        gameState.players[playerPosition] = {
+            nickname: joinMessage.nickname,
+            avatar: joinMessage.avatar,
+            position: playerPosition//0-3
+        };
+    }
 	
 	const parseInitialMessage = (initialMessage) => {
-		gameState.playerNumber = initialMessage.playerNumber
+		//gameState.playerNumber = initialMessage.playerNumber
 		gameState.players = initialMessage.players
-		gameState.currentEvent = initialMessage.nextEventType
-		gameState.specialCards = initialMessage.specialCards
-		gameState.hands = initialMessage.startingHands
+		gameState.currentRound = initialMessage.new_round;
+		gameState.currentEvent = initialMessage.new_event_type
+		gameState.currentCountry = initialMessage.new_country;
+		gameState.specialCards = initialMessage.special_items
+		gameState.hands = initialMessage.player_hands
+	}
+
+	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
+	const parseNewRoundMessage = (newRoundMessage) => {
+		gameState.currentRound = newRoundMessage.new_round;
+	}
+
+    // random order: boose, personal items , souvenir& duty free . 100 for theb first, 200 for the second, 300 for the last
+	const parseNewEventTypeMessage = (newEventTypeMessage) => {
+		gameState.currentEvent = newEventTypeMessage.new_event_type
+	}
+
+    // new country: 0000 for the first, 1000 for the second, 2000 for the third, 3000 for the fourth
+	const parseNewCountryMessage = (newEventTypeMessage) => {
+		gameState.currentCountry = newEventTypeMessage.new_country;
 	}
 
 	function onStartGame() {
@@ -925,10 +985,32 @@
         result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
         console.log('rendergameRecap ',gameRecapJSON);
         if(gameRecapJSON && gameRecapJSON.data && gameRecapJSON.data.length){
+
+		    initializeGameState();
             result = "here is what happened \n";
             gameRecapJSON.data.forEach(oneRecord => {
                 //result += "\n"+JSON.stringify(oneRecord);
                 result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
+                if(oneRecord.phase_after == "100") {
+                    parseInitialMessage(oneRecord.action_parameters);
+                }
+                switch(oneRecord.description){
+                    case "join": parseJoinMessage(oneRecord); break;
+                }
+                if(oneRecord.action_parameters.is_new_round) {
+                    parseNewRoundMessage(oneRecord);
+                }
+                if(oneRecord.action_parameters.is_new_event_type) {
+                    parseNewEventTypeMessage(oneRecord);
+                }
+                if(oneRecord.action_parameters.is_new_country) {
+                    parseNewCountryMessage(oneRecord);
+                }
+
+                // other player actions are only parsed if the round is over
+                /*if() {
+
+                }*/
             });
 
         }
