@@ -207,6 +207,7 @@
 	let suitCaseSprite;
 	let phaseText;
 	let gameState = { history : []};
+	let gamePhase = "title"
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
@@ -459,6 +460,12 @@
         screenSprites.BG_start = new Sprite(resources["images/BG_start2.png"].texture);
         screenSprites.BG_start.x = 0;
         screenSprites.BG_start.y = 0;
+		screenSprites.BG_start.interactive = true;
+		screenSprites.BG_start.on('pointerdown', () => {
+			gamePhase = "play"
+			initializeGameState()
+			parseInitialMessage(mockedMessages.initialMessage)
+		})
         app.stage.addChild(screenSprites.BG_start);
 
         //Create the `BG_lose` sprite
@@ -866,6 +873,10 @@
 	const parseNewCountryMessage = (newEventTypeMessage) => {
 		gameState.currentCountry = newEventTypeMessage.new_country;
 	}
+	
+	const renderTitleScreen = () => {
+		setBGactive("BG_start")
+	}
 
 	function onStartGame() {
         msg_status.y = 1080;
@@ -1268,6 +1279,20 @@
         //moveSpeed = mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed;
 
         // evolution
+		
+		switch (gamePhase){
+			case 'title':
+				renderTitleScreen()
+				break;
+			case 'play':
+				setBGactive("party")
+				drawInventory()
+				createOrUpdatePhaseText("select an item for the event")
+				break;
+		}
+		
+		
+		
         switch (mode) {
             case 'normal':
                 checkBulletCollision();
