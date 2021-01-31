@@ -169,6 +169,7 @@
 	.add("images/TESTBG.png")
 	.add("images/newPictures/lostAndFound.png")
 	.add("images/newPictures/party.png")
+	.add("images/newPictures/suitCase.png")
 
     .load(setup);
 
@@ -200,6 +201,8 @@
     let ROLLER_COASTER_LOW = 900;
 	let screenSprites;
 	let itemSprites = {};
+	let suitCaseSprite;
+	let gameState = {};
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -207,6 +210,7 @@
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
     const textureSkillbar= PIXI.Texture.from('images/Skills_bar3.png');
+	const textureItems = PIXI.Texture.from('images/newPictures/itemTileMap.jpg');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     //const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
@@ -461,7 +465,11 @@
             .on('pointerout', onButtonOut);*/
         app.stage.addChild(hamster);
 		
-		
+		suitCaseSprite = new Sprite(resources["images/newPictures/suitCase.png"].texture)
+		suitCaseSprite.x = 0
+		suitCaseSprite.y = 1080
+		suitCaseSprite.scale = new PIXI.Point(0.5, 0.5)
+		app.stage.addChild(suitCaseSprite)
 		
 		//new sprites
 		fetchItemSprites()		
@@ -690,7 +698,8 @@
 						id: 3
 					}
 				]
-			]
+			],
+			playerNumber: 0
 		}
 	}
 	
@@ -723,78 +732,104 @@
 		}
 	}
 	
+	const drawInventory = () => {
+		suitCaseSprite.x = 0
+		suitCaseSprite.y = 300
+		
+		hand = gameState.hands[gameState.playerNumber]
+		positionItem(hand[0].id, suitCaseSprite.x + 100, suitCaseSprite.y + 300)
+		positionItem(hand[1].id, suitCaseSprite.x + 300, suitCaseSprite.y + 300)
+		positionItem(hand[2].id, suitCaseSprite.x + 500, suitCaseSprite.y + 300)
+	}
+	
 	
 	const fetchItemSprites = () => {
 		
-		for (key of Object.keys(itemFiles)) {
+		for (key of Object.keys(itemPositions)) {
 			let tmpItem = {};
-			tmpItem = new Sprite(resources[itemFiles[key]].texture)
+			tmpItem = new PIXI.TilingSprite(
+				textureItems,
+				200,
+				200
+			);
 			tmpItem.x = 0
 			tmpItem.y = 1080
+			tmpItem.tilePosition.x = itemPositions[key][0]
+			tmpItem.tilePosition.y = itemPositions[key][1]
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
 		}
 	}
-
-	const itemFiles = {
-		"0": "images/gum2.png",
-		"2": "images/gum2.png",
-		"3": "images/gum2.png",
-		"6": "images/gum2.png",
-		"7": "images/gum2.png"
+	
+	//2048 * 1748
+	const itemPositions = {
+		"0": [1925, 1650],
+		"1": [1520, 1650],
+		"2": [1075, 1650],
+		"3": [600, 1650],
+		"4": [1925, 750],
+		"5": [1520, 750],
+		"6": [1075, 750],
+		"7": [600, 750],
+		"8": [1925, 300],
+		"9": [1520, 300],
+		"10": [1075, 300],
+		"11": [600, 300],
 	}
 	
-	const itemIds = {
-		"0": "lamp",
-		"2": "bottle",
-		"3": "corkscrew",
-		"6": "salmiakki",
-		"7": "scarf"
+	const positionItem = (itemId, newX, newY) => {
+		itemSprites[itemId].x = newX
+		itemSprites[itemId].y = newY
 	}
 	
-	let gameState;
+	
 
 	const initializeGameState = () => {
-		gameState.currentDay = 0
+		gameState["currentDay"] = 0
 		gameState.ownPosition = 0
-		
+		/*
 		for (id in itemIds){
 			gameState.itemValues = 0
 		}
+		*/
 	}
 
 	
 	const parseInitialMessage = (initialMessage) => {
+		gameState.playerNumber = initialMessage.playerNumber
 		gameState.players = initialMessage.players
 		gameState.currentEvent = initialMessage.nextEventType
 		gameState.specialCards = initialMessage.specialCards
 		gameState.hands = initialMessage.startingHands
 	}
 
-	
-	const playScreen = () => {
-		//set the background
-		
-	
-		
-	}
-	
-    function onStartGame() {
+	function onStartGame() {
         msg_status.y = 1080;
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
-		
-		console.log("we got this far")
-		
-		
-		itemSprites["0"].x = 150
-		itemSprites["0"].y = 150
-		
-		console.log("further?")
-		
+				
 		setBGactive("party")
 		
+		initializeGameState()
+		parseInitialMessage(mockedMessages.initialMessage)
+		
+		/*
+		positionItem("0", 0, 200)
+		positionItem("1", 200, 200)
+		positionItem("2", 400, 200)
+		positionItem("3", 600, 200)
+		positionItem("4", 800, 200)
+		positionItem("5", 1000, 200)
+		positionItem("6", 0, 500)
+		positionItem("7", 200, 500)
+		positionItem("8", 400, 500)
+		positionItem("9", 600, 500)
+		positionItem("10", 800, 500)
+		positionItem("11", 1000, 500)
+		*/
+		
+		drawInventory()
 		
         CURRENT_LVL = 0;
         resetJammers();
