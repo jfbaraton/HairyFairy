@@ -12,7 +12,6 @@
     Sprite = PIXI.Sprite,
     Text = PIXI.Text,
     TextStyle = PIXI.TextStyle;
-    const gameRecap = {'data':{}};
 	    
 	var size = [1920, 1080];
 	var ratio = size[0] / size[1];
@@ -206,9 +205,11 @@
 	let itemSprites = {};
 	let suitCaseSprite;
 	let phaseText;
-	let gameState = { history : []};
 	let gamePhase = "title"
 	let UiProgress = new Array();
+	let gameState = { history : [], gameId : 6};
+	let waitingForEndOfRound = true;
+	let targetPlayer = null;
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
@@ -679,63 +680,35 @@
 			],
 			// special items ordered according to player position
 			special_items: [
-				{
-					id: 0
-				},
-				{
-					id: 7
-				},
-				{
-					id: 6
-				}
+				0,
+				4,
+				8,
+				3
 			],
 			new_event_type: 'boose',
 			new_round: 'brag',
 			new_country: 'finland', // 0-2
 			player_hands: [
 				[
-					{
-						id: 0 // item id
-					},
-					{
-						id: 1
-					},
-					{
-						id: 2
-					},
+
+					0, // item id
+					1,
+					2
 				],
 				[
-					{
-						id: 4
-					},
-					{
-						id: 5
-					},
-					{
-						id: 6
-					},
+					4,
+					5,
+					6
 				],
 				[
-					{
-						id: 8
-					},
-					{
-						id: 9
-					},
-					{
-						id: 10
-					},
+					8,
+					9,
+					10
 				],
 				[
-					{
-						id: 3
-					},
-					{
-						id: 7
-					},
-					{
-						id: 11
-					}
+					3,
+					7,
+					11
 				]
 			]
 		},
@@ -774,9 +747,9 @@
 		suitCaseSprite.y = 300
 
 		hand = gameState.hands[gameState.playerNumber]
-		positionItem(hand[0].id, suitCaseSprite.x + 100, suitCaseSprite.y + 300)
-		positionItem(hand[1].id, suitCaseSprite.x + 300, suitCaseSprite.y + 300)
-		positionItem(hand[2].id, suitCaseSprite.x + 500, suitCaseSprite.y + 300)
+		positionItem(hand[0], suitCaseSprite.x + 100, suitCaseSprite.y + 300)
+		positionItem(hand[1], suitCaseSprite.x + 300, suitCaseSprite.y + 300)
+		positionItem(hand[2], suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 	}
 	
 	const fetchItemSprites = () => {
@@ -839,6 +812,7 @@
 		phaseText.position.set(1000, 400)
 	}	
 
+
 	const initializeGameState = () => {
 		gameState["currentDay"] = 0
 		gameState.playerNumber = 0
@@ -861,7 +835,9 @@
 
 	const parseInitialMessage = (initialMessage) => {
 		//gameState.playerNumber = initialMessage.playerNumber
-		gameState.players = initialMessage.players
+		if(initialMessage.players) { // only in the mocked initial message. in real life, the players are read from the join messages. see parseJoinMessage
+		    gameState.players = initialMessage.players
+		}
 		gameState.currentRound = initialMessage.new_round;
 		gameState.currentEvent = initialMessage.new_event_type
 		gameState.currentCountry = initialMessage.new_country;
@@ -871,18 +847,18 @@
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage) => {
-		gameState.currentRound = newRoundMessage.new_round;
+		gameState.currentRound = newRoundMessage.action_parameters.new_round;
 		UiProgress = new Array()
 	}
 
     // random order: boose, personal items , souvenir& duty free . 100 for theb first, 200 for the second, 300 for the last
 	const parseNewEventTypeMessage = (newEventTypeMessage) => {
-		gameState.currentEvent = newEventTypeMessage.new_event_type
+		gameState.currentEvent = newEventTypeMessage.action_parameters.new_event_type
 	}
 
     // new country: 0000 for the first, 1000 for the second, 2000 for the third, 3000 for the fourth
 	const parseNewCountryMessage = (newEventTypeMessage) => {
-		gameState.currentCountry = newEventTypeMessage.new_country;
+		gameState.currentCountry = newEventTypeMessage.action_parameters.new_country;
 	}
 	
 	const renderTitleScreen = () => {
@@ -1010,19 +986,25 @@
             my_string += ' killed!';
         }
 		
-		console.log("identifyclick" + this.identifyForClick)
+		console.log("identifyclick" + !!this.identifyForClick)
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
 		
-		if(clickIdentifier && clickIdentifier.elementType === "item") {
+		if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
 			switch(gameState.currentRound){
 				case 'brag':
 					console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
+				    waitingForEndOfRound = true;
+				    var actionId = getCurrentActionId();
+	                playItem(actionId,clickIdentifier.id,targetPlayer);
 					if(UiProgress.length === 0){
 						UiProgress.push(() => positionItem(clickIdentifier.id, 1300, 800))
 					}
 					break;
 				case 'lost_and_found':
 					console.log("send more actions to server")
+				    waitingForEndOfRound = true;
+				    var actionId = getCurrentActionId();
+	                playItem(actionId,clickIdentifier.id,targetPlayer);
 					if(UiProgress.length === 0){
 						UiProgress.push(() => positionItem(clickIdentifier.id, 1200, 800))
 					} else if(UiProgress.length ===1) {
@@ -1033,19 +1015,10 @@
 		}
 
         if(this.isJeff){
-            console.log('click jeff',param.data.global);
+            console.log('click jeff');
             this.text = 'yes you clicked';
-            const userAction = async (gameId) => {
-                console.log('async call',param.data.global);
-                const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
-                const myJson = await response.json(); //extract JSON from the http response
-                console.log('async answer',myJson);
-                gameRecap.data = myJson;
-                this.text = rendergameRecap(gameRecap.data);
-                console.log('async done!!!!',myJson);
-                // do something with myJson
-            };
-            userAction(5);
+
+            gameRecap(this);
         } else {
             console.log('NOT click weapon',param.data.global);
             var targetX = param.data.global.x;
@@ -1062,11 +1035,46 @@
 
     }
 
+    const getCurrentActionId = () => {
+        let actionId = gameState.history.length && gameState.history[gameState.history.length-1].phase_after;
+    	actionId = actionId-(actionId % 10); // if the latest known phase is 110, 111, 112, 113 or 114, then the current actionId is 110
+
+    	return actionId;
+    }
+
+    const gameRecap = async (messageArea) => {
+        console.log('async call gameRecap');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameState.gameId);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('gameRecap answer',myJson);
+        messageArea.text = rendergameRecap(myJson);
+        console.log('gameRecap done!!!!',messageArea.text);
+        // do something with myJson
+    };
+
+    const playItem = async (actionId,itemId,targetPlayer) => {
+        let action_parameters = {itemId : itemId};
+        if(targetPlayer) {
+            action_parameters.targetPlayer = targetPlayer;
+        }
+        let base64Parameter = btoa(JSON.stringify(action_parameters));
+        console.log('async call doGameAction',actionId,itemId,targetPlayer);
+        //const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+playername+'&playerid='+playerid+'&gametype=lajam&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('doGameAction answer',myJson);
+        //this.text = rendergameRecap(myJson);
+        //console.log('async done!!!!',myJson);
+        // do something with myJson
+    };
+
     function rendergameRecap(gameRecapJSON) {
         result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
         console.log('rendergameRecap ',gameRecapJSON);
         if(gameRecapJSON && gameRecapJSON.data && gameRecapJSON.data.length){
             if(gameState.history.length != gameRecapJSON.data.length){
+                waitingForEndOfRound = false; // actually, this should be set when we a re done reading the history. in case of refresh of the page
+                targetPlayer = null;
                 initializeGameState();
                 result = "here is what happened \n";
                 gameRecapJSON.data.forEach(oneRecord => {
@@ -1094,7 +1102,9 @@
 
                     }*/
                 });
-            }
+            } else {
+                 result = "nothing new in history ";
+             }
         }
 
         return result;

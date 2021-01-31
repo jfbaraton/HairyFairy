@@ -141,7 +141,8 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 
 
 } else {
-    $return = [ 'error' => 'wrong arguments '.$playername.', '.$playerid.', '.$gametype.', '.$action.', '.$description.', '.$actionParameter, 'id' => -1];
+    $return = [ 'error' => 'wrong arguments  '.$playerid.', '.$playername.','.$gametype.','.$gameid.', '.$action.', '.$description.', '.$actionParameter.' :::: '.!empty($playerid) .', '.!empty($playername).', '.!empty($gametype) .', '.!empty($gameid) .', '.!empty($action) .', '.!empty($description) .', '.!empty($actionParameter)
+    , 'id' => -1];
 }
 
 
