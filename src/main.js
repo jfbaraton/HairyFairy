@@ -205,17 +205,13 @@
 	let screenSprites;
 	let itemSprites = {};
 	let suitCaseSprite;
-<<<<<<< HEAD
-	let gameState = {};
 	let phaseText;
-=======
 	let gameState = { history : []};
 
 	// user properties
 	let playerid = 2; // server side id, this is not the player position in this game
 	let playername = 'jeff';
 	let playeravatar = 'blob';
->>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -765,12 +761,7 @@
 		positionItem(hand[1].id, suitCaseSprite.x + 300, suitCaseSprite.y + 300)
 		positionItem(hand[2].id, suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 	}
-<<<<<<< HEAD
 	
-=======
-
-
->>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 	const fetchItemSprites = () => {
 		
 		for (let key of Object.keys(itemPositions)) {
@@ -881,13 +872,6 @@
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
-<<<<<<< HEAD
-				
-=======
-
-		setBGactive("party")
-
->>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
 		initializeGameState()
 		parseInitialMessage(mockedMessages.initialMessage)
 
@@ -905,18 +889,12 @@
 		positionItem("10", 800, 500)
 		positionItem("11", 1000, 500)
 		*/
-<<<<<<< HEAD
 		
 		
 		setBGactive("party")
 		drawInventory()
 		createOrUpdatePhaseText("select an item for the event")
 		
-=======
-
-		drawInventory()
-
->>>>>>> 4219a0a45db8e911835365061ab7a5da55be2680
         CURRENT_LVL = 0;
         resetJammers();
 
