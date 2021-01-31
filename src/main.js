@@ -202,6 +202,7 @@
 	let itemSprites = {};
 	let suitCaseSprite;
 	let gameState = {};
+	let phaseText;
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -750,7 +751,6 @@
 		positionItem(hand[2].id, suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 	}
 	
-	
 	const fetchItemSprites = () => {
 		
 		for (let key of Object.keys(itemPositions)) {
@@ -793,6 +793,23 @@
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
 	}
+	
+	const createOrUpdatePhaseText = (textForPhase) => {
+		if (!phaseText){
+			let style4 = new TextStyle({
+			fontFamily: "Bodoni MT", // "chalkduster"
+			fontSize: 60,
+			//fontStyle: 'underline',
+			fill: "blue",
+			});
+			
+			phaseText = new Text(textForPhase, style4)
+			app.stage.addChild(phaseText)
+		} else {
+			phaseText.text = textForPhase
+		}
+		phaseText.position.set(1000, 400)
+	}	
 
 	const initializeGameState = () => {
 		gameState["currentDay"] = 0
@@ -844,8 +861,6 @@
             BGmusicSprite.baseTexture.source.pause();
         }
 				
-		setBGactive("party")
-		
 		initializeGameState()
 		parseInitialMessage(mockedMessages.initialMessage)
 		
@@ -864,7 +879,10 @@
 		positionItem("11", 1000, 500)
 		*/
 		
+		
+		setBGactive("party")
 		drawInventory()
+		createOrUpdatePhaseText("select an item for the event")
 		
         CURRENT_LVL = 0;
         resetJammers();
@@ -960,6 +978,7 @@
 		
 		if(clickIdentifier && clickIdentifier.elementType === "item") {
 			console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
+			positionItem(clickIdentifier.id, 1300, 800)
 		}
 
         if(this.isJeff){
