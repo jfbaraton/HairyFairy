@@ -210,7 +210,7 @@
 	let gamePhase = "title"
 	let UiProgress = new Array();
 	let UiState = {}
-	let gameState = { history : [], gameId : 6};
+	let gameState = { history : [], gameId : -1};
 	let waitingForEndOfRound = true;
 	let targetPlayer = null;
 
@@ -274,15 +274,30 @@
             } else {
                 console.log('credentials but no id, login in');
             }
-            login(playername,playeravatar, (readPlayerId => {
+            login(playername,playeravatar, (readPlayerId, readGameId) => {
+                if(readGameId) {
+                    gameState.gameId = readGameId;
+                }
                 if(!readPlayerId || readPlayerId != playerid){
                     window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
                 }
-            }));
+            });
 
         } else {
             console.log('no credentials, setting random ones');
             window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+playerid+"";
+        }
+
+        if(!!getUrlParameter('gameid')) {
+            gameState.gameId = getUrlParameter('gameid');
+        }
+
+        if(!gameState.gameId || gameState.gameId<=0) {
+            newGame(playername,playeravatar,(newGameId)=> {
+               if(newGameId) {
+                   gameState.gameId = newGameId;
+               }
+           });
         }
 
         mode = 'start';
@@ -1178,9 +1193,9 @@
         console.log('login answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
         if(myJson && myJson.id){
-            callBack(myJson.id);
+            callBack(myJson.id, myJson.gameid);
         } else if(myJson && myJson.data && myJson.data.id){
-            callBack(myJson.data.id);
+            callBack(myJson.data.id,myJson.data.gameid);
         } else {
             callBack();
         }
@@ -1202,6 +1217,24 @@
         } else {
         }
         console.log('listGames done!!!!');
+        // do something with myJson
+    };
+
+    const newGame = async (playername,playerid,callBack) => {
+        console.log('async call newGame');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/newGame.php?playername='+playername+'&playerid='+playerid+'&gametype=lajam');
+        //const response = await   fetch('http://localhost/HairyFairy/newGame.php?playername=jeff&playerid=2&gametype=lajam);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('newGame answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        if(myJson && myJson.id){
+            callBack(myJson.id);
+        } else if(myJson && myJson.data && myJson.data.id){
+            callBack(myJson.data.id);
+        } else {
+            callBack();
+        }
+        console.log('newGame done!!!!');
         // do something with myJson
     };
 

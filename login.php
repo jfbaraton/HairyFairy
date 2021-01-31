@@ -56,6 +56,19 @@ if(!empty($playeravatar) && !empty($playername)) {
         }
     }
 
+    if($playerid > 0) {
+        $sql = "select game from player_game_action where game in (select id from game_instance where status >=0) and game not in (select game from player_game_action where phase_after >= 2000) and player = ".$playerid." order by game desc,id desc limit 1";
+        if ($result = mysqli_query($conn, $sql)) {
+            if(mysqli_num_rows($result) >0) {
+                $gameid = mysqli_fetch_assoc($result)["game"];
+                $return = [ 'action' => 'found', 'id' => $playerid, 'gameid' => $gameid ];
+            }
+
+            mysqli_free_result($result);
+        } else {
+             $return = [ 'action' => 'FAILED to read 2 ##'.$sql.'##', 'id' => -1 ];
+        }
+    }
 
 } else {
     $return = [ 'error' => 'wrong arguments '.$playername.', '.$playeravatar, 'id' => -1];
