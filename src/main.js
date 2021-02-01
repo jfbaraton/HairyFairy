@@ -274,12 +274,31 @@
             } else {
                 console.log('credentials but no id, login in');
             }
-            login(playername,playeravatar, (readPlayerId, readGameId) => {
-                if(readGameId) {
-                    gameState.gameId = readGameId;
-                }
+            login(playername,playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
                 if(!readPlayerId || readPlayerId != playerid){
+                    console.log('credentials but no id, login in');
                     window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
+                    return;
+                }
+                if(readGameId) {
+                    console.log('currently in game '+readGameId );
+                    gameState.gameId = readGameId;
+                } else if(pleaseJoinGameId) {
+                    console.log('we propose that you join game '+pleaseJoinGameId );
+                    joinGame(playername,playerid,pleaseJoinGameId);
+                    gameState.gameId = pleaseJoinGameId;
+                } else if(!!getUrlParameter('gameid')) {
+                    gameState.gameId = getUrlParameter('gameid');
+                }
+
+                if(!gameState.gameId || gameState.gameId<=0) {
+                    console.log('still not in a game, '+gameState.gameId );
+                    newGame(playername,playerid,(newGameId)=> {
+                        if(newGameId) {
+                            gameState.gameId = newGameId;
+                            console.log('created game, '+gameState.gameId );
+                        }
+                    });
                 }
             });
 
@@ -293,9 +312,11 @@
         }
 
         if(!gameState.gameId || gameState.gameId<=0) {
-            newGame(playername,playeravatar,(newGameId)=> {
+            console.log('still not in a game, '+gameState.gameId );
+            newGame(playername,playerid,(newGameId)=> {
                if(newGameId) {
                    gameState.gameId = newGameId;
+                   console.log('created game, '+gameState.gameId );
                }
            });
         }
@@ -1193,13 +1214,23 @@
         console.log('login answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
         if(myJson && myJson.id){
-            callBack(myJson.id, myJson.gameid);
+            callBack(myJson.id, myJson.gameid, myJson.pleaseJoinGameId);
         } else if(myJson && myJson.data && myJson.data.id){
-            callBack(myJson.data.id,myJson.data.gameid);
+            callBack(myJson.data.id,myJson.data.gameid, myJson.data.pleaseJoinGameId);
         } else {
             callBack();
         }
         console.log('login done!!!!');
+        // do something with myJson
+    };
+
+    const joinGame = async (playername,playerid, joinGameId) => {
+        console.log('async call joinGame');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/joinGame.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype=lajam');
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('joinGame answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        console.log('joinGame done!!!!');
         // do something with myJson
     };
 
