@@ -170,9 +170,13 @@
     .add("sounds/"+sound_bank["short_slingshot_sound"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 	.add("images/TESTBG.png")
-	.add("images/newPictures/lostAndFound.png")
-	.add("images/newPictures/party.png")
-	.add("images/newPictures/suitCase2.png")
+	.add("images/newPictures/accessories.png")  // place to brag about accessories
+	.add("images/newPictures/souvenirs.png")  	// place to brag about souvenirs
+	.add("images/newPictures/trade.png")		// place to trade (half blind draft)
+	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
+	.add("images/newPictures/party.png")		// place to brag about boose
+	.add("images/newPictures/suitCase2.png")	
+	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
 
     .load(setup);
@@ -204,6 +208,7 @@
     let ROLLER_COASTER_LOW = 900;
 	let screenSprites;
 	let itemSprites = {};
+	let itemMiniatureSprites = {};
 	let avatarSprites = {};
 	let suitCaseSprite;
 	let phaseText;
@@ -225,6 +230,7 @@
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
 	const textureItems = PIXI.Texture.from('images/newPictures/itemTileMap.png');
+	const textureAvatars = PIXI.Texture.from('images/newPictures/avatars.png');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
     //const sailor_fairy_txt = PIXI.Texture.from('images/sailor_fairy.png');
@@ -320,8 +326,11 @@
 			BG_start: {},
 			BG_win: {},
 			BG_lose: {},
-			LostAndFound: {},
-			party: {},
+			accessories: {},	// place to brag about accessories
+			souvenirs: {},		// place to brag about souvenirs
+			trade: {},			// place to trade (half blind draft)
+			LostAndFound: {},	// place for lost and found (blind draft)
+			party: {}, 			// place to brag about boose	
 		};
 		
 		fetchBackgroundSprites()
@@ -505,6 +514,7 @@
 		
 		//new sprites
 		fetchItemSprites()
+		fetchItemMiniatureSprites()
 		
 		fetchAvatarSprites()
 		
@@ -770,7 +780,11 @@
 
 	const BGfiles = {
 		"lostAndFound": "images/newPictures/lostAndFound.png",
-		"party": "images/newPictures/party.png"
+		"party": "images/newPictures/party.png",
+		"accessories": "images/newPictures/accessories.png",
+		"trade": "images/newPictures/trade.png",
+		"souvenirs": "images/newPictures/souvenirs.png",
+		
 	}
 
 	const fetchBackgroundSprites = () => {
@@ -877,6 +891,29 @@
 		}
 	}
 
+	const fetchItemMiniatureSprites = () => {
+		
+		for (let key of Object.keys(itemPositions)) {
+			let tmpItem = {};
+			tmpItem = new PIXI.TilingSprite(
+				textureItems,
+				600,
+				600
+			);
+			tmpItem.x = 0
+			tmpItem.y = 1080
+			tmpItem.tilePosition.x = itemPositions[key][0]
+			tmpItem.tilePosition.y = itemPositions[key][1]
+			//tmpItem.interactive = true;
+			//tmpItem.on('pointerdown', onButtonDown)
+			tmpItem.scale = new PIXI.Point(0.3, 0.3)
+			console.log("the key for the future: " + key)
+			tmpItem.identifyForClick = () => ({elementType: "miniatureitem", id: key})
+			itemMiniatureSprites[key] = tmpItem
+			app.stage.addChild(itemMiniatureSprites[key]);
+		}
+	}
+
 	const itemPositions = {
 		"0": [3200, 2580],
 		"1": [2550, 2580],
@@ -898,6 +935,11 @@
 	const positionItem = (itemId, newX, newY) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
+	}
+	
+	const positionItemMiniature = (itemId, newX, newY) => {
+		itemMiniatureSprites[itemId].x = newX
+		itemMiniatureSprites[itemId].y = newY
 	}
 	
 	const createOrUpdatePhaseText = (textForPhase) => {

@@ -29,5 +29,8 @@
       ],
       "extensions": "js,jsx"
     }
+  },
+  "dependencies": {
+    "npm-watch": "^0.7.0"
   }
 }
