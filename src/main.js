@@ -176,6 +176,7 @@
 	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
 	.add("images/newPictures/party.png")		// place to brag about boose
 	.add("images/newPictures/suitCase2.png")	
+	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
 	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
 
@@ -211,6 +212,7 @@
 	let itemMiniatureSprites = {};
 	let avatarSprites = {};
 	let suitCaseSprite;
+	let suitCaseSprite2; // STEP2 create a variable to store your sprite (texture holder)
 	let phaseText;
 	let gamePhase = "title"
 	let UiProgress = new Array();
@@ -532,6 +534,14 @@
 		suitCaseSprite.y = 1080
 		suitCaseSprite.scale = new PIXI.Point(0.5, 0.5)
 		app.stage.addChild(suitCaseSprite)
+		
+		
+		// STEP 3 add the texture to the variable
+		suitCaseSprite2 = new Sprite(resources["images/newPictures/suitCase2.png"].texture) // file
+		suitCaseSprite2.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
+		suitCaseSprite2.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
+		suitCaseSprite2.scale = new PIXI.Point(0.2, 0.2) // scale/zoom
+		app.stage.addChild(suitCaseSprite2)				// always add it to the scene/stage
 		
 		//new sprites
 		fetchItemSprites()
