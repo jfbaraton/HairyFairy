@@ -217,14 +217,16 @@
 	let gamePhase = "title"
 	let UiProgress = new Array();
 	let UiState = {}
-	let gameState = { history : [], gameId : -1};
+	let gameState = { history : [], gameId : -1, 
+	
+	// user properties
+		playerid : 2, // server side id, this is not the player position in this game
+		playername : 'jeff',
+		playeravatar : 'blob'
+		}; 
 	let waitingForEndOfRound = true;
 	let targetPlayer = null;
 
-	// user properties
-	let playerid = 2; // server side id, this is not the player position in this game
-	let playername = 'jeff';
-	let playeravatar = 'blob';
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -274,18 +276,18 @@
 
         let rootURL = window.location.href.slice(0,window.location.href.lastIndexOf("/")+1);
         if(!!getUrlParameter('playername') && !!getUrlParameter('playeravatar')){
-            playername=getUrlParameter('playername');
+            gameState.playername=getUrlParameter('playername');
             playeravatar=getUrlParameter('playeravatar');
             if(!!getUrlParameter('playerid')){
                 console.log('everything ok');
-                playerid = getUrlParameter('playerid');
+                gameState.playerid = getUrlParameter('playerid');
             } else {
                 console.log('credentials but no id, login in');
             }
-            login(playername,playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
-                if(!readPlayerId || readPlayerId != playerid){
+            login(gameState.playername,playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
+                if(!readPlayerId || readPlayerId != gameState.playerid){
                     console.log('credentials but no id, login in');
-                    window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
+                    window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
                     return;
                 }
                 if(readGameId) {
@@ -293,7 +295,7 @@
                     gameState.gameId = readGameId;
                 } else if(pleaseJoinGameId) {
                     console.log('we propose that you join game '+pleaseJoinGameId );
-                    joinGame(playername,playerid,pleaseJoinGameId);
+                    joinGame(gameState.playername,gameState.playerid,pleaseJoinGameId);
                     gameState.gameId = pleaseJoinGameId;
                 } else if(!!getUrlParameter('gameid')) {
                     gameState.gameId = getUrlParameter('gameid');
@@ -301,7 +303,7 @@
 
                 if(!gameState.gameId || gameState.gameId<=0) {
                     console.log('still not in a game, '+gameState.gameId );
-                    newGame(playername,playerid,(newGameId)=> {
+                    newGame(gameState.playername,gameState.playerid,(newGameId)=> {
                         if(newGameId) {
                             gameState.gameId = newGameId;
                             console.log('created game, '+gameState.gameId );
@@ -312,22 +314,22 @@
 
         } else {
             console.log('no credentials, setting random ones');
-            window.location = rootURL+"index.html?playername="+playername+"&playeravatar="+playeravatar+"&playerid="+playerid+"";
+            window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+playeravatar+"&playerid="+gameState.playerid+"";
         }
-
+/*
         if(!!getUrlParameter('gameid')) {
             gameState.gameId = getUrlParameter('gameid');
         }
 
         if(!gameState.gameId || gameState.gameId<=0) {
             console.log('still not in a game, '+gameState.gameId );
-            newGame(playername,playerid,(newGameId)=> {
+            newGame(playername,gameState.playerid,(newGameId)=> {
                if(newGameId) {
                    gameState.gameId = newGameId;
                    console.log('created game, '+gameState.gameId );
                }
            });
-        }
+        }*/
 
         mode = 'start';
         tool = 'peanut';
@@ -783,15 +785,15 @@
 			new_country: 'finland', // 0-2
 			player_hands: [
 				[
+					4,
+					5,
+					6
+				],
+				[
 
 					0, // item id
 					1,
 					2
-				],
-				[
-					4,
-					5,
-					6
 				],
 				[
 					8,
@@ -857,7 +859,7 @@
 			avatarSprites[key] = tmpItem
 			app.stage.addChild(avatarSprites[key]);
 			tmpItem.identifyForClick = () => ({elementType: "avatar", id: key})
-			console.log("keytobelogged" + key)
+			//console.log("keytobelogged" + key)
 		}
 	}
 	
@@ -915,10 +917,21 @@
 			tmpItem.interactive = true;
 			tmpItem.on('pointerdown', onButtonDown)
 			tmpItem.scale = new PIXI.Point(0.3, 0.3)
-			console.log("the key for the future: " + key)
+			//console.log("the key for the future: " + key)
 			tmpItem.identifyForClick = () => ({elementType: "item", id: key})
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
+		}
+	}
+	
+	const hideItemsNotInHand = () => {
+		for (let key of Object.keys(itemPositions)) {
+			if(!gameState.hands[gameState.playerNumber].some(oneItemInHand => oneItemInHand == key)) {
+				console.log("hideItemsNotInHand: hides" + key)
+				positionItem(key, 0, 1080);
+			} else {
+				console.log("hideItemsNotInHand: KEEP" + key)
+			}
 		}
 	}
 
@@ -938,7 +951,7 @@
 			//tmpItem.interactive = true;
 			//tmpItem.on('pointerdown', onButtonDown)
 			tmpItem.scale = new PIXI.Point(0.3, 0.3)
-			console.log("the key for the future: " + key)
+			//console.log("the key for the future: " + key)
 			tmpItem.identifyForClick = () => ({elementType: "miniatureitem", id: key})
 			itemMiniatureSprites[key] = tmpItem
 			app.stage.addChild(itemMiniatureSprites[key]);
@@ -1009,8 +1022,37 @@
             avatar: joinMessage.avatar,
             position: playerPosition//0-3
         };
-		if(joinMessage.player === playerId){
-			gameState.playerNumber = playerId
+		if(joinMessage.player === gameState.playerid){
+			gameState.playerNumber = playerPosition
+		}
+    }
+	
+	
+    // brag action. nothing to do except mark it as done
+    const parseBragMessage = (joinMessage) => {
+		if(joinMessage.player === gameState.playerid){
+			waitingForEndOfRound = true;
+		}
+    }
+    
+	// lost and found action. nothing to do except mark it as done
+    const parseLostAndFoundMessage = (joinMessage) => {
+		if(joinMessage.player === gameState.playerid){
+			waitingForEndOfRound = true;
+		}
+    }
+	
+    // declare trade action. nothing to do except mark it as done
+    const parseDeclareTradesMessage = (joinMessage) => {
+		if(joinMessage.player === gameState.playerid){
+			waitingForEndOfRound = true;
+		}
+    }
+	
+    // accept/declide trades action. nothing to do except mark it as done
+    const parseAcceptTradesMessage = (joinMessage) => {
+		if(joinMessage.player === gameState.playerid){
+			waitingForEndOfRound = true;
 		}
     }
 
@@ -1030,6 +1072,7 @@
 	const parseNewRoundMessage = (newRoundMessage) => {
 		gameState.currentRound = newRoundMessage.action_parameters.new_round;
 		UiProgress = new Array()
+		hideItemsNotInHand();
 	}
 
     // random order: boose, personal items , souvenir& duty free . 100 for theb first, 200 for the second, 300 for the last
@@ -1155,6 +1198,25 @@
         }
     }
 	
+	const tradeAvatarSpots = (playerPos, tradePartnerPos) => {
+		let targetPosOnScreen = tradePartnerPos
+		if(playerPos < tradePartnerPos){
+			targetPosOnScreen -= 1
+		}
+		
+		console.log(playerPos, tradePartnerPos)
+		
+		switch (targetPosOnScreen){
+			case 0:
+				return {x: 1000, y: 300};
+			case 1:
+				return {x: 1300, y: 300};
+			case 0:
+				return {x: 1600, y: 300};
+		}
+		
+	}
+	
     function onButtonDown(param) {
         let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
         this.isdown = true;
@@ -1174,7 +1236,7 @@
 		if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
 			switch(gameState.currentRound){
 				case 'brag':
-					console.log("you clicked item " + "[name of item]" + clickIdentifier.id )
+					console.log("you clicked item " + "[name of item] " + clickIdentifier.id )
 				    waitingForEndOfRound = true;
 				    var actionId = getCurrentActionId();
 	                playItem(actionId,clickIdentifier.id,targetPlayer);
@@ -1200,25 +1262,10 @@
 						UiState.itemIsBeingTraded = clickIdentifier.id
 					}
 			}
-		}
-		
-		const tradeAvatarSpots = (playerPos, tradePartnerPos) => {
-			let targetPosOnScreen = tradePartnerPos
-			if(playerPos < tradePartnerPos){
-				targetPosOnScreen -= 1
-			}
 			
-			console.log(playerPos, tradePartnerPos)
-			
-			switch (targetPosOnScreen){
-				case 0:
-					return {x: 1000, y: 300};
-				case 1:
-					return {x: 1300, y: 300};
-				case 0:
-					return {x: 1600, y: 300};
-			}
-			
+			console.log("end switch" + UiProgress.length)
+		} else {
+			console.log("waiting or not item" + waitingForEndOfRound+ " , "+(clickIdentifier && clickIdentifier.elementType))
 		}
 		
 		if(clickIdentifier && clickIdentifier.elementType === "avatar") {
@@ -1322,8 +1369,8 @@
     };
 
     const gameRecap = async (messageArea) => {
-        console.log('async call gameRecap');
-        const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameState.gameId);
+        console.log('async call gameRecap '+gameState.gameId);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gameid='+gameState.gameId);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('gameRecap answer',myJson);
         messageArea.text = rendergameRecap(myJson);
@@ -1339,7 +1386,7 @@
         let base64Parameter = btoa(JSON.stringify(action_parameters));
         console.log('async call doGameAction',actionId,itemId,targetPlayer);
         //const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
-        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+playername+'&playerid='+playerid+'&gametype=lajam&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gametype=lajam&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('doGameAction answer',myJson);
         //this.text = rendergameRecap(myJson);
@@ -1352,34 +1399,55 @@
         console.log('rendergameRecap ',gameRecapJSON);
         if(gameRecapJSON && gameRecapJSON.data && gameRecapJSON.data.length){
             if(gameState.history.length != gameRecapJSON.data.length){
-                waitingForEndOfRound = false; // actually, this should be set when we a re done reading the history. in case of refresh of the page
+                //waitingForEndOfRound = true; // actually, this should be set when we a re done reading the history. in case of refresh of the page
+				const serverPhase = gameRecapJSON.data[gameRecapJSON.data.length-1].phase_after;
+				const serverPhaseBegin = serverPhase-(serverPhase%10);
+				const clientPhase = !gameState.history.length ? 0 : gameState.history[gameState.history.length-1].phase_after;
+				const clientPhaseBegin = clientPhase-(clientPhase%10);
+				
                 targetPlayer = null;
-                initializeGameState();
+                if(clientPhase == 0){
+					initializeGameState();
+				}
                 result = "here is what happened \n";
                 gameRecapJSON.data.forEach(oneRecord => {
-                    gameState.history.push(oneRecord);
-                    //result += "\n"+JSON.stringify(oneRecord);
-                    result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
-                    if(oneRecord.phase_after == "100") {
-                        parseInitialMessage(oneRecord.action_parameters);
-                    }
-                    switch(oneRecord.description){
-                        case "join": parseJoinMessage(oneRecord); break;
-                    }
-                    if(oneRecord.action_parameters.is_new_round) {
-                        parseNewRoundMessage(oneRecord);
-                    }
-                    if(oneRecord.action_parameters.is_new_event_type) {
-                        parseNewEventTypeMessage(oneRecord);
-                    }
-                    if(oneRecord.action_parameters.is_new_country) {
-                        parseNewCountryMessage(oneRecord);
-                    }
+					if(!gameState.history.length || 
+						( !gameState.history.some(gameevent => gameevent.phase_after == oneRecord.phase_after) && // we only parse unknown events
+							(oneRecord.phase_after <=100 || 													  // from initial phases (join, init)
+							oneRecord.player == gameState.playerid || 											  // or by us
+							oneRecord.phase_after <= serverPhaseBegin))){ 										  // or from finished phases
+						gameState.history.push(oneRecord);
+						//result += "\n"+JSON.stringify(oneRecord);
+						result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
+						if(oneRecord.phase_after == "100") {
+							parseInitialMessage(oneRecord.action_parameters);
+						}
+						switch(oneRecord.description){
+							case "join": parseJoinMessage(oneRecord); break;
+							case "brag": parseBragMessage(oneRecord); break;
+							case "lost and found": parseLostAndFoundMessage(oneRecord); break;
+							case "declare trades": parseDeclareTradesMessage(oneRecord); break;
+							case "accept trades": parseAcceptTradesMessage(oneRecord); break;
+						}
+						if(oneRecord.action_parameters.is_new_round) {
+							parseNewRoundMessage(oneRecord);
+						}
+						if(oneRecord.action_parameters.is_new_event_type) {
+							parseNewEventTypeMessage(oneRecord);
+						}
+						if(oneRecord.action_parameters.is_new_country) {
+							parseNewCountryMessage(oneRecord);
+						}
 
-                    // other player actions are only parsed if the round is over
-                    /*if() {
-
-                    }*/
+						if(serverPhaseBegin > clientPhaseBegin && oneRecord.phase_after == serverPhaseBegin) {
+							// decide whether an action from the player will be needed this turn
+							
+							// if an action is expected and as not already been made
+							waitingForEndOfRound = false;
+						}
+						
+						
+					}
                 });
             } else {
                  result = "nothing new in history ";

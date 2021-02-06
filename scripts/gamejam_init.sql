@@ -14,13 +14,13 @@ CREATE TABLE IF NOT EXISTS game_instance (
 
 CREATE INDEX game_instance_creator ON game_instance (creator);
 CREATE INDEX game_instance_gametype ON game_instance (gametype);
-CREATE INDEX game_instance_phase ON game_instance (phase);
+CREATE INDEX game_instance_status ON game_instance (status);
 
 CREATE TABLE IF NOT EXISTS player (
     id integer AUTO_INCREMENT PRIMARY KEY,
     recordtime bigint NOT NULL,
-    nickname VARCHAR(200) NOT NULL,
-    avatar VARCHAR(200) NOT NULL,
+    nickname VARCHAR(100) NOT NULL,
+    avatar VARCHAR(100) NOT NULL,
     UNIQUE(nickname,avatar)
 );
 
