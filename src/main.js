@@ -547,13 +547,6 @@
 		suitCaseSprite2.scale = new PIXI.Point(0.2, 0.2) // scale/zoom
 		app.stage.addChild(suitCaseSprite2)				// always add it to the scene/stage
 		
-		recap_BG
-		recap_BG = new Sprite(resources["images/newPictures/recap_BG.png"].texture) // file
-		recap_BG.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
-		recap_BG.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
-		recap_BG.scale = new PIXI.Point(1.0, 1.0) // scale/zoom
-		app.stage.addChild(recap_BG)				// always add it to the scene/stage
-		
 		
 		//new sprites
 		fetchItemSprites()
@@ -562,6 +555,13 @@
 		fetchAvatarSprites()
 		
 		
+		recap_BG = new Sprite(resources["images/newPictures/recap_BG.png"].texture) // file
+		recap_BG.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
+		recap_BG.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
+		recap_BG.scale = new PIXI.Point(1.0, 1.0) // scale/zoom
+        recap_BG.interactive = true;				// make clickable
+        recap_BG.on('pointerdown', onButtonDown);	// make clickable -> call function onButtonDown
+		app.stage.addChild(recap_BG)				// always add it to the scene/stage
 			
         //Create the `BG_start` sprite
         screenSprites.BG_start = new Sprite(resources["images/newPictures/startScreen.png"].texture);
@@ -572,8 +572,8 @@
 			gamePhase = "play"
 			setBGactive("party")
 			initializeGameState()
-			parseInitialMessage(mockedMessages.initialMessage)
-			console.log("CLICKED")
+			parseInitialMessage(mockedMessages.initialMessage, true)
+			console.log("go to game")
 		})
         app.stage.addChild(screenSprites.BG_start);
 
@@ -666,7 +666,7 @@
 		debugButton = new Text("debug", style4);
 		debugButton.position.set(1500, 0)
 		debugButton.interactive = true
-		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg)})
+		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg, true)})
 		app.stage.addChild(debugButton)
 		
 
@@ -937,10 +937,10 @@
 	const hideItemsNotInHand = () => {
 		for (let key of Object.keys(itemPositions)) {
 			if(!gameState.hands[gameState.playerNumber].some(oneItemInHand => oneItemInHand == key)) {
-				console.log("hideItemsNotInHand: hides" + key)
+				//console.log("hideItemsNotInHand: hides" + key)
 				positionItem(key, 0, 1080);
 			} else {
-				console.log("hideItemsNotInHand: KEEP" + key)
+				//console.log("hideItemsNotInHand: KEEP" + key)
 			}
 		}
 	}
@@ -1025,7 +1025,7 @@
 	}
 
     // join messages are the 4 first after game creation, they define player numbers
-    const parseJoinMessage = (joinMessage) => {
+    const parseJoinMessage = (joinMessage, isRender) => {
         var playerPosition = parseInt(joinMessage.phase_after)-1;
         gameState.players[playerPosition] = {
             nickname: joinMessage.nickname,
@@ -1035,64 +1035,91 @@
 		if(joinMessage.player === gameState.playerid){
 			gameState.playerNumber = playerPosition
 		}
+		
+		if(isRender) {
+			// TODO add to gameRecap panel?
+		}
     }
 	
 	
     // brag action. nothing to do except mark it as done
-    const parseBragMessage = (joinMessage) => {
-		if(joinMessage.player === gameState.playerid){
-			waitingForEndOfRound = true;
+    const parseBragMessage = (joinMessage, isRender) => {
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
 		}
     }
     
 	// lost and found action. nothing to do except mark it as done
-    const parseLostAndFoundMessage = (joinMessage) => {
-		if(joinMessage.player === gameState.playerid){
-			waitingForEndOfRound = true;
+    const parseLostAndFoundMessage = (joinMessage, isRender) => {
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
 		}
     }
 	
     // declare trade action. nothing to do except mark it as done
-    const parseDeclareTradesMessage = (joinMessage) => {
-		if(joinMessage.player === gameState.playerid){
-			waitingForEndOfRound = true;
+    const parseDeclareTradesMessage = (joinMessage, isRender) => {
+		
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
 		}
     }
 	
     // accept/declide trades action. nothing to do except mark it as done
-    const parseAcceptTradesMessage = (joinMessage) => {
-		if(joinMessage.player === gameState.playerid){
-			waitingForEndOfRound = true;
+    const parseAcceptTradesMessage = (joinMessage, isRender) => {
+		
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
 		}
     }
 
-	const parseInitialMessage = (initialMessage) => {
+	const parseInitialMessage = (initialMessage, isRender) => {
 		//gameState.playerNumber = initialMessage.playerNumber
 		if(initialMessage.players) { // only in the mocked initial message. in real life, the players are read from the join messages. see parseJoinMessage
 		    gameState.players = initialMessage.players
 		}
-		gameState.currentRound = initialMessage.new_round;
-		gameState.currentEvent = initialMessage.new_event_type
-		gameState.currentCountry = initialMessage.new_country;
+		
+		if(isRender) {
+			gameState.currentRound = initialMessage.new_round;
+			gameState.currentEvent = initialMessage.new_event_type
+			gameState.currentCountry = initialMessage.new_country;
+		}
 		gameState.specialCards = initialMessage.special_items
 		gameState.hands = initialMessage.player_hands
+		
 	}
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
-	const parseNewRoundMessage = (newRoundMessage) => {
-		gameState.currentRound = newRoundMessage.action_parameters.new_round;
-		UiProgress = new Array()
-		hideItemsNotInHand();
+	const parseNewRoundMessage = (newRoundMessage, isRender) => {
+		
+		if(isRender) {
+			gameState.currentRound = newRoundMessage.action_parameters.new_round;
+			UiProgress = new Array()
+			hideItemsNotInHand();
+		}
 	}
 
     // random order: boose, personal items , souvenir& duty free . 100 for theb first, 200 for the second, 300 for the last
-	const parseNewEventTypeMessage = (newEventTypeMessage) => {
-		gameState.currentEvent = newEventTypeMessage.action_parameters.new_event_type
+	const parseNewEventTypeMessage = (newEventTypeMessage, isRender) => {
+		
+		if(isRender) {
+			gameState.currentEvent = newEventTypeMessage.action_parameters.new_event_type;
+		}
 	}
 
     // new country: 0000 for the first, 1000 for the second, 2000 for the third, 3000 for the fourth
-	const parseNewCountryMessage = (newEventTypeMessage) => {
-		gameState.currentCountry = newEventTypeMessage.action_parameters.new_country;
+	const parseNewCountryMessage = (newEventTypeMessage, isRender) => {
+		
+		if(isRender) {
+			gameState.currentCountry = newEventTypeMessage.action_parameters.new_country;
+		}
 	}
 	
 	const renderTitleScreen = () => {
@@ -1227,67 +1254,76 @@
 		
 	}
 	
-    function onButtonDown(param) {
-        let my_string = 'butt down '+this.killedby + ' t('+this.tool+')';
+    function onButtonDown(param) {1
         this.isdown = true;
         if(this.textureButtonDown){
             this.texture = textureButtonDown;
         }
-        if(this.killedby && this.killedby === tool){
-            this.x = 580+randomInt(0,700);
-            this.y = 1080+randomInt(50,1600);
-            my_string += ' killed!';
-        }
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
 		
-		console.log(clickIdentifier)
-		console.log(gameState.currentRound)
-		
-		if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
-			switch(gameState.currentRound){
-				case 'brag':
-					console.log("you clicked item " + "[name of item] " + clickIdentifier.id )
-				    waitingForEndOfRound = true;
-				    var actionId = getCurrentActionId();
-	                playItem(actionId,clickIdentifier.id,targetPlayer);
-					if(UiProgress.length === 0){
-						UiProgress.push(() => positionItem(clickIdentifier.id, 1300, 800))
-					}
-					break;
-				case 'lost_and_found':
-					console.log("send more actions to server")
-				    waitingForEndOfRound = true;
-				    var actionId = getCurrentActionId();
-	                playItem(actionId,clickIdentifier.id,targetPlayer);
-					if(UiProgress.length === 0){
-						UiProgress.push(() => positionItem(clickIdentifier.id, 1200, 800))
-					} else if(UiProgress.length ===1) {
-						UiProgress.push(() => positionItem(clickIdentifier.id, 1400, 800))
-					}
-					break;
-				case 'trade':
-					console.log("somewhere here trade actions" + UiProgress.length)
-					if(UiProgress.length === 0){
-						
-						UiState.itemIsBeingTraded = clickIdentifier.id
-					}
+		console.log("click ",clickIdentifier, " this: ",this)
+		console.log("------------------------------------------------- ",gameState.currentRound)
+		if( gamePhase == 'play') {
+			if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
+				switch(gameState.currentRound){
+					case 'brag':
+						console.log("you clicked item " + "[name of item] " + clickIdentifier.id )
+						waitingForEndOfRound = true;
+						var actionId = getCurrentActionId();
+						playItem(actionId,clickIdentifier.id,targetPlayer);
+						if(UiProgress.length === 0){
+							UiProgress.push(() => positionItem(clickIdentifier.id, 1300, 800))
+						}
+						break;
+					case 'lost_and_found':
+						console.log("send more actions to server")
+						waitingForEndOfRound = true;
+						var actionId = getCurrentActionId();
+						playItem(actionId,clickIdentifier.id,targetPlayer);
+						if(UiProgress.length === 0){
+							UiProgress.push(() => positionItem(clickIdentifier.id, 1200, 800))
+						} else if(UiProgress.length ===1) {
+							UiProgress.push(() => positionItem(clickIdentifier.id, 1400, 800))
+						}
+						break;
+					case 'trade':
+						console.log("somewhere here trade actions" + UiProgress.length)
+						if(UiProgress.length === 0){
+							
+							UiState.itemIsBeingTraded = clickIdentifier.id
+						}
+				}
+				
+				console.log("end switch" + UiProgress.length)
+			} else {
+				console.log("waiting or not item" + waitingForEndOfRound+ " , "+(clickIdentifier && clickIdentifier.elementType))
 			}
 			
-			console.log("end switch" + UiProgress.length)
-		} else {
-			console.log("waiting or not item" + waitingForEndOfRound+ " , "+(clickIdentifier && clickIdentifier.elementType))
+			if(clickIdentifier && clickIdentifier.elementType === "avatar") {
+				if(UiState.itemIsBeingTraded !== undefined){
+					let coordsForItem = tradeAvatarSpots(gameState.playerNumber, parseInt(clickIdentifier.id))
+					console.log("itemCoords" + coordsForItem)
+					let tradeItemNumber = UiState.itemIsBeingTraded
+					UiProgress.push(() => positionItem(tradeItemNumber, coordsForItem.x, coordsForItem.y + 300))
+					UiState.itemIsBeingTraded = undefined
+				}
+			}
+			
+			var clickX = param.data.global.x;
+            var clickY = param.data.global.y;
+			// check that the zone to open game recap was clicked
+			if(
+				(clickX > 1702 && clickY > 102 && clickY  < 255) ||
+				(clickX > (1765+(clickY-255)*(200/800)) && clickY > 255) 
+				) {
+				gamePhase = 'gameRecap'; // leave recap sheet
+			}
+			
+		} else if(gamePhase == 'gameRecap'){
+			gamePhase = 'play'; // leave recap sheet
 		}
 		
-		if(clickIdentifier && clickIdentifier.elementType === "avatar") {
-			if(UiState.itemIsBeingTraded !== undefined){
-				let coordsForItem = tradeAvatarSpots(gameState.playerNumber, parseInt(clickIdentifier.id))
-				console.log("itemCoords" + coordsForItem)
-				let tradeItemNumber = UiState.itemIsBeingTraded
-				UiProgress.push(() => positionItem(tradeItemNumber, coordsForItem.x, coordsForItem.y + 300))
-				UiState.itemIsBeingTraded = undefined
-			}
-		}
-
+		
         if(this.isJeff){
             console.log('click jeff');
             this.text = 'yes you clicked';
@@ -1427,26 +1463,27 @@
 							oneRecord.player == gameState.playerid || 											  // or by us
 							oneRecord.phase_after <= serverPhaseBegin))){ 										  // or from finished phases
 						gameState.history.push(oneRecord);
+						let isRender = oneRecord.phase_after >= serverPhaseBegin;
 						//result += "\n"+JSON.stringify(oneRecord);
 						result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
 						if(oneRecord.phase_after == "100") {
-							parseInitialMessage(oneRecord.action_parameters);
+							parseInitialMessage(oneRecord.action_parameters, isRender);
 						}
 						switch(oneRecord.description){
-							case "join": parseJoinMessage(oneRecord); break;
-							case "brag": parseBragMessage(oneRecord); break;
-							case "lost and found": parseLostAndFoundMessage(oneRecord); break;
-							case "declare trades": parseDeclareTradesMessage(oneRecord); break;
-							case "accept trades": parseAcceptTradesMessage(oneRecord); break;
+							case "join": parseJoinMessage(oneRecord, isRender); break;
+							case "brag": parseBragMessage(oneRecord, isRender); break;
+							case "lost and found": parseLostAndFoundMessage(oneRecord, isRender); break;
+							case "declare trades": parseDeclareTradesMessage(oneRecord, isRender); break;
+							case "accept trades": parseAcceptTradesMessage(oneRecord, isRender); break;
 						}
 						if(oneRecord.action_parameters.is_new_round) {
-							parseNewRoundMessage(oneRecord);
+							parseNewRoundMessage(oneRecord, isRender);
 						}
 						if(oneRecord.action_parameters.is_new_event_type) {
-							parseNewEventTypeMessage(oneRecord);
+							parseNewEventTypeMessage(oneRecord, isRender);
 						}
 						if(oneRecord.action_parameters.is_new_country) {
-							parseNewCountryMessage(oneRecord);
+							parseNewCountryMessage(oneRecord, isRender);
 						}
 
 						if(serverPhaseBegin > clientPhaseBegin && oneRecord.phase_after == serverPhaseBegin) {
@@ -1654,15 +1691,24 @@
             }
         }
     }
-
-    function moveBullets(speed){
-        for (var i = 0; i < bullets.length; i++) {
-            if(bullets[i].flying){
-                bullets[i].y += bullets[i].vy;
-                bullets[i].x += bullets[i].vx;
-            }
-        }
-    }
+	
+	function showGameRecapSheet() {
+		let sheetMoveSpeed = 15;
+		
+		if(recap_BG.x >0) {
+			recap_BG.x -= sheetMoveSpeed;
+		}
+		
+	}
+	function hideGameRecapSheet() {
+		let SHEET_MAX_OFFSET = 500; // part of the sheet that ends up hidden on the right
+		let sheetMoveSpeed = 15;
+		
+		if(recap_BG.x < SHEET_MAX_OFFSET) {
+			recap_BG.x += sheetMoveSpeed;
+		}
+		
+	}
 
     function play(delta) {
         timeInSec += 1;
@@ -1681,6 +1727,7 @@
 				renderTitleScreen()
 				break;
 			case 'play':
+				hideGameRecapSheet();
 				switch (gameState.currentRound){
 					case 'brag':
 						setBGactive("party")
@@ -1702,6 +1749,9 @@
 						createOrUpdatePhaseText("offer a trade")
 						break;
 				}
+				break;
+			case 'gameRecap': // show the score sheet on the right and prevent game actions
+				showGameRecapSheet();
 				break;
 		}
 		
@@ -1762,7 +1812,6 @@
         hamster.progress = 10 ;
 
         moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
-        moveBullets(1);
 
     }
 
