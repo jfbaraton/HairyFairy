@@ -177,6 +177,7 @@
 	.add("images/newPictures/party.png")		// place to brag about boose
 	.add("images/newPictures/suitCase2.png")	
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
+	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
 
@@ -212,7 +213,8 @@
 	let itemMiniatureSprites = {};
 	let avatarSprites = {};
 	let suitCaseSprite;
-	let suitCaseSprite2; // STEP2 create a variable to store your sprite (texture holder)
+	let suitCaseSprite2; // STEP 2 create a variable to store your sprite (texture holder)
+	let recap_BG;
 	let phaseText;
 	let gamePhase = "title"
 	let UiProgress = new Array();
@@ -544,6 +546,14 @@
 		suitCaseSprite2.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
 		suitCaseSprite2.scale = new PIXI.Point(0.2, 0.2) // scale/zoom
 		app.stage.addChild(suitCaseSprite2)				// always add it to the scene/stage
+		
+		recap_BG
+		recap_BG = new Sprite(resources["images/newPictures/recap_BG.png"].texture) // file
+		recap_BG.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
+		recap_BG.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
+		recap_BG.scale = new PIXI.Point(1.0, 1.0) // scale/zoom
+		app.stage.addChild(recap_BG)				// always add it to the scene/stage
+		
 		
 		//new sprites
 		fetchItemSprites()
