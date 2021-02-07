@@ -389,7 +389,7 @@
         weapon1.available = true;
         weapon1.on('pointerdown', onButtonDown);
         weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
-        app.stage.addChild(weapon1);
+        //app.stage.addChild(weapon1);
 
         var WEAPON_SPACING = 190;
 
@@ -408,7 +408,7 @@
         weapon2.available = true;
         weapon2.on('pointerdown', onButtonDown);
         weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);
-        app.stage.addChild(weapon2);
+        //app.stage.addChild(weapon2);
 
         weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
         weapon3.x = weapon2.x+ WEAPON_SPACING - 30;
@@ -426,7 +426,7 @@
         weapon3.available = true;
         weapon3.on('pointerdown', onButtonDown);
         weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE*1.5,WEAPON_SCALE*1.5);
-        app.stage.addChild(weapon3);
+        //app.stage.addChild(weapon3);
 
         //Create the `rollerCoaster1` sprite
         rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
@@ -563,6 +563,15 @@
         recap_BG.on('pointerdown', onButtonDown);	// make clickable -> call function onButtonDown
 		app.stage.addChild(recap_BG)				// always add it to the scene/stage
 			
+		let style14 = new TextStyle({
+			fontFamily: "Bodoni MT", // "chalkduster"
+			fontSize: 60,
+			//fontStyle: 'underline',
+			fill: "blue",
+			});
+		phaseText = new Text("", style14)
+		app.stage.addChild(phaseText)
+			
         //Create the `BG_start` sprite
         screenSprites.BG_start = new Sprite(resources["images/newPictures/startScreen.png"].texture);
         screenSprites.BG_start.x = 0;
@@ -571,8 +580,9 @@
 		screenSprites.BG_start.on('pointerdown', () => {
 			gamePhase = "play"
 			setBGactive("party")
-			initializeGameState()
-			parseInitialMessage(mockedMessages.initialMessage, true)
+			//initializeGameState()
+			//parseInitialMessage(mockedMessages.initialMessage, true)
+			gameRecap();
 			console.log("go to game")
 		})
         app.stage.addChild(screenSprites.BG_start);
@@ -817,18 +827,25 @@
 				]
 			]
 		},
-		newRoundmsg: { new_round: 'lost_and_found', is_new_round: true },
+		newRoundmsg: { new_round: 'lost and found', is_new_round: true },
 		newTradRoundMsg: {action_parameters: { new_round: 'trade', is_new_round: true }}
 	}
 
 	const BGfiles = {
-		"lostAndFound": "images/newPictures/lostAndFound.png",
+		"lost and found": "images/newPictures/lostAndFound.png",
 		"party": "images/newPictures/party.png",
 		"accessories": "images/newPictures/accessories.png",
 		"trade": "images/newPictures/trade.png",
+		"offer trade": "images/newPictures/trade.png",
+		"accept trade": "images/newPictures/trade.png",
 		"souvenirs": "images/newPictures/souvenirs.png",
-		
 	}
+	
+	const BGForEventType = {
+		"boose":"party",
+		"accessories":"accessories",
+		"souvenirs":"souvenirs"
+	};
 
 	const fetchBackgroundSprites = () => {
 		for (let key of Object.keys(BGfiles)) {
@@ -998,19 +1015,12 @@
 	
 	const createOrUpdatePhaseText = (textForPhase) => {
 		if (!phaseText){
-			let style4 = new TextStyle({
-			fontFamily: "Bodoni MT", // "chalkduster"
-			fontSize: 60,
-			//fontStyle: 'underline',
-			fill: "blue",
-			});
-			
-			phaseText = new Text(textForPhase, style4)
+			phaseText = new Text(textForPhase, style14)
 			app.stage.addChild(phaseText)
 		} else {
 			phaseText.text = textForPhase
 		}
-		phaseText.position.set(1000, 400)
+		phaseText.position.set(700, 950)
 	}	
 
 
@@ -1275,7 +1285,7 @@
 							UiProgress.push(() => positionItem(clickIdentifier.id, 1300, 800))
 						}
 						break;
-					case 'lost_and_found':
+					case 'lost and found':
 						console.log("send more actions to server")
 						waitingForEndOfRound = true;
 						var actionId = getCurrentActionId();
@@ -1419,8 +1429,11 @@
         const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gameid='+gameState.gameId);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('gameRecap answer',myJson);
-        messageArea.text = rendergameRecap(myJson);
-        console.log('gameRecap done!!!!',messageArea.text);
+		let debug = rendergameRecap(myJson);
+		if(messageArea) {
+			messageArea.text = debug;
+			console.log('gameRecap done!!!!',messageArea.text);
+		}
         // do something with myJson
     };
 
@@ -1730,19 +1743,21 @@
 				hideGameRecapSheet();
 				switch (gameState.currentRound){
 					case 'brag':
-						setBGactive("party")
+						setBGactive(BGForEventType[gameState.currentEvent])
 						drawInventory()
 						UiProgress.forEach(f => f())
 						createOrUpdatePhaseText("select an item for the event")
 						break;
-					case 'lost_and_found':
-						setBGactive("party")
+					case 'lost and found':
+						setBGactive(gameState.currentRound)
 						drawInventory()
 						UiProgress.forEach(f=> f())
 						createOrUpdatePhaseText("select up to two items to send to lost and found")
 						break;
+					case 'declare trade':
+					case 'accept trade':
 					case 'trade':
-						setBGactive("party")
+						setBGactive(gameState.currentRound)
 						drawAvatars()
 						drawInventory()
 						UiProgress.forEach(f => f())
