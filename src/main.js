@@ -279,17 +279,17 @@
         let rootURL = window.location.href.slice(0,window.location.href.lastIndexOf("/")+1);
         if(!!getUrlParameter('playername') && !!getUrlParameter('playeravatar')){
             gameState.playername=getUrlParameter('playername');
-            playeravatar=getUrlParameter('playeravatar');
+            gameState.playeravatar=getUrlParameter('playeravatar');
             if(!!getUrlParameter('playerid')){
                 console.log('everything ok');
                 gameState.playerid = getUrlParameter('playerid');
             } else {
                 console.log('credentials but no id, login in');
             }
-            login(gameState.playername,playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
+            login(gameState.playername,gameState.playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
                 if(!readPlayerId || readPlayerId != gameState.playerid){
                     console.log('credentials but no id, login in');
-                    window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+playeravatar+"&playerid="+readPlayerId+"";
+                    window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+gameState.playeravatar+"&playerid="+readPlayerId+"";
                     return;
                 }
                 if(readGameId) {
@@ -316,7 +316,7 @@
 
         } else {
             console.log('no credentials, setting random ones');
-            window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+playeravatar+"&playerid="+gameState.playerid+"";
+            window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+gameState.playeravatar+"&playerid="+gameState.playerid+"";
         }
 /*
         if(!!getUrlParameter('gameid')) {
