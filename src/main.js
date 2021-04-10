@@ -1,6 +1,6 @@
 // server url
     //let serverURL = '82.181.24.9:81'; // raspberry
-    let serverURL = 'localhost';
+    let serverURL = 'localhost:3000';
 
 //Aliases
     let Application = PIXI.Application,
@@ -265,6 +265,7 @@
     const WEAPON_2_Y = 920+15;
     const WEAPON_3_Y = 915;
     let count = 0;
+
 
     const getUrlParameter = (name) => {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
