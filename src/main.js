@@ -224,11 +224,14 @@
 	// user properties
 		playerid : 2, // server side id, this is not the player position in this game
 		playername : 'jeff',
-		playeravatar : 'blob'
+		playeravatar : 'blob',
+		lobbyData : []
 		}; 
 	let waitingForEndOfRound = true;
 	let targetPlayer = null;
-
+	const autoJoin = false;
+	const autoCreate = false;
+	const gameType = 'lajam'; // lajam = cleplomat
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
@@ -290,28 +293,46 @@
             login(gameState.playername,gameState.playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
                 if(!readPlayerId || readPlayerId != gameState.playerid){
                     console.log('credentials but no id, login in');
+                    debugButton.text ='credentials but no id, login in';
                     window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+gameState.playeravatar+"&playerid="+readPlayerId+"";
                     return;
                 }
                 if(readGameId) {
                     console.log('currently in game '+readGameId );
+                    debugButton.text ='currently in game '+readGameId;
                     gameState.gameId = readGameId;
                 } else if(pleaseJoinGameId) {
                     console.log('we propose that you join game '+pleaseJoinGameId );
-                    joinGame(gameState.playername,gameState.playerid,pleaseJoinGameId);
-                    gameState.gameId = pleaseJoinGameId;
+                    debugButton.text ='we propose that you join game '+pleaseJoinGameId;
+                    if(autoJoin) {
+						joinGame(gameState.playername,gameState.playerid,pleaseJoinGameId);
+						gameState.gameId = pleaseJoinGameId;
+					}
                 } else if(!!getUrlParameter('gameid')) {
                     gameState.gameId = getUrlParameter('gameid');
+                    debugButton.text ='you pretend to be in game '+gameId;
                 }
 
                 if(!gameState.gameId || gameState.gameId<=0) {
                     console.log('still not in a game, '+gameState.gameId );
-                    newGame(gameState.playername,gameState.playerid,(newGameId)=> {
-                        if(newGameId) {
-                            gameState.gameId = newGameId;
-                            console.log('created game, '+gameState.gameId );
-                        }
-                    });
+                    debugButton.text +='\nSTILL not in a game, '+gameState.gameId;
+                    if(autoCreate) {
+						newGame(gameState.playername,gameState.playerid,(newGameId)=> {
+							if(newGameId) {
+								gameState.gameId = newGameId;
+								console.log('created game, '+gameState.gameId );
+								debugButton.text +='\ncreated game, '+gameState.gameId;
+							}
+						});
+					} else {
+						// list games
+						listGames(gameState.playername,gameState.playerid,(lobbyData) => {
+							console.log('list, ',lobbyData);
+							console.log('list length, ',lobbyData &&lobbyData.length);
+							debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
+							gameState.lobbyData = lobbyData;
+						});
+					}
                 }
             });
 
@@ -581,6 +602,7 @@
 		screenSprites.BG_start.on('pointerdown', () => {
 			gamePhase = "play"
 			setBGactive("party")
+			//setBGactive("BG_start")
 			//initializeGameState()
 			//parseInitialMessage(mockedMessages.initialMessage, true)
 			gameRecap();
@@ -675,7 +697,7 @@
         app.stage.addChild(msg_menu_1);
 		
 		debugButton = new Text("debug", style4);
-		debugButton.position.set(1500, 0)
+		debugButton.position.set(1100, 0)
 		debugButton.interactive = true
 		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg, true)})
 		app.stage.addChild(debugButton)
@@ -833,13 +855,14 @@
 	}
 
 	const BGfiles = {
-		"lost and found": "images/newPictures/lostAndFound.png",
-		"party": "images/newPictures/party.png",
-		"accessories": "images/newPictures/accessories.png",
-		"trade": "images/newPictures/trade.png",
-		"offer trade": "images/newPictures/trade.png",
-		"accept trade": "images/newPictures/trade.png",
-		"souvenirs": "images/newPictures/souvenirs.png",
+		"lost and found": 	"images/newPictures/lostAndFound.png",
+		"party": 			"images/newPictures/party.png",
+		"accessories": 		"images/newPictures/accessories.png",
+		"trade": 			"images/newPictures/trade.png",
+		"offer trade": 		"images/newPictures/trade.png",
+		"accept trade": 	"images/newPictures/trade.png",
+		"souvenirs": 		"images/newPictures/souvenirs.png",
+		"BG_start": 		"images/newPictures/startScreen.png",
 	}
 	
 	const BGForEventType = {
@@ -1382,7 +1405,7 @@
 
     const joinGame = async (playername,playerid, joinGameId) => {
         console.log('async call joinGame');
-        const response = await fetch('http://'+serverURL+'/HairyFairy/joinGame.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype=lajam');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/joinGame.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('joinGame answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
@@ -1409,8 +1432,8 @@
 
     const newGame = async (playername,playerid,callBack) => {
         console.log('async call newGame');
-        const response = await fetch('http://'+serverURL+'/HairyFairy/newGame.php?playername='+playername+'&playerid='+playerid+'&gametype=lajam');
-        //const response = await   fetch('http://localhost/HairyFairy/newGame.php?playername=jeff&playerid=2&gametype=lajam);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/newGame.php?playername='+playername+'&playerid='+playerid+'&gametype='+gameType);
+        //const response = await   fetch('http://localhost/HairyFairy/newGame.php?playername=jeff&playerid=2&gametype='+gameType);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('newGame answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
@@ -1446,7 +1469,7 @@
         let base64Parameter = btoa(JSON.stringify(action_parameters));
         console.log('async call doGameAction',actionId,itemId,targetPlayer);
         //const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
-        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gametype=lajam&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gametype='+gameType+'&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('doGameAction answer',myJson);
         //this.text = rendergameRecap(myJson);

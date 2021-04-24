@@ -71,6 +71,11 @@ const phpProxy = function(oreq, ores) {
   creq.end();
 };
 app.get('/HairyFairy/login.php',phpProxy);
+app.get('/HairyFairy/listGames.php',phpProxy);
+app.get('/HairyFairy/newGame.php',phpProxy);
+app.get('/HairyFairy/joinGame.php',phpProxy);
+app.get('/HairyFairy/gameRecap.php',phpProxy);
+app.get('/HairyFairy/doGameAction.php',phpProxy);
 
 app.get('/index.html', (req, res) => {
   //console.log(`serving req: `,req);
