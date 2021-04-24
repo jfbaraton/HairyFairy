@@ -1953,7 +1953,7 @@
               key.isDown = true;
               key.isUp = false;
             }
-            event.preventDefault();
+            //event.preventDefault();
         };
 
         //The `upHandler`
@@ -1963,7 +1963,7 @@
               key.isDown = false;
               key.isUp = true;
             }
-            event.preventDefault();
+            //event.preventDefault();
         };
 
         //Attach event listeners
@@ -1973,5 +1973,12 @@
         window.addEventListener(
             "keyup", key.upHandler.bind(key), false
         );
+		
+		// Detach event listeners
+		key.unsubscribe = () => {
+			window.removeEventListener("keydown", downListener);
+			window.removeEventListener("keyup", upListener);
+		};
+		
         return key;
     }
