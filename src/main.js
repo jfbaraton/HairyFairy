@@ -170,6 +170,7 @@
     .add("sounds/"+sound_bank["short_slingshot_sound"])
     .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
 	.add("images/TESTBG.png")
+	.add("images/newPictures/lobby_one_game.png")  // one game background in the lobby
 	.add("images/newPictures/accessories.png")  // place to brag about accessories
 	.add("images/newPictures/souvenirs.png")  	// place to brag about souvenirs
 	.add("images/newPictures/trade.png")		// place to trade (half blind draft)
@@ -180,6 +181,7 @@
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
+	.add("images/newPictures/BG_lobby.png")
 
     .load(setup);
 
@@ -212,11 +214,12 @@
 	let itemSprites = {};
 	let itemMiniatureSprites = {};
 	let avatarSprites = {};
+	let elementSprites = {};
 	let suitCaseSprite;
 	let suitCaseSprite2; // STEP 2 create a variable to store your sprite (texture holder)
 	let recap_BG;
 	let phaseText;
-	let gamePhase = "title"
+	let gamePhase = "lobby";
 	let UiProgress = new Array();
 	let UiState = {}
 	let gameState = { history : [], gameId : -1, 
@@ -331,6 +334,10 @@
 							console.log('list length, ',lobbyData &&lobbyData.length);
 							debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
 							gameState.lobbyData = lobbyData;
+							// TODO get list of game ids, and assign positions/indexes
+							// TODO clear existing visual lobby info
+							placeLobbyGame(lobbyData, 1, 1);
+							placeLobbyGame(lobbyData, 5, 2);
 						});
 					}
                 }
@@ -373,6 +380,7 @@
 		screenSprites = {
 			playScreenBG: {},
 			BG_start: {},
+			BG_lobby: {},
 			BG_win: {},
 			BG_lose: {},
 			accessories: {},	// place to brag about accessories
@@ -385,12 +393,12 @@
 		fetchBackgroundSprites()
 		
 		// BG for the play screen
-		screenSprites.playScreenBG = new Sprite(resources["images/TESTBG.png"].texture)
+		/*screenSprites.playScreenBG = new Sprite(resources["images/TESTBG.png"].texture)
         screenSprites.playScreenBG.x = 0;
         screenSprites.playScreenBG.y = 0;
         screenSprites.playScreenBG.interactive = true;
         screenSprites.playScreenBG.on('pointerdown', onButtonDown);
-        app.stage.addChild(screenSprites.playScreenBG);
+        app.stage.addChild(screenSprites.playScreenBG);*/
 		
         //Create the 'weapon selection' sprite
 
@@ -595,23 +603,27 @@
 		app.stage.addChild(phaseText)
 			
         //Create the `BG_start` sprite
-        screenSprites.BG_start = new Sprite(resources["images/newPictures/startScreen.png"].texture);
+        screenSprites.BG_start = new Sprite(resources["images/newPictures/BG_lobby.png"].texture);
         screenSprites.BG_start.x = 0;
         screenSprites.BG_start.y = 0;
 		screenSprites.BG_start.interactive = true;
 		screenSprites.BG_start.on('pointerdown', () => {
-			gamePhase = "play"
-			setBGactive("party")
-			//setBGactive("BG_start")
-			//initializeGameState()
-			//parseInitialMessage(mockedMessages.initialMessage, true)
-			gameRecap();
-			console.log("go to game")
+			if(gamePhase == "title") {
+				gamePhase = "play"
+				setBGactive("party")
+				//setBGactive("BG_start")
+				//initializeGameState()
+				//parseInitialMessage(mockedMessages.initialMessage, true)
+				gameRecap();
+				console.log("go to game")
+			} else if(gamePhase == "lobby") {
+				console.log("you are still in lobby, need to join a game");
+			}
 		})
         app.stage.addChild(screenSprites.BG_start);
 
         //Create the `BG_lose` sprite
-        screenSprites.BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
+        /*screenSprites.BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
         screenSprites.BG_lose.x = 0;
         screenSprites.BG_lose.y = 1080;
         app.stage.addChild(screenSprites.BG_lose);
@@ -621,7 +633,7 @@
         screenSprites.BG_win = new Sprite(resources["images/BG_win.png"].texture);
         screenSprites.BG_win.x = 0;
         screenSprites.BG_win.y = 1080;
-        app.stage.addChild(screenSprites.BG_win);
+        app.stage.addChild(screenSprites.BG_win);*/
 
         //Create the text sprite
         let style2 = new TextStyle({
@@ -853,7 +865,8 @@
 		newRoundmsg: { new_round: 'lost and found', is_new_round: true },
 		newTradRoundMsg: {action_parameters: { new_round: 'trade', is_new_round: true }}
 	}
-
+	
+	// list of fulscreen backgrounds. only one is visible at a time
 	const BGfiles = {
 		"lost and found": 	"images/newPictures/lostAndFound.png",
 		"party": 			"images/newPictures/party.png",
@@ -863,6 +876,14 @@
 		"accept trade": 	"images/newPictures/trade.png",
 		"souvenirs": 		"images/newPictures/souvenirs.png",
 		"BG_start": 		"images/newPictures/startScreen.png",
+		"BG_win": 			"images/BG_win.png",
+		"BG_lose": 			"images/BG_lose.png",
+		"BG_lobby": 		"images/newPictures/BG_lobby.png",
+	}
+	
+	// repeatable elements
+	const fullSpriteElementFiles = {
+		"lobby_one_game": "images/newPictures/lobby_one_game.png",
 	}
 	
 	const BGForEventType = {
@@ -898,7 +919,7 @@
 		"2": "images/gum2.png",
 		"3": "images/gum2.png"
 	}
-	
+	/*
 	const fetchAvatarSprites = () => {
 		for (let key of Object.keys(AvatarFiles)) {
 			let tmpItem = {};
@@ -924,7 +945,7 @@
 			}			
 			avatarSprites[targetPos].position.set(spriteXCoords[targetPos], 300)
 		}
-	}
+	}*/
 
 	const drawInventory = () => {
 		suitCaseSprite.x = 0
@@ -972,6 +993,59 @@
 			tmpItem.identifyForClick = () => ({elementType: "item", id: key})
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
+		}
+	}
+	
+	// repeatable full sprite. spriteType must be in fullSpriteElementFiles
+	const placeElementSprite = (spriteType, group, id, posX, posY ) => {
+		var elementUniqueId = spriteType+(group? '_g'+group : '')+(id? '_i'+id : '');
+		if (!elementSprites[elementUniqueId]) {
+			let tmpItem = {};
+			
+			tmpItem = new Sprite(resources[fullSpriteElementFiles[spriteType]].texture)
+			//tmpItem.x = 0
+			//tmpItem.y = 1080
+			//tmpItem.tilePosition.x = itemPositions[key][0]
+			//tmpItem.tilePosition.y = itemPositions[key][1]
+			//tmpItem.interactive = true;
+			//tmpItem.on('pointerdown', onButtonDown)
+			//tmpItem.scale = new PIXI.Point(0.3, 0.3)
+			//console.log("the key for the future: " + key)
+			tmpItem.identifyForClick = () => ({elementType: "repeatable", spriteType:spriteType, id: elementUniqueId})
+			elementSprites[elementUniqueId] = tmpItem;
+			app.stage.addChild(elementSprites[elementUniqueId]);
+		}
+		elementSprites[elementUniqueId].x=posX;
+		elementSprites[elementUniqueId].y=posY;
+	}
+	
+	// jSONData: all the games, oneGameId: id of the game to represent, gameGroupId: index/where to represent it
+	const placeLobbyGame = (jSONData, oneGameId, gameGroupId) => {
+		var baseX = 90, baseY = 120+(gameGroupId-1)*250;
+		// background
+		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
+	}
+	
+	const fetchAvatarSprites = () => {
+		
+		for (let key of Object.keys(avatarPositions)) {
+			let tmpAvatar = {};
+			tmpAvatar = new PIXI.TilingSprite(
+				textureAvatars,
+				600,
+				600
+			);
+			tmpAvatar.x = 0
+			tmpAvatar.y = 1080
+			tmpAvatar.tilePosition.x = avatarPositions[key][0]
+			tmpAvatar.tilePosition.y = avatarPositions[key][1]
+			tmpAvatar.interactive = true;
+			tmpAvatar.on('pointerdown', onButtonDown)
+			tmpAvatar.scale = new PIXI.Point(0.3, 0.3)
+			//console.log("the key for the future: " + key)
+			tmpAvatar.identifyForClick = () => ({elementType: "avatar", id: key})
+			avatarSprites[key] = tmpAvatar
+			app.stage.addChild(avatarSprites[key]);
 		}
 	}
 	
@@ -1027,9 +1101,32 @@
 		"14": [600, 650],
 	}
 	
+	const avatarPositions = {
+		"0": [3200, 2580],
+		"1": [2550, 2580],
+		"2": [1920, 2580],
+		"3": [1240, 2580],
+		"4": [600, 2580],
+		"5": [3200, 1200],
+		"6": [2550, 1200],
+		"7": [1920, 1200],
+		"8": [1240, 1200],
+		"9": [600, 1200],
+		"10": [3200, 650],
+		"11": [2550, 650],
+		"12": [1920, 650],
+		"13": [1240, 650],
+		"14": [600, 650],
+	}
+	
 	const positionItem = (itemId, newX, newY) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
+	}
+	
+	const positionAvatar = (avatarId, newX, newY) => {
+		avatarSprites[avatarId].x = newX
+		avatarSprites[avatarId].y = newY
 	}
 	
 	const positionItemMiniature = (itemId, newX, newY) => {
@@ -1782,7 +1879,7 @@
 					case 'accept trade':
 					case 'trade':
 						setBGactive(gameState.currentRound)
-						drawAvatars()
+						//drawAvatars()
 						drawInventory()
 						UiProgress.forEach(f => f())
 						createOrUpdatePhaseText("offer a trade")
