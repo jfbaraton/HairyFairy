@@ -1010,10 +1010,10 @@
 			//tmpItem.interactive = true;
 			//tmpItem.on('pointerdown', onButtonDown)
 			//tmpItem.scale = new PIXI.Point(0.3, 0.3)
-			//console.log("the key for the future: " + key)
 			tmpItem.identifyForClick = () => ({elementType: "repeatable", spriteType:spriteType, id: elementUniqueId})
 			elementSprites[elementUniqueId] = tmpItem;
 			app.stage.addChild(elementSprites[elementUniqueId]);
+			console.log("placeElementSprite1: ", tmpItem)
 		}
 		elementSprites[elementUniqueId].x=posX;
 		elementSprites[elementUniqueId].y=posY;
@@ -1024,6 +1024,9 @@
 		var baseX = 90, baseY = 120+(gameGroupId-1)*250;
 		// background
 		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
+		positionAvatar('cat', baseX, baseY);
+		//positionAvatar('blob', baseX+200, baseY);
+		//positionItem("0", baseX+200, baseY);
 	}
 	
 	const fetchAvatarSprites = () => {
@@ -1032,7 +1035,7 @@
 			let tmpAvatar = {};
 			tmpAvatar = new PIXI.TilingSprite(
 				textureAvatars,
-				600,
+				475,
 				600
 			);
 			tmpAvatar.x = 0
@@ -1102,8 +1105,9 @@
 	}
 	
 	const avatarPositions = {
-		"0": [3200, 2580],
-		"1": [2550, 2580],
+		"cat": [885, 684],
+		"blob": [3200, 2580],
+		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],
 		"4": [600, 2580],
@@ -1119,19 +1123,33 @@
 		"14": [600, 650],
 	}
 	
-	const positionItem = (itemId, newX, newY) => {
+	const positionItem = (itemId, newX, newY, doNotBringToFront) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
+		if(!doNotBringToFront) {
+			app.stage.removeChild(itemSprites[itemId]);
+			app.stage.addChild(itemSprites[itemId]);
+		}
 	}
 	
-	const positionAvatar = (avatarId, newX, newY) => {
+	const positionAvatar = (avatarId, newX, newY, doNotBringToFront) => {
 		avatarSprites[avatarId].x = newX
 		avatarSprites[avatarId].y = newY
+		if(!doNotBringToFront && avatarSprites[avatarId].parent) {
+			var spriteParent = avatarSprites[avatarId].parent;
+			spriteParent.removeChild(avatarSprites[avatarId]);
+			spriteParent.addChild(avatarSprites[avatarId]);
+		}
 	}
 	
-	const positionItemMiniature = (itemId, newX, newY) => {
+	const positionItemMiniature = (itemId, newX, newY, doNotBringToFront) => {
 		itemMiniatureSprites[itemId].x = newX
 		itemMiniatureSprites[itemId].y = newY
+		if(!doNotBringToFront && itemMiniatureSprites[avatarId].parent) {
+			var spriteParent = itemMiniatureSprites[avatarId].parent;
+			spriteParent.removeChild(itemMiniatureSprites[avatarId]);
+			spriteParent.addChild(itemMiniatureSprites[avatarId]);
+		}
 	}
 	
 	const createOrUpdatePhaseText = (textForPhase) => {
