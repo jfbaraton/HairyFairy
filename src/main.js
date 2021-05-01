@@ -1020,12 +1020,13 @@
 	}
 	
 	// jSONData: all the games, oneGameId: id of the game to represent, gameGroupId: index/where to represent it
+	// draw one lobby game. group Id represents where in the lobby list
 	const placeLobbyGame = (jSONData, oneGameId, gameGroupId) => {
 		var baseX = 90, baseY = 120+(gameGroupId-1)*250;
 		// background
 		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
-		positionAvatar('cat', baseX, baseY);
-		//positionAvatar('blob', baseX+200, baseY);
+		//positionAvatar('cat', baseX, baseY);
+		positionAvatar('blob', baseX, baseY);
 		//positionItem("0", baseX+200, baseY);
 	}
 	
@@ -1035,8 +1036,8 @@
 			let tmpAvatar = {};
 			tmpAvatar = new PIXI.TilingSprite(
 				textureAvatars,
-				475,
-				600
+				232,
+				405
 			);
 			tmpAvatar.x = 0
 			tmpAvatar.y = 1080
@@ -1044,7 +1045,7 @@
 			tmpAvatar.tilePosition.y = avatarPositions[key][1]
 			tmpAvatar.interactive = true;
 			tmpAvatar.on('pointerdown', onButtonDown)
-			tmpAvatar.scale = new PIXI.Point(0.3, 0.3)
+			tmpAvatar.scale = new PIXI.Point(0.4, 0.4)
 			//console.log("the key for the future: " + key)
 			tmpAvatar.identifyForClick = () => ({elementType: "avatar", id: key})
 			avatarSprites[key] = tmpAvatar
@@ -1105,8 +1106,8 @@
 	}
 	
 	const avatarPositions = {
-		"cat": [885, 684],
-		"blob": [3200, 2580],
+		"cat": [0, 0],
+		"blob": [100, 0],
 		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],

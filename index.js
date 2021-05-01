@@ -18,11 +18,15 @@ app.use('/texturePackerFiles',express.static('texturePackerFiles'));
 });*/
 const phpProxy = function(oreq, ores) {
 	console.log(`proxy to `+oreq.url);
+	
+    //let serverURL = '82.181.24.9:81'; // raspberry
 	const options = {
     // host to forward to
-    host: 'localhost',
+    //host: 'localhost',
+    host: '82.181.24.9',
     // port to forward to
-    port: 80,
+    //port: 80,
+    port: 81,
     // path to forward to
     path: oreq.url,
     // request method
@@ -92,57 +96,3 @@ http.listen(port, () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
 
-
-	/*
-app.get('/api/BLABLA', (oreq, ores) => {
-  const options = {
-    // host to forward to
-    host: 'www.google.com',
-    // port to forward to
-    port: 80,
-    // path to forward to
-    path: '/api/BLABLA',
-    // request method
-    method: 'POST',
-    // headers to send
-    headers: oreq.headers,
-  };
-
-  const creq = http
-    .request(options, pres => {
-      // set encoding
-      pres.setEncoding('utf8');
-
-      // set http status code based on proxied response
-      ores.writeHead(pres.statusCode);
-
-      // wait for data
-      pres.on('data', chunk => {
-        ores.write(chunk);
-      });
-
-      pres.on('close', () => {
-        // closed, let's end client request as well
-        ores.end();
-      });
-
-      pres.on('end', () => {
-        // finished, let's finish client request as well
-        ores.end();
-      });
-    })
-    .on('error', e => {
-      // we got an error
-      console.log(e.message);
-      try {
-        // attempt to set error message and http status
-        ores.writeHead(500);
-        ores.write(e.message);
-      } catch (e) {
-        // ignore
-      }
-      ores.end();
-    });
-
-  creq.end();
-});*/
