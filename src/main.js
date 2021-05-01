@@ -334,10 +334,23 @@
 							console.log('list length, ',lobbyData &&lobbyData.length);
 							debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
 							gameState.lobbyData = lobbyData;
+							const gameLobbies = {};
+							const gameLobbyIds = [];
+							lobbyData.forEach((oneGameInfo) => {
+								if(!gameLobbyIds.includes(oneGameInfo.id)) {
+									gameLobbies[oneGameInfo.id] = [];
+									gameLobbyIds.push(oneGameInfo.id);
+								}
+								gameLobbies[oneGameInfo.id].push(oneGameInfo);
+								oneGameInfo.lobbyIndex = gameLobbyIds.indexOf(oneGameInfo.id);
+							});
 							// TODO get list of game ids, and assign positions/indexes
 							// TODO clear existing visual lobby info
-							placeLobbyGame(lobbyData, 1, 1);
-							placeLobbyGame(lobbyData, 5, 2);
+							//placeLobbyGame(lobbyData, 1, 1);
+							//placeLobbyGame(lobbyData, 5, 2);
+							gameLobbyIds.forEach((gameLobbyId) => {
+								placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, gameLobbyIds.indexOf(gameLobbyId)+1);
+							});
 						});
 					}
                 }
@@ -1022,35 +1035,62 @@
 	// jSONData: all the games, oneGameId: id of the game to represent, gameGroupId: index/where to represent it
 	// draw one lobby game. group Id represents where in the lobby list
 	const placeLobbyGame = (jSONData, oneGameId, gameGroupId) => {
+		const topMargin = 5;
+		const getLobbyPlayerxOffset = (playerIdx) => {
+			return 150+(playerIdx-1)*90;
+		}
 		var baseX = 90, baseY = 120+(gameGroupId-1)*250;
+		var playerIdx = 1;
 		// background
 		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
-		//positionAvatar('cat', baseX, baseY);
-		positionAvatar('blob', baseX, baseY);
+		//positionAvatar('cat', baseX, baseY+305);
+		
+		/*positionAvatar('wolf', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
+		
+		playerIdx = 2;
+		//positionAvatar('blob', baseX, baseY);
+		positionAvatar('hen', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
 		//positionItem("0", baseX+200, baseY);
+		
+		playerIdx = 3;
+		//positionAvatar('blob', baseX, baseY);
+		positionAvatar('ostrich', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
+		
+		playerIdx = 4;
+		//positionAvatar('blob', baseX, baseY);
+		positionAvatar('bunbun', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
+		*/
+		
+		jSONData.forEach((gameLobbyPlayer) => {
+			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after);
+		});
 	}
 	
 	const fetchAvatarSprites = () => {
 		
 		for (let key of Object.keys(avatarPositions)) {
-			let tmpAvatar = {};
-			tmpAvatar = new PIXI.TilingSprite(
-				textureAvatars,
-				232,
-				405
-			);
-			tmpAvatar.x = 0
-			tmpAvatar.y = 1080
-			tmpAvatar.tilePosition.x = avatarPositions[key][0]
-			tmpAvatar.tilePosition.y = avatarPositions[key][1]
-			tmpAvatar.interactive = true;
-			tmpAvatar.on('pointerdown', onButtonDown)
-			tmpAvatar.scale = new PIXI.Point(0.4, 0.4)
-			//console.log("the key for the future: " + key)
-			tmpAvatar.identifyForClick = () => ({elementType: "avatar", id: key})
-			avatarSprites[key] = tmpAvatar
-			app.stage.addChild(avatarSprites[key]);
+			fetchAvatarSprite(key, key);
 		}
+	}
+	
+	const fetchAvatarSprite = (key, UUID) => {
+		let tmpAvatar = {};
+		tmpAvatar = new PIXI.TilingSprite(
+			textureAvatars,
+			232,
+			405
+		);
+		tmpAvatar.x = 0
+		tmpAvatar.y = 1080
+		tmpAvatar.tilePosition.x = avatarPositions[key][0]
+		tmpAvatar.tilePosition.y = avatarPositions[key][1]
+		tmpAvatar.interactive = true;
+		tmpAvatar.on('pointerdown', onButtonDown)
+		tmpAvatar.scale = new PIXI.Point(0.4, 0.4)
+		//console.log("the key for the future: " + key)
+		tmpAvatar.identifyForClick = () => ({elementType: "avatar", id: UUID, key:key})
+		avatarSprites[UUID] = tmpAvatar
+		app.stage.addChild(avatarSprites[UUID]);
 	}
 	
 	const hideItemsNotInHand = () => {
@@ -1107,7 +1147,11 @@
 	
 	const avatarPositions = {
 		"cat": [0, 0],
-		"blob": [100, 0],
+		"ostrich": [0, 0],
+		"blob": [-223, 0],
+		"bunbun": [-223, 0],
+		"wolf": [-447, 0],
+		"hen": [-670, 0],
 		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],
@@ -1133,13 +1177,18 @@
 		}
 	}
 	
-	const positionAvatar = (avatarId, newX, newY, doNotBringToFront) => {
-		avatarSprites[avatarId].x = newX
-		avatarSprites[avatarId].y = newY
-		if(!doNotBringToFront && avatarSprites[avatarId].parent) {
-			var spriteParent = avatarSprites[avatarId].parent;
-			spriteParent.removeChild(avatarSprites[avatarId]);
-			spriteParent.addChild(avatarSprites[avatarId]);
+	// 
+	const positionAvatar = (avatarId, newX, newY, groupId, subIndex, doNotBringToFront) => {
+		const spriteUUID = avatarId+(groupId? ('_g'+groupId) : '')+(subIndex? ('_s'+subIndex) : '')
+		if(!avatarSprites[spriteUUID]){
+			fetchAvatarSprite(avatarId,spriteUUID);
+		}
+		avatarSprites[spriteUUID].x = newX;
+		avatarSprites[spriteUUID].y = newY;
+		if(!doNotBringToFront && avatarSprites[spriteUUID].parent) {
+			var spriteParent = avatarSprites[spriteUUID].parent;
+			spriteParent.removeChild(avatarSprites[spriteUUID]);
+			spriteParent.addChild(avatarSprites[spriteUUID]);
 		}
 	}
 	

@@ -27,10 +27,10 @@ CREATE TABLE IF NOT EXISTS player (
 CREATE INDEX player_nickname ON player (nickname);
 CREATE INDEX player_avatar ON player (avatar);
 
-insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'ira','cat');
-insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'jeff','blob');
-insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'jouko','cat');
-insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'anu','cat');
+insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'ira','bunbun');
+insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'jeff','wolf');
+insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'jouko','hen');
+insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'anu','ostrich');
 insert into player(recordtime,nickname,avatar) values(CURRENT_TIMESTAMP(),'random','cat');
 insert into player(id,recordtime,nickname,avatar) values(0,CURRENT_TIMESTAMP(),'game master','blob');
 UPDATE player SET id=0 WHERE nickname = 'game master';
