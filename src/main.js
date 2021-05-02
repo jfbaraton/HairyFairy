@@ -222,13 +222,15 @@
 	let gamePhase = "lobby";
 	let UiProgress = new Array();
 	let UiState = {}
-	let gameState = { history : [], gameId : -1, 
+	let gameState = { 
+		history : [], gameId : -1, 
 	
-	// user properties
+		// user properties
 		playerid : 2, // server side id, this is not the player position in this game
 		playername : 'jeff',
 		playeravatar : 'blob',
-		lobbyData : []
+		lobbyData : [],
+		lobbyFirstGameId : 0 // for pagination
 		}; 
 	let waitingForEndOfRound = true;
 	let targetPlayer = null;
@@ -1022,10 +1024,13 @@
 	// draw one lobby game. group Id represents where in the lobby list
 	const placeLobbyGame = (jSONData, oneGameId, gameGroupId) => {
 		const topMargin = 5;
+		const gamesForColumn = 5; // games per column +1
 		const getLobbyPlayerxOffset = (playerIdx) => {
-			return 150+(playerIdx-1)*90;
+			return (150+(playerIdx-1)*90);
 		}
-		var baseX = 90, baseY = 120+(gameGroupId-1)*250;
+		var baseX = 90+  (gameGroupId >= gamesForColumn ? 1000:0)
+		var	baseY = 120+(((gameGroupId-1) % (gamesForColumn-1)))*250;
+		console.log('placeLobbyGame idx: '+gameGroupId+' game: '+oneGameId+ ' ('+baseX+','+baseY+')');
 		var playerIdx = 1;
 		// background
 		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
@@ -1099,7 +1104,7 @@
 		tmpAvatar = new PIXI.TilingSprite(
 			textureAvatars,
 			232,
-			405
+			390
 		);
 		tmpAvatar.x = 0
 		tmpAvatar.y = 1080
@@ -1174,7 +1179,9 @@
 		"wolf": [-447, 0],
 		"hen": [-670, 0],
 		"join": [-899, 0],
-		"enter": [-1124, 0],
+		"exit": [-1124, 0],
+		"enter": [-1349, 0],
+		"create": [-1600, 0],
 		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],
@@ -1635,13 +1642,15 @@
         const myJson = await response.json(); //extract JSON from the http response
         console.log('newGame answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
-        if(myJson && myJson.id){
-            callBack(myJson.id);
-        } else if(myJson && myJson.data && myJson.data.id){
-            callBack(myJson.data.id);
-        } else {
-            callBack();
-        }
+		if(callBack) {
+			if(myJson && myJson.id){
+				callBack(myJson.id);
+			} else if(myJson && myJson.data && myJson.data.id){
+				callBack(myJson.data.id);
+			} else {
+				callBack();
+			}
+		}
         console.log('newGame done!!!!');
         // do something with myJson
     };
@@ -1695,7 +1704,8 @@
 		}
 	}
 	
-	const refreshLobbies = () => {
+	const refreshLobbies = (gameIdStart) => { // id of the first game to be shown
+		console.log('call refresh lobbies '+gameIdStart);
 		listGames(gameState.playername,gameState.playerid,(lobbyData) => {
 			console.log('list, ',lobbyData);
 			console.log('list length, ',lobbyData &&lobbyData.length);
@@ -1713,12 +1723,30 @@
 				gameLobbies[oneGameInfo.id].push(oneGameInfo);
 				oneGameInfo.lobbyIndex = gameLobbyIds.indexOf(oneGameInfo.id);
 			});
-			// TODO get list of game ids, and assign positions/indexes
-			// TODO clear existing visual lobby info
-			//placeLobbyGame(lobbyData, 1, 1);
-			//placeLobbyGame(lobbyData, 5, 2);
+			
+			var idxStart = gameIdStart ? gameIdStart : 0 ;
+			/*if(gameState.lobbyFirstGameId && gameLobbyIds.includes(gameState.lobbyFirstGameId)) {
+				idxStart = gameLobbyIds.indexOf(gameState.lobbyFirstGameId);
+			}*/
+			var idxEnd = idxStart +7;
+			console.log('showing lobbies '+idxStart+' to '+idxEnd);
+			// show create button
+			//positionAvatar('create', 1000, 15, null, null, 
+			positionAvatar('create', 1000, 15, null, null, 
+			() => {
+				console.log('clicked create game ');
+				/*newGame(gameState.playername,gameState.playerid, () => {
+					refreshLobbies(idxStart);
+				});*/
+				refreshLobbies(idxEnd+1);
+				//gameState.gameId = pleaseJoinGameId;
+			});
 			gameLobbyIds.forEach((gameLobbyId) => {
-				placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, gameLobbyIds.indexOf(gameLobbyId)+1);
+				var idx = gameLobbyIds.indexOf(gameLobbyId);
+				if( idx >= idxStart && idx <=idxEnd ) {
+					console.log('drow lobby index '+idx+' for game '+gameLobbyId);
+					placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, idx-idxStart+1);
+				}
 			});
 		});
 	}
