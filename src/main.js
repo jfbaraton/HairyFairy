@@ -303,7 +303,8 @@
                 if(readGameId) {
                     console.log('currently in game '+readGameId );
                     debugButton.text ='currently in game '+readGameId;
-                    gameState.gameId = readGameId;
+                    // TODO auto join? or have to click ENTER? annoying on refresh?
+					//gameState.gameId = readGameId;
                 } else if(pleaseJoinGameId) {
                     console.log('we propose that you join game '+pleaseJoinGameId );
                     debugButton.text ='we propose that you join game '+pleaseJoinGameId;
@@ -325,35 +326,18 @@
 								gameState.gameId = newGameId;
 								console.log('created game, '+gameState.gameId );
 								debugButton.text +='\ncreated game, '+gameState.gameId;
+								
+								// list games
+								refreshLobbies();
 							}
 						});
 					} else {
 						// list games
-						listGames(gameState.playername,gameState.playerid,(lobbyData) => {
-							console.log('list, ',lobbyData);
-							console.log('list length, ',lobbyData &&lobbyData.length);
-							debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
-							gameState.lobbyData = lobbyData;
-							const gameLobbies = {};
-							const gameLobbyIds = [];
-							lobbyData.forEach((oneGameInfo) => {
-								if(!gameLobbyIds.includes(oneGameInfo.id)) {
-									gameLobbies[oneGameInfo.id] = [];
-									gameLobbyIds.push(oneGameInfo.id);
-								}
-								gameLobbies[oneGameInfo.id].push(oneGameInfo);
-								oneGameInfo.lobbyIndex = gameLobbyIds.indexOf(oneGameInfo.id);
-							});
-							// TODO get list of game ids, and assign positions/indexes
-							// TODO clear existing visual lobby info
-							//placeLobbyGame(lobbyData, 1, 1);
-							//placeLobbyGame(lobbyData, 5, 2);
-							gameLobbyIds.forEach((gameLobbyId) => {
-								placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, gameLobbyIds.indexOf(gameLobbyId)+1);
-							});
-						});
+						refreshLobbies();
 					}
-                }
+                } else {
+					// XXX TODO enter game automatically? change url? better to keep usrl free from game id so that we can
+				}
             });
 
         } else {
@@ -917,6 +901,8 @@
 	}
 
 	const setBGactive = (BGtype) => {
+		resetElementSprites();
+		resetAvatarSprites();
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
@@ -1060,10 +1046,45 @@
 		//positionAvatar('blob', baseX, baseY);
 		positionAvatar('bunbun', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
 		*/
-		
+		var alreadyJoined = false;
+		var amountOfPlayers = 0;
 		jSONData.forEach((gameLobbyPlayer) => {
+			amountOfPlayers++;
+			if(gameLobbyPlayer.player == gameState.playerid) {
+				alreadyJoined = true;
+			}
 			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after);
 		});
+		if(amountOfPlayers<4) {
+			if(!alreadyJoined){
+				// show join button
+				positionAvatar('join', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
+				() => {
+					console.log('clicked join game '+oneGameId);
+					joinGame(gameState.playername,gameState.playerid,oneGameId);
+					//gameState.gameId = pleaseJoinGameId;
+					refreshLobbies();
+				});
+			} else if(false) { // if logged in user is the creator (first player)
+				// show "add robot" / "kick player"
+				
+			}
+		} else {
+			// show "enter game" button
+			positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
+				gameState.gameId = oneGameId;
+				gamePhase = "play"
+				setBGactive("party")
+				//setBGactive("BG_start")
+				//initializeGameState()
+				//parseInitialMessage(mockedMessages.initialMessage, true)
+				gameRecap();
+				
+				
+				//onStartGame();
+			});
+			
+		}
 	}
 	
 	const fetchAvatarSprites = () => {
@@ -1084,8 +1105,8 @@
 		tmpAvatar.y = 1080
 		tmpAvatar.tilePosition.x = avatarPositions[key][0]
 		tmpAvatar.tilePosition.y = avatarPositions[key][1]
-		tmpAvatar.interactive = true;
-		tmpAvatar.on('pointerdown', onButtonDown)
+		//tmpAvatar.interactive = true;
+		//tmpAvatar.on('pointerdown', onButtonDown)
 		tmpAvatar.scale = new PIXI.Point(0.4, 0.4)
 		//console.log("the key for the future: " + key)
 		tmpAvatar.identifyForClick = () => ({elementType: "avatar", id: UUID, key:key})
@@ -1152,6 +1173,8 @@
 		"bunbun": [-223, 0],
 		"wolf": [-447, 0],
 		"hen": [-670, 0],
+		"join": [-899, 0],
+		"enter": [-1124, 0],
 		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],
@@ -1178,13 +1201,22 @@
 	}
 	
 	// 
-	const positionAvatar = (avatarId, newX, newY, groupId, subIndex, doNotBringToFront) => {
+	const positionAvatar = (avatarId, newX, newY, groupId, subIndex, onClickAction, doNotBringToFront) => {
 		const spriteUUID = avatarId+(groupId? ('_g'+groupId) : '')+(subIndex? ('_s'+subIndex) : '')
 		if(!avatarSprites[spriteUUID]){
 			fetchAvatarSprite(avatarId,spriteUUID);
 		}
 		avatarSprites[spriteUUID].x = newX;
 		avatarSprites[spriteUUID].y = newY;
+		if(onClickAction) {
+			console.log('sprites '+spriteUUID+' created with on click action');
+			avatarSprites[spriteUUID].interactive = true;
+			avatarSprites[spriteUUID].on('pointerdown', onClickAction);
+		} else {
+			avatarSprites[spriteUUID].interactive = false;
+			avatarSprites[spriteUUID].on('pointerdown', () => {});
+		}
+		
 		if(!doNotBringToFront && avatarSprites[spriteUUID].parent) {
 			var spriteParent = avatarSprites[spriteUUID].parent;
 			spriteParent.removeChild(avatarSprites[spriteUUID]);
@@ -1327,6 +1359,7 @@
 
 	function onStartGame() {
         // msg_status.y = 1080;
+		resetAvatarSprites();
         if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
             BGmusicSprite.baseTexture.source.pause();
         }
@@ -1641,6 +1674,54 @@
         //console.log('async done!!!!',myJson);
         // do something with myJson
     };
+	
+	const resetAvatarSprites = (avatarType) => {
+		for (let key of Object.keys(avatarSprites)) {
+			if(!avatarType || key === avatarType || (avatarSprites[key].identifyForClick && avatarSprites[key].identifyForClick().elementType && 
+				avatarSprites[key].identifyForClick().elementType == avatarType)) {
+					
+				avatarSprites[key].y = 1080;
+			} 
+		}
+	}
+	
+	const resetElementSprites = (elementType) => {
+		for (let key of Object.keys(elementSprites)) {
+			if(!elementType || key === elementType || (elementSprites[key].identifyForClick && elementSprites[key].identifyForClick().elementType && 
+				elementSprites[key].identifyForClick().elementType == elementType)) {
+					
+				elementSprites[key].y = 1080;
+			} 
+		}
+	}
+	
+	const refreshLobbies = () => {
+		listGames(gameState.playername,gameState.playerid,(lobbyData) => {
+			console.log('list, ',lobbyData);
+			console.log('list length, ',lobbyData &&lobbyData.length);
+			debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
+			gameState.lobbyData = lobbyData;
+			const gameLobbies = {};
+			const gameLobbyIds = [];
+			resetAvatarSprites();
+			resetElementSprites();
+			lobbyData.forEach((oneGameInfo) => {
+				if(!gameLobbyIds.includes(oneGameInfo.id)) {
+					gameLobbies[oneGameInfo.id] = [];
+					gameLobbyIds.push(oneGameInfo.id);
+				}
+				gameLobbies[oneGameInfo.id].push(oneGameInfo);
+				oneGameInfo.lobbyIndex = gameLobbyIds.indexOf(oneGameInfo.id);
+			});
+			// TODO get list of game ids, and assign positions/indexes
+			// TODO clear existing visual lobby info
+			//placeLobbyGame(lobbyData, 1, 1);
+			//placeLobbyGame(lobbyData, 5, 2);
+			gameLobbyIds.forEach((gameLobbyId) => {
+				placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, gameLobbyIds.indexOf(gameLobbyId)+1);
+			});
+		});
+	}
 
     function rendergameRecap(gameRecapJSON) {
         result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
