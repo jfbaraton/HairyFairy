@@ -17,7 +17,7 @@ $return = [ 'error' => 'nothing happened', 'id' => -1];
     // accessed as example in JavaScript like: result.name or result['error'] (returns "nothing happened")
 if(!empty($playerid) && !empty($playername)) {
     /* Select queries return a resultset */
-    $sql = "SELECT id FROM player WHERE nickname = '".$playername."' and id = '".$playerid."' LIMIT 10";
+    $sql = "SELECT id FROM player WHERE nickname = '".$playername."' and id = ".$playerid." LIMIT 10";
     if ($result = mysqli_query($conn, $sql)) {
         if(mysqli_num_rows($result) >0) {
             $playerid = mysqli_fetch_assoc($result)["id"];
@@ -35,7 +35,7 @@ if(!empty($playerid) && !empty($playername)) {
 
     if ($playerid >0 ) {
 
-        if ($result = mysqli_query($conn, "select game.id, game.gametype, participant.player, participant.phase_after, player.nickname, player.avatar from game_instance as game join player_game_action as participant on game.id = participant.game join player on player.id = participant.player  where participant.phase_after >0 and participant.phase_after <100  limit 100")) {
+        if ($result = mysqli_query($conn, "select game.id, game.gametype, participant.player, participant.phase_after, player.nickname, player.avatar from game_instance as game join player_game_action as participant on game.id = participant.game join player on player.id = participant.player  where (participant.phase_after >0 and participant.phase_after <100) and (game.id in (select game from player_game_action where player = ".$playerid.") or game.id not in (select game from player_game_action where phase_after > 100)) and game.id not in (select game from player_game_action where phase_after >= 2000000) order by game.id limit 20000")) {
             if(mysqli_num_rows($result) >0) {
                 $return = [ 'action' => 'found', 'count' => mysqli_num_rows($result) ];
                 $rescpt = 0;
