@@ -1181,7 +1181,9 @@
 		"join": [-899, 0],
 		"exit": [-1124, 0],
 		"enter": [-1349, 0],
-		"create": [-1600, 0],
+		"create": [-1570, 0],
+		"prev": [-1349, 695],
+		"next": [-1570, 695],
 		//"blob": [2550, 2580],
 		"2": [1920, 2580],
 		"3": [1240, 2580],
@@ -1215,13 +1217,13 @@
 		}
 		avatarSprites[spriteUUID].x = newX;
 		avatarSprites[spriteUUID].y = newY;
+		avatarSprites[spriteUUID].removeAllListeners('pointerdown');
 		if(onClickAction) {
 			console.log('sprites '+spriteUUID+' created with on click action');
 			avatarSprites[spriteUUID].interactive = true;
 			avatarSprites[spriteUUID].on('pointerdown', onClickAction);
 		} else {
 			avatarSprites[spriteUUID].interactive = false;
-			avatarSprites[spriteUUID].on('pointerdown', () => {});
 		}
 		
 		if(!doNotBringToFront && avatarSprites[spriteUUID].parent) {
@@ -1721,25 +1723,38 @@
 					gameLobbyIds.push(oneGameInfo.id);
 				}
 				gameLobbies[oneGameInfo.id].push(oneGameInfo);
-				oneGameInfo.lobbyIndex = gameLobbyIds.indexOf(oneGameInfo.id);
+				if(oneGameInfo.player == gameState.playerid) {
+					array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
+				}
 			});
 			
-			var idxStart = gameIdStart ? gameIdStart : 0 ;
+			var idxStart = gameIdStart || 0==gameIdStart ? gameIdStart : gameState.lobbyFirstGameId ? gameState.lobbyFirstGameId : 0  ;
+			if(idxStart >= gameLobbyIds.length || idxStart < 0) {
+				idxStart = 0;
+			}
+			gameState.lobbyFirstGameId = idxStart;
 			/*if(gameState.lobbyFirstGameId && gameLobbyIds.includes(gameState.lobbyFirstGameId)) {
 				idxStart = gameLobbyIds.indexOf(gameState.lobbyFirstGameId);
 			}*/
 			var idxEnd = idxStart +7;
 			console.log('showing lobbies '+idxStart+' to '+idxEnd);
 			// show create button
-			//positionAvatar('create', 1000, 15, null, null, 
-			positionAvatar('create', 1000, 15, null, null, 
+			positionAvatar('create', 900, 15, 1, 1, 
 			() => {
 				console.log('clicked create game ');
-				/*newGame(gameState.playername,gameState.playerid, () => {
-					refreshLobbies(idxStart);
-				});*/
+				newGame(gameState.playername,gameState.playerid, () => {
+					refreshLobbies(0);
+				});
+			});
+			positionAvatar('next', 900, 315, 1, 2, 
+			() => {
+				console.log('clicked next game page');
 				refreshLobbies(idxEnd+1);
-				//gameState.gameId = pleaseJoinGameId;
+			});
+			positionAvatar('prev', 900, 615, 1, 3, 
+			() => {
+				console.log('clicked prev game page');
+				refreshLobbies(idxStart-8);
 			});
 			gameLobbyIds.forEach((gameLobbyId) => {
 				var idx = gameLobbyIds.indexOf(gameLobbyId);
@@ -1750,6 +1765,15 @@
 			});
 		});
 	}
+	function array_move(arr, old_index, new_index) {
+		if (new_index >= arr.length) {
+			var k = new_index - arr.length + 1;
+			while (k--) {
+				arr.push(undefined);
+			}
+		}
+		arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+	};
 
     function rendergameRecap(gameRecapJSON) {
         result = "not an array "+(gameRecapJSON && typeof(gameRecapJSON.data));
