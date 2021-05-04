@@ -1052,10 +1052,14 @@
 		positionAvatar('bunbun', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
 		*/
 		var alreadyJoined = false;
+		var isCreator = false;
 		var amountOfPlayers = 0;
 		jSONData.forEach((gameLobbyPlayer) => {
 			amountOfPlayers++;
 			if(gameLobbyPlayer.player == gameState.playerid) {
+				if(gameLobbyPlayer.phase_after == 1){
+					isCreator = true;
+				}
 				alreadyJoined = true;
 			}
 			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after);
@@ -1066,13 +1070,21 @@
 				positionAvatar('join', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 				() => {
 					console.log('clicked join game '+oneGameId);
-					joinGame(gameState.playername,gameState.playerid,oneGameId);
+					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);});
 					//gameState.gameId = pleaseJoinGameId;
-					refreshLobbies();
 				});
-			} else if(false) { // if logged in user is the creator (first player)
+			} else if(isCreator && amountOfPlayers>1) { // if logged in user is the creator (first player)
 				// show "add robot" / "kick player"
 				
+			} else {
+				// show exit button
+				positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
+				() => {
+					console.log('clicked exit game '+oneGameId);
+					leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies();});
+					//gameState.gameId = pleaseJoinGameId;
+					
+				});
 			}
 		} else {
 			// show "enter game" button
@@ -1610,7 +1622,7 @@
         // do something with myJson
     };
 
-    const joinGame = async (playername,playerid, joinGameId) => {
+    const joinGame = async (playername,playerid, joinGameId, callBack) => {
         console.log('async call joinGame');
         const response = await fetch('http://'+serverURL+'/HairyFairy/joinGame.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType);
         const myJson = await response.json(); //extract JSON from the http response
@@ -1618,6 +1630,19 @@
         //messageArea.text = rendergameRecap(myJson);
         console.log('joinGame done!!!!');
         // do something with myJson
+		if(callBack) callBack();
+    };
+	
+	
+    const leaveGame = async (playername,playerid, joinGameId, callBack) => {
+        console.log('async call leaveGame');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/leaveGame.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType);
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('leaveGame answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        console.log('leaveGame done!!!!');
+        // do something with myJson
+		if(callBack) callBack();
     };
 
     const listGames = async (playername,playerid,callBack) => {
@@ -1717,6 +1742,7 @@
 			const gameLobbyIds = [];
 			resetAvatarSprites();
 			resetElementSprites();
+			var isCanCreateMoreGames = true;
 			lobbyData.forEach((oneGameInfo) => {
 				if(!gameLobbyIds.includes(oneGameInfo.id)) {
 					gameLobbies[oneGameInfo.id] = [];
@@ -1724,6 +1750,9 @@
 				}
 				gameLobbies[oneGameInfo.id].push(oneGameInfo);
 				if(oneGameInfo.player == gameState.playerid) {
+					if(oneGameInfo.phase_after == 1){
+						isCanCreateMoreGames = false;
+					}
 					array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
 				}
 			});
@@ -1739,13 +1768,15 @@
 			var idxEnd = idxStart +7;
 			console.log('showing lobbies '+idxStart+' to '+idxEnd);
 			// show create button
-			positionAvatar('create', 900, 15, 1, 1, 
-			() => {
-				console.log('clicked create game ');
-				newGame(gameState.playername,gameState.playerid, () => {
-					refreshLobbies(0);
+			if(isCanCreateMoreGames) {
+				positionAvatar('create', 900, 15, 1, 1, 
+				() => {
+					console.log('clicked create game ');
+					newGame(gameState.playername,gameState.playerid, () => {
+						refreshLobbies(0);
+					});
 				});
-			});
+			}
 			positionAvatar('next', 900, 315, 1, 2, 
 			() => {
 				console.log('clicked next game page');
