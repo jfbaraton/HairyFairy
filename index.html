@@ -26,30 +26,38 @@
 			
 		</div>
 		<form id="form" action="" style="float: right; width: 15%;">
-		  <input id="input" autocomplete="off" /><button>Send</button>
+		  <input id="socketInput" data-lobbyId="0" data-playername="" autocomplete="off" /><button>Send</button>
 		</form>
 		 <script>
 		  var socket = io('ws://localhost:3000');
 
 		  var messages = document.getElementById('messages');
 		  var form = document.getElementById('form');
-		  var input = document.getElementById('input');
-
+		  var socketInput2 = document.getElementById('socketInput');
+		  socketInput2.jeffSocket = socket;
 		  form.addEventListener('submit', function(e) {
 			e.preventDefault();
-			if (input.value) {
-			  socket.emit('chat message', input.value);
-			  input.value = '';
+			if (socketInput.value) {
+			  //socket.emit('chat message', 'lobby_'+input.['data-lobbyId']+':'+input.value);
+			  socket.emit('chat message', 'lobby_'+socketInput2.getAttribute('data-lobbyId')+':'+socketInput2.getAttribute('data-playername')+': '+socketInput2.value);
+			  socketInput2.value = '';
 			}
 		  });
 
 		  socket.on('chat message', function(msg) { //
-			var item = document.createElement('li');
-			item.textContent = msg;
-			messages.appendChild(item);
-			var objDiv = document.getElementById("locatorJeff");
-			objDiv.scrollTop = objDiv.scrollHeight;
-			//window.scrollTo(0, document.body.scrollHeight);
+			console.log('chat message '+msg);
+			if(msg && msg.startsWith('lobby_')) {
+				var item = document.createElement('li');
+				item.textContent = msg.slice(msg.indexOf(":")+1);
+				messages.appendChild(item);
+				var objDiv = document.getElementById("locatorJeff");
+				objDiv.scrollTop = objDiv.scrollHeight;
+				//window.scrollTo(0, document.body.scrollHeight);
+			} else if(msg && msg.startsWith('joinevent_')) {
+				if(socketInput2.refreshLobbyAction) {
+					socketInput2.refreshLobbyAction();
+				}
+			}
 		  });
 		</script>
 	</body>

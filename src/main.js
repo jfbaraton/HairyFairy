@@ -219,6 +219,7 @@
 	let suitCaseSprite2; // STEP 2 create a variable to store your sprite (texture holder)
 	let recap_BG;
 	let phaseText;
+	let socketInput;
 	let gamePhase = "lobby";
 	let UiProgress = new Array();
 	let UiState = {}
@@ -296,6 +297,7 @@
                 console.log('credentials but no id, login in');
             }
             login(gameState.playername,gameState.playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
+				socketInput.setAttribute('data-playername',gameState.playername);
                 if(!readPlayerId || readPlayerId != gameState.playerid){
                     console.log('credentials but no id, login in');
                     debugButton.text ='credentials but no id, login in';
@@ -313,9 +315,10 @@
                     if(autoJoin) {
 						joinGame(gameState.playername,gameState.playerid,pleaseJoinGameId);
 						gameState.gameId = pleaseJoinGameId;
+						socketInput.setAttribute('data-lobbyId',gameState.gameId);
 					}
                 } else if(!!getUrlParameter('gameid')) {
-                    gameState.gameId = getUrlParameter('gameid');
+                    //gameState.gameId = getUrlParameter('gameid');
                     debugButton.text ='you pretend to be in game '+gameId;
                 }
 
@@ -719,7 +722,10 @@
         console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
         msg_menu_2.interactive = true;
 
-
+		// setup socket messages
+		socketInput = document.getElementById('socketInput');
+		socketInput.refreshLobbyAction = refreshLobbies;
+		//socketInput.jeffSocket.emit('chat message', 'joinevent_0');
 
         //Capture the keyboard arrow keys
         let keyLetterS = keyboard(83),
@@ -1070,7 +1076,7 @@
 				positionAvatar('join', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 				() => {
 					console.log('clicked join game '+oneGameId);
-					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);});
+					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
 					//gameState.gameId = pleaseJoinGameId;
 				});
 			} else if(isCreator && amountOfPlayers>1) { // if logged in user is the creator (first player)
@@ -1081,7 +1087,7 @@
 				positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 				() => {
 					console.log('clicked exit game '+oneGameId);
-					leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies();});
+					leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
 					//gameState.gameId = pleaseJoinGameId;
 					
 				});
@@ -1090,6 +1096,9 @@
 			// show "enter game" button
 			positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
 				gameState.gameId = oneGameId;
+				socketInput.setAttribute('data-lobbyId',gameState.gameId);
+				// TODO clear chat or add a delimiter "entered game XXX"
+				
 				gamePhase = "play"
 				setBGactive("party")
 				//setBGactive("BG_start")
@@ -1774,6 +1783,7 @@
 					console.log('clicked create game ');
 					newGame(gameState.playername,gameState.playerid, () => {
 						refreshLobbies(0);
+						socketInput.jeffSocket.emit('chat message', 'joinevent_0');
 					});
 				});
 			}
