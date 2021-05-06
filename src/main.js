@@ -214,6 +214,8 @@
 	let itemSprites = {};
 	let itemMiniatureSprites = {};
 	let avatarSprites = {};
+	let avatarSpritesLegend = {};
+	let lobbyLegend = {};
 	let elementSprites = {};
 	let suitCaseSprite;
 	let suitCaseSprite2; // STEP 2 create a variable to store your sprite (texture holder)
@@ -227,9 +229,9 @@
 		history : [], gameId : -1, 
 	
 		// user properties
-		playerid : 2, // server side id, this is not the player position in this game
-		playername : 'jeff',
-		playeravatar : 'blob',
+		playerid : -1, // server side id, this is not the player position in this game
+		playername : null,
+		playeravatar : null,
 		lobbyData : [],
 		lobbyFirstGameId : 0 // for pagination
 		}; 
@@ -274,7 +276,8 @@
     const WEAPON_2_Y = 920+15;
     const WEAPON_3_Y = 915;
     let count = 0;
-
+    let rootURL = window.location.href.slice(0,window.location.href.lastIndexOf("/")+1);
+	let style4;
 
     const getUrlParameter = (name) => {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -283,27 +286,34 @@
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     };
 
-
-    function setup() {
-
-        let rootURL = window.location.href.slice(0,window.location.href.lastIndexOf("/")+1);
-        if(!!getUrlParameter('playername') && !!getUrlParameter('playeravatar')){
-            gameState.playername=getUrlParameter('playername');
-            gameState.playeravatar=getUrlParameter('playeravatar');
-            if(!!getUrlParameter('playerid')){
+	const initialMode = () => {
+		
+        gameState.playername=!!getUrlParameter('playername') ? getUrlParameter('playername') : window.localStorage.getItem('playername');
+        gameState.playeravatar=!!getUrlParameter('playeravatar') ? getUrlParameter('playeravatar') : window.localStorage.getItem('playeravatar');
+        if(!!gameState.playername && !!gameState.playeravatar){
+			window.localStorage.setItem('playername',gameState.playername);
+			window.localStorage.setItem('playeravatar',gameState.playeravatar);
+            /*if(!!getUrlParameter('playerid')){
                 console.log('everything ok');
                 gameState.playerid = getUrlParameter('playerid');
             } else {
                 console.log('credentials but no id, login in');
-            }
+            }*/
             login(gameState.playername,gameState.playeravatar, (readPlayerId, readGameId, pleaseJoinGameId) => {
 				socketInput.setAttribute('data-playername',gameState.playername);
-                if(!readPlayerId || readPlayerId != gameState.playerid){
+				gameState.playerid = readPlayerId;
+                if(!!getUrlParameter('playeravatar') || !!getUrlParameter('playername')){
+                    console.log('remove url parameters');
+                    debugButton.text ='credentials but no id, login in';
+                    window.location = rootURL+"index.html";
+                    return;
+                }
+                /*if(!readPlayerId || readPlayerId != gameState.playerid){
                     console.log('credentials but no id, login in');
                     debugButton.text ='credentials but no id, login in';
                     window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+gameState.playeravatar+"&playerid="+readPlayerId+"";
                     return;
-                }
+                }*/
                 if(readGameId) {
                     console.log('currently in game '+readGameId );
                     debugButton.text ='currently in game '+readGameId;
@@ -345,11 +355,24 @@
 				}
             });
 
-        } else {
-            console.log('no credentials, setting random ones');
-            window.location = rootURL+"index.html?playername="+gameState.playername+"&playeravatar="+gameState.playeravatar+"&playerid="+gameState.playerid+"";
+        } else if (!!gameState.playername){
+			window.localStorage.setItem('playername',gameState.playername);
+			// show avatar choice screen
+            console.log('show avatar choice screen, '+gameState.playername );
+			gamePhase ='avatar_choice';
+			resetAvatarSprites();
+			placeAvatarChoices();
+			
+		} else {
+            // show nickname form
+            console.log('redirect to choose playername, '+gameState.playername );
+            window.location = rootURL+"chooseUsername.html";
         }
-/*
+	}
+
+    function setup() {
+
+		/*
         if(!!getUrlParameter('gameid')) {
             gameState.gameId = getUrlParameter('gameid');
         }
@@ -676,11 +699,11 @@
         app.stage.addChild(butt_sound);
 
         //Create the text sprite
-        let style4 = new TextStyle({
+        style4 = new TextStyle({
         fontFamily: "Bodoni MT", // "chalkduster"
-        fontSize: 60,
+        fontSize: 25,
         //fontStyle: 'underline',
-        fill: "blue",
+        fill: "white",
         });
 		/*
         msg_status = new Text(
@@ -719,7 +742,7 @@
 
         msg_menu_2 = new Text("Settings", style4);
         msg_menu_2.position.set(MENU_X0+80, MENU_Y0+MENU_OFFSET);
-        console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
+        //console.log('pos2 ',MENU_X0+80, ' ', MENU_Y0+MENU_OFFSET);
         msg_menu_2.interactive = true;
 
 		// setup socket messages
@@ -755,6 +778,7 @@
 
         //Start the game loop
         app.ticker.add(delta => gameLoop(delta));
+		initialMode();
     }
 
     const allItems = [
@@ -909,6 +933,7 @@
 	}
 
 	const setBGactive = (BGtype) => {
+		console.log('change background to '+BGtype);
 		resetElementSprites();
 		resetAvatarSprites();
 		for (let key of Object.keys(screenSprites)) {
@@ -1020,10 +1045,34 @@
 			tmpItem.identifyForClick = () => ({elementType: "repeatable", spriteType:spriteType, id: elementUniqueId})
 			elementSprites[elementUniqueId] = tmpItem;
 			app.stage.addChild(elementSprites[elementUniqueId]);
-			console.log("placeElementSprite1: ", tmpItem)
+			//console.log("placeElementSprite1: ", tmpItem)
 		}
 		elementSprites[elementUniqueId].x=posX;
 		elementSprites[elementUniqueId].y=posY;
+	}
+	
+	const placeAvatarChoices = () => {
+		var baseX = 200;
+		var baseY = 200;
+		var cpt = 1;
+		const availablePlayerAvatars = [
+			"ostrich",
+			"bunbun",
+			"wolf",
+			"hen"];
+		console.log('available avatars');
+		debugButton.x = 300;
+		debugButton.y = 100;
+		debugButton.text = 'Choose an avatar';
+		placeElementSprite('lobby_one_game',  0, null, baseX, baseY);
+			availablePlayerAvatars.forEach(avatarId=> {
+				positionAvatar(avatarId, baseX, baseY, 1, cpt++, () => {
+				window.localStorage.setItem('playeravatar',avatarId);
+				window.location = rootURL+"index.html";
+			});
+			baseX = baseX + 110;
+		});
+		
 	}
 	
 	// jSONData: all the games, oneGameId: id of the game to represent, gameGroupId: index/where to represent it
@@ -1034,12 +1083,23 @@
 		const getLobbyPlayerxOffset = (playerIdx) => {
 			return (150+(playerIdx-1)*90);
 		}
-		var baseX = 90+  (gameGroupId >= gamesForColumn ? 1000:0)
+		var baseX = 190+  (gameGroupId >= gamesForColumn ? 900:0)
 		var	baseY = 120+(((gameGroupId-1) % (gamesForColumn-1)))*250;
-		console.log('placeLobbyGame idx: '+gameGroupId+' game: '+oneGameId+ ' ('+baseX+','+baseY+')');
+		//console.log('placeLobbyGame idx: '+gameGroupId+' game: '+oneGameId+ ' ('+baseX+','+baseY+')');
 		var playerIdx = 1;
 		// background
 		placeElementSprite('lobby_one_game', gameGroupId || 0, null, baseX, baseY);
+		var lobbyBGID = 'placeLobbyGame'+oneGameId;
+		if(!lobbyLegend[lobbyBGID]) {
+			var debugButton2 = new Text("debug", style4);
+			debugButton2.position.set(0,1080);
+			app.stage.addChild(debugButton2);
+			lobbyLegend[lobbyBGID] = debugButton2;
+		}
+		lobbyLegend[lobbyBGID].x =baseX+6;
+		lobbyLegend[lobbyBGID].y = baseY+54;
+		//lobbyLegend['placeLobbyGame'+oneGameId].position.set(0,0);
+		lobbyLegend[lobbyBGID].text = 'game\n'+'  '+(oneGameId%10000);
 		//positionAvatar('cat', baseX, baseY+305);
 		
 		/*positionAvatar('wolf', baseX+getLobbyPlayerxOffset(playerIdx), baseY+topMargin, gameGroupId, playerIdx);
@@ -1068,7 +1128,8 @@
 				}
 				alreadyJoined = true;
 			}
-			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after);
+			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after, null, gameLobbyPlayer.nickname);
+			
 		});
 		if(amountOfPlayers<4) {
 			if(!alreadyJoined){
@@ -1231,16 +1292,30 @@
 	}
 	
 	// 
-	const positionAvatar = (avatarId, newX, newY, groupId, subIndex, onClickAction, doNotBringToFront) => {
+	const positionAvatar = (avatarId, newX, newY, groupId, subIndex, onClickAction, legend, doNotBringToFront) => {
 		const spriteUUID = avatarId+(groupId? ('_g'+groupId) : '')+(subIndex? ('_s'+subIndex) : '')
 		if(!avatarSprites[spriteUUID]){
 			fetchAvatarSprite(avatarId,spriteUUID);
 		}
+		if(legend && !avatarSpritesLegend[spriteUUID]){
+			var debugButton1 = new Text("debug", style4);
+			debugButton1.position.set(0,1080);
+			app.stage.addChild(debugButton1);
+			avatarSpritesLegend[spriteUUID] = debugButton1;
+		}
 		avatarSprites[spriteUUID].x = newX;
 		avatarSprites[spriteUUID].y = newY;
 		avatarSprites[spriteUUID].removeAllListeners('pointerdown');
+		
+		if(legend) {
+			avatarSpritesLegend[spriteUUID].x =newX+6;
+			avatarSpritesLegend[spriteUUID].y = newY+124;
+			//avatarSpritesLegend[spriteUUID].position.set(0,0);
+			avatarSpritesLegend[spriteUUID].text = legend;
+		}
+		
 		if(onClickAction) {
-			console.log('sprites '+spriteUUID+' created with on click action');
+			//console.log('sprites '+spriteUUID+' created with on click action');
 			avatarSprites[spriteUUID].interactive = true;
 			avatarSprites[spriteUUID].on('pointerdown', onClickAction);
 		} else {
@@ -1251,6 +1326,11 @@
 			var spriteParent = avatarSprites[spriteUUID].parent;
 			spriteParent.removeChild(avatarSprites[spriteUUID]);
 			spriteParent.addChild(avatarSprites[spriteUUID]);
+			if(avatarSpritesLegend[spriteUUID]){
+				spriteParent = avatarSpritesLegend[spriteUUID].parent;
+				spriteParent.removeChild(avatarSpritesLegend[spriteUUID]);
+				spriteParent.addChild(avatarSpritesLegend[spriteUUID]);
+			}
 		}
 	}
 	
@@ -1503,7 +1583,7 @@
 			targetPosOnScreen -= 1
 		}
 		
-		console.log(playerPos, tradePartnerPos)
+		//console.log(playerPos, tradePartnerPos)
 		
 		switch (targetPosOnScreen){
 			case 0:
@@ -1523,8 +1603,8 @@
         }
 		let clickIdentifier = this.identifyForClick && this.identifyForClick()
 		
-		console.log("click ",clickIdentifier, " this: ",this)
-		console.log("------------------------------------------------- ",gameState.currentRound)
+		//console.log("click ",clickIdentifier, " this: ",this)
+		//console.log("------------------------------------------------- ",gameState.currentRound)
 		if( gamePhase == 'play') {
 			if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
 				switch(gameState.currentRound){
@@ -1564,7 +1644,7 @@
 			if(clickIdentifier && clickIdentifier.elementType === "avatar") {
 				if(UiState.itemIsBeingTraded !== undefined){
 					let coordsForItem = tradeAvatarSpots(gameState.playerNumber, parseInt(clickIdentifier.id))
-					console.log("itemCoords" + coordsForItem)
+					//console.log("itemCoords" + coordsForItem)
 					let tradeItemNumber = UiState.itemIsBeingTraded
 					UiProgress.push(() => positionItem(tradeItemNumber, coordsForItem.x, coordsForItem.y + 300))
 					UiState.itemIsBeingTraded = undefined
@@ -1627,7 +1707,7 @@
         } else {
             callBack();
         }
-        console.log('login done!!!!');
+        //console.log('login done!!!!');
         // do something with myJson
     };
 
@@ -1637,7 +1717,7 @@
         const myJson = await response.json(); //extract JSON from the http response
         console.log('joinGame answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
-        console.log('joinGame done!!!!');
+        //console.log('joinGame done!!!!');
         // do something with myJson
 		if(callBack) callBack();
     };
@@ -1721,6 +1801,7 @@
     };
 	
 	const resetAvatarSprites = (avatarType) => {
+		console.log('resetAvatarSprites');
 		for (let key of Object.keys(avatarSprites)) {
 			if(!avatarType || key === avatarType || (avatarSprites[key].identifyForClick && avatarSprites[key].identifyForClick().elementType && 
 				avatarSprites[key].identifyForClick().elementType == avatarType)) {
@@ -1728,9 +1809,15 @@
 				avatarSprites[key].y = 1080;
 			} 
 		}
+		
+		for (let key of Object.keys(avatarSpritesLegend)) {
+			avatarSpritesLegend[key].y = 1080;
+		}
+		
 	}
 	
 	const resetElementSprites = (elementType) => {
+		console.log('resetElementSprites');
 		for (let key of Object.keys(elementSprites)) {
 			if(!elementType || key === elementType || (elementSprites[key].identifyForClick && elementSprites[key].identifyForClick().elementType && 
 				elementSprites[key].identifyForClick().elementType == elementType)) {
@@ -1741,70 +1828,72 @@
 	}
 	
 	const refreshLobbies = (gameIdStart) => { // id of the first game to be shown
-		console.log('call refresh lobbies '+gameIdStart);
-		listGames(gameState.playername,gameState.playerid,(lobbyData) => {
-			console.log('list, ',lobbyData);
-			console.log('list length, ',lobbyData &&lobbyData.length);
-			debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
-			gameState.lobbyData = lobbyData;
-			const gameLobbies = {};
-			const gameLobbyIds = [];
-			resetAvatarSprites();
-			resetElementSprites();
-			var isCanCreateMoreGames = true;
-			lobbyData.forEach((oneGameInfo) => {
-				if(!gameLobbyIds.includes(oneGameInfo.id)) {
-					gameLobbies[oneGameInfo.id] = [];
-					gameLobbyIds.push(oneGameInfo.id);
-				}
-				gameLobbies[oneGameInfo.id].push(oneGameInfo);
-				if(oneGameInfo.player == gameState.playerid) {
-					if(oneGameInfo.phase_after == 1){
-						isCanCreateMoreGames = false;
+		if(gamePhase == 'lobby') {
+			console.log('call refresh lobbies '+gameIdStart);
+			listGames(gameState.playername,gameState.playerid,(lobbyData) => {
+				console.log('list, ',lobbyData);
+				console.log('list length, ',lobbyData &&lobbyData.length);
+				debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
+				gameState.lobbyData = lobbyData;
+				const gameLobbies = {};
+				const gameLobbyIds = [];
+				resetAvatarSprites();
+				resetElementSprites();
+				var isCanCreateMoreGames = true;
+				lobbyData.forEach((oneGameInfo) => {
+					if(!gameLobbyIds.includes(oneGameInfo.id)) {
+						gameLobbies[oneGameInfo.id] = [];
+						gameLobbyIds.push(oneGameInfo.id);
 					}
-					array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
-				}
-			});
-			
-			var idxStart = gameIdStart || 0==gameIdStart ? gameIdStart : gameState.lobbyFirstGameId ? gameState.lobbyFirstGameId : 0  ;
-			if(idxStart >= gameLobbyIds.length || idxStart < 0) {
-				idxStart = 0;
-			}
-			gameState.lobbyFirstGameId = idxStart;
-			/*if(gameState.lobbyFirstGameId && gameLobbyIds.includes(gameState.lobbyFirstGameId)) {
-				idxStart = gameLobbyIds.indexOf(gameState.lobbyFirstGameId);
-			}*/
-			var idxEnd = idxStart +7;
-			console.log('showing lobbies '+idxStart+' to '+idxEnd);
-			// show create button
-			if(isCanCreateMoreGames) {
-				positionAvatar('create', 900, 15, 1, 1, 
-				() => {
-					console.log('clicked create game ');
-					newGame(gameState.playername,gameState.playerid, () => {
-						refreshLobbies(0);
-						socketInput.jeffSocket.emit('chat message', 'joinevent_0');
-					});
+					gameLobbies[oneGameInfo.id].push(oneGameInfo);
+					if(oneGameInfo.player == gameState.playerid) {
+						if(oneGameInfo.phase_after == 1){
+							isCanCreateMoreGames = false;
+						}
+						array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
+					}
 				});
-			}
-			positionAvatar('next', 900, 315, 1, 2, 
-			() => {
-				console.log('clicked next game page');
-				refreshLobbies(idxEnd+1);
-			});
-			positionAvatar('prev', 900, 615, 1, 3, 
-			() => {
-				console.log('clicked prev game page');
-				refreshLobbies(idxStart-8);
-			});
-			gameLobbyIds.forEach((gameLobbyId) => {
-				var idx = gameLobbyIds.indexOf(gameLobbyId);
-				if( idx >= idxStart && idx <=idxEnd ) {
-					console.log('drow lobby index '+idx+' for game '+gameLobbyId);
-					placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, idx-idxStart+1);
+				
+				var idxStart = gameIdStart || 0==gameIdStart ? gameIdStart : gameState.lobbyFirstGameId ? gameState.lobbyFirstGameId : 0  ;
+				if(idxStart >= gameLobbyIds.length || idxStart < 0) {
+					idxStart = 0;
 				}
+				gameState.lobbyFirstGameId = idxStart;
+				/*if(gameState.lobbyFirstGameId && gameLobbyIds.includes(gameState.lobbyFirstGameId)) {
+					idxStart = gameLobbyIds.indexOf(gameState.lobbyFirstGameId);
+				}*/
+				var idxEnd = idxStart +7;
+				//console.log('showing lobbies '+idxStart+' to '+idxEnd);
+				// show create button
+				if(isCanCreateMoreGames) {
+					positionAvatar('create', 900, 15, 1, 1, 
+					() => {
+						console.log('clicked create game ');
+						newGame(gameState.playername,gameState.playerid, () => {
+							refreshLobbies(0);
+							socketInput.jeffSocket.emit('chat message', 'joinevent_0');
+						});
+					});
+				}
+				positionAvatar('next', 1800, 475, 1, 2, 
+				() => {
+					console.log('clicked next game page');
+					refreshLobbies(idxEnd+1);
+				});
+				positionAvatar('prev', 75, 475, 1, 3, 
+				() => {
+					console.log('clicked prev game page');
+					refreshLobbies(idxStart-8);
+				});
+				gameLobbyIds.forEach((gameLobbyId) => {
+					var idx = gameLobbyIds.indexOf(gameLobbyId);
+					if( idx >= idxStart && idx <=idxEnd ) {
+						//console.log('drow lobby index '+idx+' for game '+gameLobbyId);
+						placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, idx-idxStart+1);
+					}
+				});
 			});
-		});
+		}
 	}
 	function array_move(arr, old_index, new_index) {
 		if (new_index >= arr.length) {

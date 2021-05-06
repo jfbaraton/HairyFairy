@@ -86,6 +86,14 @@ app.get('/index.html', (req, res) => {
   //console.log(`serving req: `,req);
   res.sendFile(__dirname + '/index.html');
 });
+app.get('/chooseUsername.html', (req, res) => {
+  //console.log(`serving req: `,req);
+  res.sendFile(__dirname + '/chooseUsername.html');
+});
+app.get('/resetLocalStorage.html', (req, res) => {
+  //console.log(`serving req: `,req);
+  res.sendFile(__dirname + '/resetLocalStorage.html');
+});
 
 io.on('connection', (socket) => {
   socket.on('chat message', msg => {

@@ -37,7 +37,7 @@
 		  socketInput2.jeffSocket = socket;
 		  form.addEventListener('submit', function(e) {
 			e.preventDefault();
-			if (socketInput.value) {
+			if (socketInput2.value) {
 			  //socket.emit('chat message', 'lobby_'+input.['data-lobbyId']+':'+input.value);
 			  socket.emit('chat message', 'lobby_'+socketInput2.getAttribute('data-lobbyId')+':'+socketInput2.getAttribute('data-playername')+': '+socketInput2.value);
 			  socketInput2.value = '';
