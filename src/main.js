@@ -641,6 +641,7 @@
 		screenSprites.BG_start.interactive = true;
 		screenSprites.BG_start.on('pointerdown', () => {
 			if(gamePhase == "title") {
+				console.log("clicked on screenSprites.BG_start");
 				gamePhase = "play"
 				setBGactive("pending_play")
 				//setBGactive("BG_start")
@@ -1188,6 +1189,7 @@
 					socketInput.setAttribute('data-lobbyId',gameState.gameId);
 					// TODO clear chat or add a delimiter "entered game XXX"
 					
+					console.log("clicked on enter-start game button as creator");
 					gamePhase = "play"
 					setBGactive("pending_play")
 					//setBGactive("BG_start")
@@ -1214,6 +1216,7 @@
 			socketInput.setAttribute('data-lobbyId',gameState.gameId);
 			// TODO clear chat or add a delimiter "entered game XXX"
 			
+			console.log("clicked on enter game button");
 			gamePhase = "play"
 			setBGactive("pending_play")
 			//setBGactive("BG_start")
@@ -1221,6 +1224,7 @@
 			//parseInitialMessage(mockedMessages.initialMessage, true)
 			gameRecap();
 			
+			drawInventory();
 			
 			//onStartGame();
 		});
@@ -1586,6 +1590,8 @@
 	}
 	
 	const renderTitleScreen = () => {
+		
+		console.log("renderTitleScreen");
 		setBGactive("BG_start")
 	}
 
@@ -2324,26 +2330,24 @@
 				break;
 			case 'play':
 				hideGameRecapSheet();
+				UiProgress.forEach(f => f())
 				switch (gameState.currentRound){
 					case 'brag':
-						setBGactive(BGForEventType[gameState.currentEvent])
-						drawInventory()
-						UiProgress.forEach(f => f())
+						//setBGactive(BGForEventType[gameState.currentEvent])
+						//drawInventory()
 						createOrUpdatePhaseText("select an item for the event")
 						break;
 					case 'lost and found':
-						setBGactive(gameState.currentRound)
-						drawInventory()
-						UiProgress.forEach(f=> f())
+						//setBGactive(gameState.currentRound)
+						//drawInventory()
 						createOrUpdatePhaseText("select up to two items to send to lost and found")
 						break;
 					case 'declare trade':
 					case 'accept trade':
 					case 'trade':
-						setBGactive(gameState.currentRound)
+						//setBGactive(gameState.currentRound)
 						//drawAvatars()
-						drawInventory()
-						UiProgress.forEach(f => f())
+						//drawInventory()
 						createOrUpdatePhaseText("offer a trade")
 						break;
 				}

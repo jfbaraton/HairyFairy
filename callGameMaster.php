@@ -297,7 +297,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                 }
             }
         } else {
-            $return = [ 'action' => 'wait...', 'id' => -1 ];
+            $return = [ 'action' => 'wait...', 'id' => -1, 'player_seq' => $player_seq, 'granted' => $granted ];
         }
 
     }
