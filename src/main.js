@@ -180,6 +180,7 @@
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
 	.add("images/newPictures/template_grid_transparent.png")	
 	.add("images/newPictures/template_grid.png")	
+	.add("images/newPictures/item_set_1.png")	
 	.add("images/newPictures/Items_Borders.png")	
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
@@ -251,7 +252,7 @@
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
 	const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
-	const textureItemsTest = PIXI.Texture.from('images/newPictures/template_grid.png');
+	const textureItemsTest = PIXI.Texture.from('images/newPictures/item_set_1.png');
 	const textureItemsBorders = PIXI.Texture.from('images/newPictures/Items_Borders.png');
 	const textureItems2 = PIXI.Texture.from('images/newPictures/itemTileMap.png');
 	const textureAvatars = PIXI.Texture.from('images/newPictures/avatars.png');
@@ -1224,7 +1225,7 @@
 			//parseInitialMessage(mockedMessages.initialMessage, true)
 			gameRecap();
 			
-			drawInventory();
+			//drawInventory();
 			
 			//onStartGame();
 		});
@@ -1517,6 +1518,22 @@
 			}
 		}
     }
+    // brag action. nothing to do except mark it as done
+    const parseSuccessMessage = (joinMessage, isRender) => {
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
+		}
+    }
+    // brag action. nothing to do except mark it as done
+    const parseFailMessage = (joinMessage, isRender) => {
+		if(isRender) {
+			if(joinMessage.player === gameState.playerid){
+				waitingForEndOfRound = true;
+			}
+		}
+    }
     
 	// lost and found action. nothing to do except mark it as done
     const parseLostAndFoundMessage = (joinMessage, isRender) => {
@@ -1570,6 +1587,7 @@
 			gameState.currentRound = newRoundMessage.action_parameters.new_round;
 			UiProgress = new Array()
 			hideItemsNotInHand();
+			drawInventory();
 		}
 	}
 
@@ -2074,6 +2092,8 @@
 						switch(oneRecord.description){
 							case "join": parseJoinMessage(oneRecord, isRender); break;
 							case "brag": parseBragMessage(oneRecord, isRender); break;
+							case "success": parseSuccessMessage(oneRecord, isRender); break;
+							case "fail": parseFailMessage(oneRecord, isRender); break;
 							case "lost and found": parseLostAndFoundMessage(oneRecord, isRender); break;
 							case "declare trades": parseDeclareTradesMessage(oneRecord, isRender); break;
 							case "accept trades": parseAcceptTradesMessage(oneRecord, isRender); break;

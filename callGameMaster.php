@@ -273,6 +273,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 						// pending game
 						// open the next one
 						// generate 8 random numbers
+						$actionParameter['is_new_round'] = true;
 						$actionParameter['rand1'] = rand ( 0 , 1000 );
 						$actionParameter['rand2'] = rand ( 0 , 1000 );
 						$actionParameter['rand3'] = rand ( 0 , 1000 );
