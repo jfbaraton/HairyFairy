@@ -66,7 +66,8 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
         if($granted && $player_seq == 1) {
             $sql = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
                    "join player_game_action as participant on game.id = participant.game ".
-                   "where (participant.phase_after >".$action."+10 or (participant.phase_after >".$action." and participant.phase_after <".$action."+10 and participant.player = ".$playerid.")) ".
+                   //"where (participant.phase_after >".$action."+10 or (participant.phase_after >".$action." and participant.phase_after <".$action."+10 and participant.player = ".$playerid.")) ".
+                   "where (participant.phase_after >".$player_seq."+10 or (participant.phase_after >".$player_seq." and participant.phase_after <".$player_seq."+10 and participant.player = ".$playerid.")) ".
                    " and game.id = ".$gameid." and game.gametype = '".$gametype."' LIMIT 1";
             // if game exists, is in setup phase (0-99) and this player is not already a participant
             if ($result = mysqli_query($conn, $sql)) {
@@ -91,7 +92,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                     if(mysqli_num_rows($result) == 1) {
                         $phase_before = mysqli_fetch_assoc($result)["phase_after"];
                         // check gamemaster action needed
-                        if($phase_before % 10 == 4 && gametype == "lajam") {
+                        if($phase_before % 10 == 4 && $gametype == "lajam") {
                             $current_round   = $phase_before-($phase_before%10);
                             $current_event_type = $phase_before-($phase_before%100);
                             $current_country = $phase_before-($phase_before%1000)+100;
@@ -150,7 +151,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                             $return = [ 'action' => 'i shall help', 'phase' => $phase_after , 'transition' => $transition];
 
 
-                        } else if(gametype == "pending") {
+                        } else if($gametype == "pending") {
 							$is_new_round = true;
 							$transition = 'new_round';
                             $current_round   = $phase_before-($phase_before%10);
@@ -172,7 +173,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
                 }
 
                 if($granted && $transition != 'game_over') {
-					if(gametype == "lajam") {
+					if($gametype == "lajam") {
 						// read all game actions
 						$sql = "select action.id, action.player, action.recordtime, action.description, action.phase_before, action.phase_after, action.action_parameters, player.nickname, player.avatar ".
 							   "from player_game_action as action join player on player.id = action.player  ".
@@ -268,7 +269,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 						} else {
 							$return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
 						}
-					} else if (gametype == "pending"){
+					} else if ($gametype == "pending"){
 						// pending game
 						// open the next one
 						// generate 8 random numbers
