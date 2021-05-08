@@ -87,6 +87,10 @@ app.get('/index.html', (req, res) => {
   //console.log(`serving req: `,req);
   res.sendFile(__dirname + '/index.html');
 });
+app.get('/favicon.ico', (req, res) => {
+  //console.log(`serving req: `,req);
+  res.sendFile(__dirname + '/favicon.ico');
+});
 app.get('/chooseUsername.html', (req, res) => {
   //console.log(`serving req: `,req);
   res.sendFile(__dirname + '/chooseUsername.html');
@@ -99,6 +103,15 @@ app.get('/resetLocalStorage.html', (req, res) => {
 io.on('connection', (socket) => {
   socket.on('chat message', msg => {
     io.emit('chat message', msg);
+  });
+  socket.on('lobby message', msg => {
+    io.emit('lobby message', msg);
+  });
+  socket.on('game chat message', msg => {
+    io.emit('game chat message', msg);
+  });
+  socket.on('game event', msg => {
+    io.emit('game event', msg);
   });
 });
 

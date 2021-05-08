@@ -176,12 +176,14 @@
 	.add("images/newPictures/trade.png")		// place to trade (half blind draft)
 	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
 	.add("images/newPictures/pending_play_BG.png")		// background for pending gamme play phase
+	.add("images/newPictures/BG_321_Go.png")		// background countdown before play phase
 	.add("images/newPictures/suitCase2.png")	
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
 	.add("images/newPictures/template_grid_transparent.png")	
 	.add("images/newPictures/template_grid.png")	
 	.add("images/newPictures/item_set_1.png")	
 	.add("images/newPictures/item_set_2.png")	
+	.add("images/newPictures/item_set_3.png")	
 	.add("images/newPictures/Items_Borders.png")	
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
@@ -256,6 +258,7 @@
 	const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
 	const textureItems1 = PIXI.Texture.from('images/newPictures/item_set_1.png');
 	const textureItems2 = PIXI.Texture.from('images/newPictures/item_set_2.png');
+	const textureItems3 = PIXI.Texture.from('images/newPictures/item_set_3.png');
 	const textureItemsBorders = PIXI.Texture.from('images/newPictures/Items_Borders.png');
 	//const textureItems2 = PIXI.Texture.from('images/newPictures/itemTileMap.png');
 	const textureAvatars = PIXI.Texture.from('images/newPictures/avatars.png');
@@ -327,7 +330,7 @@
                 }*/
                 if(readGameId) {
                     console.log('currently in game '+readGameId );
-                    debugButton.text ='currently in game '+readGameId;
+                    //debugButton.text ='currently in game '+readGameId;
                     // TODO auto join? or have to click ENTER? annoying on refresh?
 					//gameState.gameId = readGameId;
                 } else if(pleaseJoinGameId) {
@@ -849,7 +852,7 @@
 	const mockedMessages = {
 		initialMessage: {
 			players: [
-				{
+				/*{
 					nickname: "Matti", 
 					avatar  : "cat", //refers to filename
 					position: 1 //0-3
@@ -868,7 +871,7 @@
 					nickname: "Ansa",
 					avatar  : "cat", //refers to filename
 					position: 2
-				},
+				},*/
 			],
 			// special items ordered according to player position
 			special_items: [
@@ -912,7 +915,7 @@
 	const BGFiles = {
 		"lost and found": 	"images/newPictures/lostAndFound.png",
 		"pending_play": 	"images/newPictures/pending_play_BG.png",
-		"countdown": 		"images/newPictures/souvenirs.png",
+		"countdown": 		"images/newPictures/BG_321_Go.png",
 		"accessories": 		"images/newPictures/accessories.png",
 		"trade": 			"images/newPictures/trade.png",
 		"offer trade": 		"images/newPictures/trade.png",
@@ -950,6 +953,7 @@
 		console.log('change background to '+BGtype);
 		resetElementSprites();
 		resetAvatarSprites();
+		resetItemSprites();
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
@@ -1008,15 +1012,22 @@
 		positionItem("5", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("6", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("7", 90+((cptX++)*500), 90+(cptY*500));*/
-		
-		positionItem("8", 90+((cptX++)*500), 90+(cptY*500));
+		const badItems = [9,10,11];
+		const goodItem = 8;
+		badItems.push(goodItem);
+		const shuffledItems = shuffleArray(badItems);
+		shuffledItems.forEach(itemId => {
+			positionItem(itemId, 290+((cptX++)*500), 90+(cptY*500));
+			if(cptX >=2) { cptX = 0;cptY++;}
+		});
+		/*positionItem("8", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("9", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("10", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("11", 90+((cptX++)*500), 90+(cptY*500));
 		cptX = 0;cptY++;
 		positionItem("12", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("13", 90+((cptX++)*500), 90+(cptY*500));
-		positionItem("14", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("14", 90+((cptX++)*500), 90+(cptY*500));*/
 		/*positionItem("8", 600, 500)
 		positionItem("9", 900, 500)
 		positionItem("10", 1200, 500)
@@ -1030,12 +1041,31 @@
 		*/
 	}
 	
+	const shuffleArray = (array) => {
+	  var currentIndex = array.length, temporaryValue, randomIndex;
+
+	  // While there remain elements to shuffle...
+	  while (0 !== currentIndex) {
+
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	  }
+
+	  return array;
+	}
+	
 	const fetchItemSprites = () => {
 		
 		for (let key of Object.keys(itemPositions)) {
 			let tmpItem = {};
 			tmpItem = new PIXI.TilingSprite(
-				key<15?textureItems1:key<30?textureItems2:textureItems2,
+				key<15?textureItems1:key<30?textureItems2:textureItems3,
 				360,
 				360
 			);
@@ -1506,6 +1536,7 @@
             avatar: joinMessage.avatar,
             position: playerPosition//0-3
         };
+		console.log('player in game '+playerPosition,gameState.players[playerPosition]);
 		if(joinMessage.player === gameState.playerid){
 			gameState.playerNumber = playerPosition
 		}
@@ -1533,6 +1564,7 @@
     // success action. nothing to do except mark it as done
     const parseSuccessMessage = (joinMessage, isRender) => {
 		if(isRender) {
+			debugButton.text ='Round '+((getCurrentActionId()-(getCurrentActionId()%10))/10)+'/10\nsomeone found before you';
 			waitingForEndOfRound = true;
 			roundCouldBeConsideredOver = true;
 			if(gamePhase != 'synchro321') {
@@ -1603,6 +1635,7 @@
 		
 		if(isRender) {
 			gameState.currentRound = newRoundMessage.action_parameters.new_round;
+			debugButton.text ='Round '+(getCurrentActionId()-(getCurrentActionId()%10))/10+'/10';
 			UiProgress = new Array()
 			hideItemsNotInHand();
 			if(isLatestState) { // go to countdown
@@ -1793,14 +1826,18 @@
 				
 				waitingForEndOfRound = true;
 				gamePhase == 'played';
-				if(clickIdentifier.id == '0') {
-					playItem('success',clickIdentifier.id,targetPlayer);
+				if(clickIdentifier.id == '8') {
+					playItem('success',clickIdentifier.id,targetPlayer,()=>{
+						socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
+					});
 					setBGactive("BG_win");
 				} else {
-					playItem('fail',clickIdentifier.id,targetPlayer);
+					playItem('fail',clickIdentifier.id,targetPlayer, ()=>{
+						socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
+					});
 					setBGactive("BG_lose");
 				}
-				socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
+				
 				/*switch(gameState.currentRound){
 					case 'brag':
 						console.log("you clicked item " + "[name of item] " + clickIdentifier.id )
@@ -1887,6 +1924,13 @@
 
     	return actionId;
     }
+	
+    const getLastPhaseId = () => {
+        let actionId = gameState.history.length && gameState.history[gameState.history.length-1].phase_after;
+    	actionId = actionId; // if the latest known phase is 110, 111, 112, 113 or 114, then the current actionId is 110
+
+    	return actionId;
+    }
 
     const login = async (playername,playeravatar,callBack) => {
         console.log('async call login');
@@ -1917,7 +1961,7 @@
     };
     const callGameMaster = async (playername,playerid, joinGameId, callBack) => {
         console.log('async call callGameMaster');
-        const response = await fetch('http://'+serverURL+'/HairyFairy/callGameMaster.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType+'&action='+getCurrentActionId());
+        const response = await fetch('http://'+serverURL+'/HairyFairy/callGameMaster.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType+'&action='+getLastPhaseId());
         const myJson = await response.json(); //extract JSON from the http response
         console.log('callGameMaster answer',myJson);
         //messageArea.text = rendergameRecap(myJson);
@@ -1976,19 +2020,21 @@
     };
 
     const gameRecap = async (messageArea) => {
-        console.log('async call gameRecap '+gameState.gameId);
-        const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gameid='+gameState.gameId);
-        const myJson = await response.json(); //extract JSON from the http response
-        console.log('gameRecap answer',myJson);
-		let debug = rendergameRecap(myJson);
-		if(messageArea) {
-			messageArea.text = debug;
-			console.log('gameRecap done!!!!',messageArea.text);
+		if(gameState.gameId >0) {
+			console.log('async call gameRecap '+gameState.gameId);
+			const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gameid='+gameState.gameId);
+			const myJson = await response.json(); //extract JSON from the http response
+			console.log('gameRecap answer',myJson);
+			let debug = rendergameRecap(myJson);
+			if(messageArea) {
+				messageArea.text = debug;
+				console.log('gameRecap done!!!!',messageArea.text);
+			}
 		}
         // do something with myJson
     };
 
-    const playItem = async (actionId,itemId,targetPlayer) => {
+    const playItem = async (actionId,itemId,targetPlayer,callBack) => {
         let action_parameters = {itemId : itemId};
         if(targetPlayer) {
             action_parameters.targetPlayer = targetPlayer;
@@ -2002,6 +2048,7 @@
         //this.text = rendergameRecap(myJson);
         //console.log('async done!!!!',myJson);
         // do something with myJson
+		if(callBack) callBack();
     };
 	
 	const resetAvatarSprites = (avatarType) => {
@@ -2038,6 +2085,24 @@
 		}
 	}
 	
+	const resetItemSprites = (elementType) => {
+		console.log('resetItemSprites');
+		for (let key of Object.keys(itemSprites)) {
+			if(!elementType || key === elementType || (itemSprites[key].identifyForClick && itemSprites[key].identifyForClick().elementType && 
+				itemSprites[key].identifyForClick().elementType == elementType)) {
+					
+				itemSprites[key].y = 1380;
+			} 
+		}
+		for (let key of Object.keys(itemFrameSprites)) {
+			if(!elementType || key === elementType || (itemFrameSprites[key].identifyForClick && itemFrameSprites[key].identifyForClick().elementType && 
+				itemFrameSprites[key].identifyForClick().elementType == elementType)) {
+					
+				itemFrameSprites[key].y = 1380;
+			} 
+		}
+	}
+	
 	const refreshLobbies = (gameIdStart) => { // id of the first game to be shown
 		if(gamePhase == 'lobby') {
 			console.log('call refresh lobbies '+gameIdStart);
@@ -2047,25 +2112,44 @@
 				debugButton.text +='\nlist, '+(lobbyData &&lobbyData.length);
 				gameState.lobbyData = lobbyData;
 				const gameLobbies = {};
-				const gameLobbyIds = [];
+				var gameLobbyIds = [];
+				const myGameLobbyIds = []; //games where i am present
+				const excludeGameLobbyIds = [];
 				resetAvatarSprites();
 				resetElementSprites();
+				resetItemSprites();
 				var isCanCreateMoreGames = true;
 				lobbyData.forEach((oneGameInfo) => {
 					if(oneGameInfo.gametype == gameType) {
-						if(!gameLobbyIds.includes(oneGameInfo.id)) {
+						
+						if(!gameLobbyIds.includes(oneGameInfo.id) && !excludeGameLobbyIds.includes(oneGameInfo.id)) {
 							gameLobbies[oneGameInfo.id] = [];
 							gameLobbyIds.push(oneGameInfo.id);
 						}
-						gameLobbies[oneGameInfo.id].push(oneGameInfo);
 						if(oneGameInfo.player == gameState.playerid) {
-							if(oneGameInfo.phase_after == 1){
-								isCanCreateMoreGames = false;
+							if(!myGameLobbyIds.includes(oneGameInfo.id)) {
+								myGameLobbyIds.push(oneGameInfo.id);
 							}
 							array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
 						}
+						if(oneGameInfo.phase_after>=10) {
+							if(!myGameLobbyIds.includes(oneGameInfo.id) || oneGameInfo.phase_after>=1000000) {
+								excludeGameLobbyIds.push(oneGameInfo.id);
+							}
+						} else {
+							gameLobbies[oneGameInfo.id].push(oneGameInfo);
+						}
 					}
 				});
+				myGameLobbyIds.forEach(oneGameId => {
+					if(!excludeGameLobbyIds.includes(oneGameId)){
+						if(gameLobbies[oneGameId][0].player == gameState.playerid) {
+							isCanCreateMoreGames = false;
+						}
+					}
+				});
+				
+				gameLobbyIds = gameLobbyIds.filter(oneGameId =>  !excludeGameLobbyIds.includes(oneGameId));
 				
 				var idxStart = gameIdStart || 0==gameIdStart ? gameIdStart : gameState.lobbyFirstGameId ? gameState.lobbyFirstGameId : 0  ;
 				if(idxStart >= gameLobbyIds.length || idxStart < 0) {
@@ -2099,10 +2183,12 @@
 					refreshLobbies(idxStart-8);
 				});
 				gameLobbyIds.forEach((gameLobbyId) => {
-					var idx = gameLobbyIds.indexOf(gameLobbyId);
-					if( idx >= idxStart && idx <=idxEnd ) {
-						//console.log('drow lobby index '+idx+' for game '+gameLobbyId);
-						placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, idx-idxStart+1);
+					if(!excludeGameLobbyIds.includes(gameLobbyId)) {
+						var idx = gameLobbyIds.indexOf(gameLobbyId);
+						if( idx >= idxStart && idx <=idxEnd ) {
+							//console.log('drow lobby index '+idx+' for game '+gameLobbyId);
+							placeLobbyGame(gameLobbies[gameLobbyId], gameLobbyId, idx-idxStart+1);
+						}
 					}
 				});
 			});
@@ -2180,13 +2266,13 @@
 						
 					}
                 });
-				if(roundCouldBeConsideredOver && isCreator()) { // next phase in 10 seconds
+				if( isCreator() && (roundCouldBeConsideredOver || getCurrentActionId() <10)) { // next phase in 5 seconds
 					roundCouldBeConsideredOver = false;
 					window.setTimeout( () => {
 						callGameMaster(gameState.playername,gameState.playerid, gameState.gameId, ()=>{
 							console.log('finished callGameMaster, now emit gameevent_');
 							socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);});
-					}, 10000);
+					}, 5000);
 					
 				}
             } else {
@@ -2390,8 +2476,8 @@
 		
 		if(recap_BG.x >0) {
 			recap_BG.x -= sheetMoveSpeed;
+			showScoresInGameRecapSheet(recap_BG.x);
 		}
-		
 	}
 	function hideGameRecapSheet() {
 		let SHEET_MAX_OFFSET = 500; // part of the sheet that ends up hidden on the right
@@ -2399,7 +2485,22 @@
 		
 		if(recap_BG.x < SHEET_MAX_OFFSET) {
 			recap_BG.x += sheetMoveSpeed;
+			showScoresInGameRecapSheet(recap_BG.x);
 		}
+		
+	}
+	
+	function showScoresInGameRecapSheet(sheetX) {
+		
+		var baseX = sheetX +1470;
+		var baseY = 130;
+		//console.log('---- ',gameState.players);
+		gameState.players && gameState.players.forEach((onePlayer) => {
+			//console.log('score of ',onePlayer.playerid);
+			positionAvatar(onePlayer.avatar, baseX, baseY, 1000, onePlayer.playerid, null, onePlayer.playername);
+			baseY = baseY +200;
+			
+		});
 		
 	}
 
