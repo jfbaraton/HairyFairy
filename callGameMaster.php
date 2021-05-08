@@ -23,11 +23,12 @@ $playername = $_GET["playername"];
 $playerid = $_GET["playerid"];
 $gametype = $_GET["gametype"];
 $gameid = $_GET["gameid"];
+$action = $_GET["action"];
 $granted = false;
 $return = [ 'error' => 'nothing happened', 'id' => -1];
     // will encode to JSON object: {"error":"nothing happened","id":-1}
     // accessed as example in JavaScript like: result.name or result['error'] (returns "nothing happened")
-if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($gameid)) {
+if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($gameid) && !empty($action)) {
     /* Select queries return a resultset */
     $sql = "SELECT id FROM player WHERE nickname = '".$playername."' and id = '".$playerid."' LIMIT 10";
     if ($result = mysqli_query($conn, $sql)) {
@@ -67,7 +68,7 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
             $sql = "select game.id, game.gametype, participant.player, participant.phase_after from game_instance as game ".
                    "join player_game_action as participant on game.id = participant.game ".
                    //"where (participant.phase_after >".$action."+10 or (participant.phase_after >".$action." and participant.phase_after <".$action."+10 and participant.player = ".$playerid.")) ".
-                   "where (participant.phase_after >".$player_seq."+10 or (participant.phase_after >".$player_seq." and participant.phase_after <".$player_seq."+10 and participant.player = ".$playerid.")) ".
+                   "where (participant.phase_after >".$action."+10 or (participant.phase_after >".$action." and participant.phase_after <".$action."+10 and participant.player = ".$playerid.")) ".
                    " and game.id = ".$gameid." and game.gametype = '".$gametype."' LIMIT 1";
             // if game exists, is in setup phase (0-99) and this player is not already a participant
             if ($result = mysqli_query($conn, $sql)) {

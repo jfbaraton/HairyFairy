@@ -38,14 +38,18 @@
 		  form.addEventListener('submit', function(e) {
 			e.preventDefault();
 			if (socketInput2.value) {
-			  //socket.emit('chat message', 'lobby_'+input.['data-lobbyId']+':'+input.value);
-			  socket.emit('chat message', 'lobby_'+socketInput2.getAttribute('data-lobbyId')+':'+socketInput2.getAttribute('data-playername')+': '+socketInput2.value);
-			  socketInput2.value = '';
+				//socket.emit('chat message', 'lobby_'+input.['data-lobbyId']+':'+input.value);
+				if(socketInput2.getAttribute('data-lobbyId')) {
+					socket.emit('game chat message', 'lobby_'+socketInput2.getAttribute('data-lobbyId')+':'+socketInput2.getAttribute('data-playername')+': '+socketInput2.value);
+				} else {
+					socket.emit('lobby message', 'lobby_'+socketInput2.getAttribute('data-lobbyId')+':'+socketInput2.getAttribute('data-playername')+': '+socketInput2.value);
+				}
+				socketInput2.value = '';
 			}
 		  });
 
-		  socket.on('chat message', function(msg) { //
-			console.log('chat message '+msg);
+		  socket.on('lobby message', function(msg) { //
+			console.log('lobby message '+msg);
 			if(msg && msg.startsWith('lobby_')) {
 				var item = document.createElement('li');
 				item.textContent = msg.slice(msg.indexOf(":")+1);
@@ -56,6 +60,36 @@
 			} else if(msg && msg.startsWith('joinevent_')) {
 				if(socketInput2.refreshLobbyAction) {
 					socketInput2.refreshLobbyAction();
+				}
+			}
+		  });
+		  
+		  socket.on('game chat message', function(msg) { //
+			console.log('chat message '+msg);
+			if(msg) {
+				var myGameId = socketInput2.getAttribute('data-lobbyId');
+				var messageGameId = msg.slice(msg.indexOf("_")+1,msg.indexOf(":"));
+				if(myGameId == messageGameId) {
+					var item = document.createElement('li');
+					item.textContent = msg.slice(msg.indexOf(":")+1);
+					messages.appendChild(item);
+					var objDiv = document.getElementById("locatorJeff");
+					objDiv.scrollTop = objDiv.scrollHeight;
+					//window.scrollTo(0, document.body.scrollHeight);
+				}
+			}
+		  });
+		  
+		  socket.on('game event', function(msg) { //
+			console.log('chat message '+msg);
+			if(msg && msg.startsWith('gameevent_')) {
+				console.log('socket received game event, gameevent_');
+				var myGameId = socketInput2.getAttribute('data-lobbyId');
+				var messageGameId = msg.slice(msg.indexOf("_")+1);
+				console.log('socket received game event, gameevent_', myGameId, messageGameId);
+				if(myGameId == messageGameId && socketInput2.gameRecap) {
+					console.log('socket triggered gamerecap');
+					socketInput2.gameRecap();
 				}
 			}
 		  });

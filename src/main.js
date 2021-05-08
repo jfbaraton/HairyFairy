@@ -181,6 +181,7 @@
 	.add("images/newPictures/template_grid_transparent.png")	
 	.add("images/newPictures/template_grid.png")	
 	.add("images/newPictures/item_set_1.png")	
+	.add("images/newPictures/item_set_2.png")	
 	.add("images/newPictures/Items_Borders.png")	
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
@@ -241,6 +242,7 @@
 		lobbyFirstGameId : 0 // for pagination
 		}; 
 	let waitingForEndOfRound = true;
+	let roundCouldBeConsideredOver = false;
 	let targetPlayer = null;
 	const autoJoin = false;
 	const autoCreate = false;
@@ -252,9 +254,10 @@
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
 	const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
-	const textureItemsTest = PIXI.Texture.from('images/newPictures/item_set_1.png');
+	const textureItems1 = PIXI.Texture.from('images/newPictures/item_set_1.png');
+	const textureItems2 = PIXI.Texture.from('images/newPictures/item_set_2.png');
 	const textureItemsBorders = PIXI.Texture.from('images/newPictures/Items_Borders.png');
-	const textureItems2 = PIXI.Texture.from('images/newPictures/itemTileMap.png');
+	//const textureItems2 = PIXI.Texture.from('images/newPictures/itemTileMap.png');
 	const textureAvatars = PIXI.Texture.from('images/newPictures/avatars.png');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
@@ -643,8 +646,8 @@
 		screenSprites.BG_start.on('pointerdown', () => {
 			if(gamePhase == "title") {
 				console.log("clicked on screenSprites.BG_start");
-				gamePhase = "play"
-				setBGactive("pending_play")
+				gamePhase = "play";
+				setBGactive("pending_play");
 				//setBGactive("BG_start")
 				//initializeGameState()
 				//parseInitialMessage(mockedMessages.initialMessage, true)
@@ -657,7 +660,7 @@
         app.stage.addChild(screenSprites.BG_start);
 
         //Create the `BG_lose` sprite
-        /*screenSprites.BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
+        screenSprites.BG_lose = new Sprite(resources["images/BG_lose.png"].texture);
         screenSprites.BG_lose.x = 0;
         screenSprites.BG_lose.y = 1080;
         app.stage.addChild(screenSprites.BG_lose);
@@ -667,7 +670,7 @@
         screenSprites.BG_win = new Sprite(resources["images/BG_win.png"].texture);
         screenSprites.BG_win.x = 0;
         screenSprites.BG_win.y = 1080;
-        app.stage.addChild(screenSprites.BG_win);*/
+        app.stage.addChild(screenSprites.BG_win);
 
         //Create the text sprite
         let style2 = new TextStyle({
@@ -757,7 +760,8 @@
 		// setup socket messages
 		socketInput = document.getElementById('socketInput');
 		socketInput.refreshLobbyAction = refreshLobbies;
-		//socketInput.jeffSocket.emit('chat message', 'joinevent_0');
+		socketInput.gameRecap = gameRecap;
+		//socketInput.jeffSocket.emit('lobby message', 'joinevent_0');
 
         //Capture the keyboard arrow keys
         let keyLetterS = keyboard(83),
@@ -908,6 +912,7 @@
 	const BGFiles = {
 		"lost and found": 	"images/newPictures/lostAndFound.png",
 		"pending_play": 	"images/newPictures/pending_play_BG.png",
+		"countdown": 		"images/newPictures/souvenirs.png",
 		"accessories": 		"images/newPictures/accessories.png",
 		"trade": 			"images/newPictures/trade.png",
 		"offer trade": 		"images/newPictures/trade.png",
@@ -1030,12 +1035,12 @@
 		for (let key of Object.keys(itemPositions)) {
 			let tmpItem = {};
 			tmpItem = new PIXI.TilingSprite(
-				textureItemsTest,
+				key<15?textureItems1:key<30?textureItems2:textureItems2,
 				360,
 				360
 			);
 			tmpItem.x = 0
-			tmpItem.y = 1080
+			tmpItem.y = 1380
 			tmpItem.tilePosition.x = itemPositions[key][0]
 			tmpItem.tilePosition.y = itemPositions[key][1]
 			tmpItem.interactive = true;
@@ -1054,7 +1059,7 @@
 			);
 			
 			tmpItemBorder.x = 0
-			tmpItemBorder.y = 1080
+			tmpItemBorder.y = 1380
 			tmpItemBorder.tilePosition.x = itemBorderPositions[0][0]
 			tmpItemBorder.tilePosition.y = itemBorderPositions[0][1]
 			tmpItemBorder.interactive = true;
@@ -1177,7 +1182,7 @@
 				positionAvatar('join', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 				() => {
 					console.log('clicked join game '+oneGameId);
-					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
+					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);socketInput.jeffSocket.emit('lobby message', 'joinevent_0');});
 					//gameState.gameId = pleaseJoinGameId;
 				});
 			}
@@ -1206,7 +1211,7 @@
 			positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 			() => {
 				console.log('clicked exit game '+oneGameId);
-				leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
+				leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{socketInput.jeffSocket.emit('lobby message', 'joinevent_0');});
 				//gameState.gameId = pleaseJoinGameId;
 				
 			});
@@ -1263,7 +1268,7 @@
 		for (let key of Object.keys(itemPositions)) {
 			if(!gameState.hands[gameState.playerNumber].some(oneItemInHand => oneItemInHand == key)) {
 				//console.log("hideItemsNotInHand: hides" + key)
-				positionItem(key, 0, 1080);
+				positionItem(key, 0, 1380);
 			} else {
 				//console.log("hideItemsNotInHand: KEEP" + key)
 			}
@@ -1496,6 +1501,7 @@
     const parseJoinMessage = (joinMessage, isRender) => {
         var playerPosition = parseInt(joinMessage.phase_after)-1;
         gameState.players[playerPosition] = {
+            playerid: joinMessage.player,
             nickname: joinMessage.nickname,
             avatar: joinMessage.avatar,
             position: playerPosition//0-3
@@ -1509,7 +1515,13 @@
 		}
     }
 	
+	const getAmountOfPlayers = () => {
+		return gameState.players.length;
+	}
 	
+	const isCreator = () => {
+		return gameState.players && gameState.players.length && gameState.players[0].playerid == gameState.playerid;
+	}
     // brag action. nothing to do except mark it as done
     const parseBragMessage = (joinMessage, isRender) => {
 		if(isRender) {
@@ -1518,19 +1530,25 @@
 			}
 		}
     }
-    // brag action. nothing to do except mark it as done
+    // success action. nothing to do except mark it as done
     const parseSuccessMessage = (joinMessage, isRender) => {
 		if(isRender) {
-			if(joinMessage.player === gameState.playerid){
-				waitingForEndOfRound = true;
+			waitingForEndOfRound = true;
+			roundCouldBeConsideredOver = true;
+			if(gamePhase != 'synchro321') {
+				gamePhase = 'played';
 			}
 		}
     }
-    // brag action. nothing to do except mark it as done
+    // fail action. nothing to do except mark it as done
     const parseFailMessage = (joinMessage, isRender) => {
 		if(isRender) {
 			if(joinMessage.player === gameState.playerid){
 				waitingForEndOfRound = true;
+				roundCouldBeConsideredOver = true;
+				if(gamePhase != 'synchro321') {
+					gamePhase = 'played';
+				}
 			}
 		}
     }
@@ -1581,13 +1599,32 @@
 	}
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
-	const parseNewRoundMessage = (newRoundMessage, isRender) => {
+	const parseNewRoundMessage = (newRoundMessage, isRender, isLatestState) => {
 		
 		if(isRender) {
 			gameState.currentRound = newRoundMessage.action_parameters.new_round;
 			UiProgress = new Array()
 			hideItemsNotInHand();
-			drawInventory();
+			if(isLatestState) { // go to countdown
+				var isCountDownOver = true;
+				if(isCountDownOver) {
+					gamePhase = 'play';
+					setBGactive("pending_play");
+					drawInventory();
+					waitingForEndOfRound = false;
+					roundCouldBeConsideredOver = false;
+				} else { // go to coutdown
+					setBGactive("countdown");
+					window.setTimeout(()=>{
+						gamePhase = 'play';
+						setBGactive("play");
+					},10000);
+				}
+			} else { // draw inventory ?
+				gamePhase = 'play';
+				setBGactive("pending_play");
+				drawInventory();
+			}
 		}
 	}
 
@@ -1753,7 +1790,18 @@
 		//console.log("------------------------------------------------- ",gameState.currentRound)
 		if( gamePhase == 'play') {
 			if(!waitingForEndOfRound && clickIdentifier && clickIdentifier.elementType === "item") {
-				switch(gameState.currentRound){
+				
+				waitingForEndOfRound = true;
+				gamePhase == 'played';
+				if(clickIdentifier.id == '0') {
+					playItem('success',clickIdentifier.id,targetPlayer);
+					setBGactive("BG_win");
+				} else {
+					playItem('fail',clickIdentifier.id,targetPlayer);
+					setBGactive("BG_lose");
+				}
+				socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
+				/*switch(gameState.currentRound){
 					case 'brag':
 						console.log("you clicked item " + "[name of item] " + clickIdentifier.id )
 						waitingForEndOfRound = true;
@@ -1780,7 +1828,7 @@
 							
 							UiState.itemIsBeingTraded = clickIdentifier.id
 						}
-				}
+				}*/
 				
 				console.log("end switch" + UiProgress.length)
 			} else {
@@ -1867,6 +1915,16 @@
         // do something with myJson
 		if(callBack) callBack();
     };
+    const callGameMaster = async (playername,playerid, joinGameId, callBack) => {
+        console.log('async call callGameMaster');
+        const response = await fetch('http://'+serverURL+'/HairyFairy/callGameMaster.php?playername='+playername+'&playerid='+playerid+'&gameid='+joinGameId+'&gametype='+gameType+'&action='+getCurrentActionId());
+        const myJson = await response.json(); //extract JSON from the http response
+        console.log('callGameMaster answer',myJson);
+        //messageArea.text = rendergameRecap(myJson);
+        //console.log('joinGame done!!!!');
+        // do something with myJson
+		if(callBack) callBack();
+    };
 	
 	
     const leaveGame = async (playername,playerid, joinGameId, callBack) => {
@@ -1938,7 +1996,7 @@
         let base64Parameter = btoa(JSON.stringify(action_parameters));
         console.log('async call doGameAction',actionId,itemId,targetPlayer);
         //const response = await fetch('http://'+serverURL+'/HairyFairy/gameRecap.php?playername='+playername+'&playerid='+playerid+'&gameid='+gameId);
-        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gametype='+gameType+'&action='+actionId+'&description='+gameState.currentRound+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
+        const response = await fetch('http://'+serverURL+'/HairyFairy/doGameAction.php?playername='+gameState.playername+'&playerid='+gameState.playerid+'&gametype='+gameType+'&action='+getCurrentActionId()+'&description='+actionId+'&actionParameter='+base64Parameter+'&gameid='+gameState.gameId);
         const myJson = await response.json(); //extract JSON from the http response
         console.log('doGameAction answer',myJson);
         //this.text = rendergameRecap(myJson);
@@ -1952,12 +2010,12 @@
 			if(!avatarType || key === avatarType || (avatarSprites[key].identifyForClick && avatarSprites[key].identifyForClick().elementType && 
 				avatarSprites[key].identifyForClick().elementType == avatarType)) {
 					
-				avatarSprites[key].y = 1080;
+				avatarSprites[key].y = 1380;
 			} 
 		}
 		
 		for (let key of Object.keys(avatarSpritesLegend)) {
-			avatarSpritesLegend[key].y = 1080;
+			avatarSpritesLegend[key].y = 1380;
 		}
 		
 	}
@@ -1968,14 +2026,14 @@
 			if(!elementType || key === elementType || (elementSprites[key].identifyForClick && elementSprites[key].identifyForClick().elementType && 
 				elementSprites[key].identifyForClick().elementType == elementType)) {
 					
-				elementSprites[key].y = 1080;
+				elementSprites[key].y = 1380;
 			} 
 		}
 		for (let key of Object.keys(lobbyLegend)) {
 			if(!elementType || key === elementType || (lobbyLegend[key].identifyForClick && lobbyLegend[key].identifyForClick().elementType && 
 				lobbyLegend[key].identifyForClick().elementType == elementType)) {
 					
-				lobbyLegend[key].y = 1080;
+				lobbyLegend[key].y = 1380;
 			} 
 		}
 	}
@@ -2026,7 +2084,7 @@
 						console.log('clicked create game ');
 						newGame(gameState.playername,gameState.playerid, () => {
 							refreshLobbies(0);
-							socketInput.jeffSocket.emit('chat message', 'joinevent_0');
+							socketInput.jeffSocket.emit('lobby message', 'joinevent_0');
 						});
 					});
 				}
@@ -2078,12 +2136,17 @@
                 result = "here is what happened \n";
                 gameRecapJSON.data.forEach(oneRecord => {
 					if(!gameState.history.length || 
-						( !gameState.history.some(gameevent => gameevent.phase_after == oneRecord.phase_after) && // we only parse unknown events
-							(oneRecord.phase_after <=100 || 													  // from initial phases (join, init)
-							oneRecord.player == gameState.playerid || 											  // or by us
-							oneRecord.phase_after <= serverPhaseBegin))){ 										  // or from finished phases
+						( !gameState.history.some(gameevent => gameevent.phase_after == oneRecord.phase_after))){ // we only parse unknown events
+							
 						gameState.history.push(oneRecord);
+						let isLastKnownAction = gameState.history.length == gameRecapJSON.data.length;
+						if(isLastKnownAction){
+							console.log('isLastKnownAction ',oneRecord);
+						}
 						let isRender = oneRecord.phase_after >= serverPhaseBegin;
+						if(isRender && gamePhase != 'played' && gamePhase != 'synchro321') {
+							gamePhase = 'play';
+						}
 						//result += "\n"+JSON.stringify(oneRecord);
 						result += "\n"+" at "+oneRecord.phase_after+" - "+oneRecord.nickname+" did "+oneRecord.description+" : "+JSON.stringify(oneRecord.action_parameters);
 						if(oneRecord.phase_after == "100") {
@@ -2115,9 +2178,17 @@
 							waitingForEndOfRound = false;
 						}
 						
-						
 					}
                 });
+				if(roundCouldBeConsideredOver && isCreator()) { // next phase in 10 seconds
+					roundCouldBeConsideredOver = false;
+					window.setTimeout( () => {
+						callGameMaster(gameState.playername,gameState.playerid, gameState.gameId, ()=>{
+							console.log('finished callGameMaster, now emit gameevent_');
+							socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);});
+					}, 10000);
+					
+				}
             } else {
                  result = "nothing new in history ";
              }
