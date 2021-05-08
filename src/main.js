@@ -175,9 +175,12 @@
 	.add("images/newPictures/souvenirs.png")  	// place to brag about souvenirs
 	.add("images/newPictures/trade.png")		// place to trade (half blind draft)
 	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
-	.add("images/newPictures/party.png")		// place to brag about boose
+	.add("images/newPictures/pending_play_BG.png")		// background for pending gamme play phase
 	.add("images/newPictures/suitCase2.png")	
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
+	.add("images/newPictures/template_grid_transparent.png")	
+	.add("images/newPictures/template_grid.png")	
+	.add("images/newPictures/Items_Borders.png")	
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
@@ -212,6 +215,7 @@
     let ROLLER_COASTER_LOW = 900;
 	let screenSprites;
 	let itemSprites = {};
+	let itemFrameSprites = {};
 	let itemMiniatureSprites = {};
 	let avatarSprites = {};
 	let avatarSpritesLegend = {};
@@ -239,14 +243,17 @@
 	let targetPlayer = null;
 	const autoJoin = false;
 	const autoCreate = false;
-	const gameType = 'lajam'; // lajam = cleplomat
+	const gameType = 'pending'; // lajam = cleplomat, pending = ngj2021
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
     const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
     const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
     const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
-	const textureItems = PIXI.Texture.from('images/newPictures/itemTileMap.png');
+	const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
+	const textureItemsTest = PIXI.Texture.from('images/newPictures/template_grid.png');
+	const textureItemsBorders = PIXI.Texture.from('images/newPictures/Items_Borders.png');
+	const textureItems2 = PIXI.Texture.from('images/newPictures/itemTileMap.png');
 	const textureAvatars = PIXI.Texture.from('images/newPictures/avatars.png');
     //const goo_fairy_txt = PIXI.Texture.from('images/goo_fairy.png');
     //const goo_fairy_selected_txt = PIXI.Texture.from('images/goo_fairy_selected.png');
@@ -412,7 +419,7 @@
 			souvenirs: {},		// place to brag about souvenirs
 			trade: {},			// place to trade (half blind draft)
 			LostAndFound: {},	// place for lost and found (blind draft)
-			party: {}, 			// place to brag about boose	
+			pending_play: {},   // pending play BG
 		};
 		
 		fetchBackgroundSprites()
@@ -598,7 +605,7 @@
 		// STEP 3 add the texture to the variable
 		suitCaseSprite2 = new Sprite(resources["images/newPictures/suitCase2.png"].texture) // file
 		suitCaseSprite2.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
-		suitCaseSprite2.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
+		suitCaseSprite2.y = 1080 // vertical (0 is the top of the screen, 1080 is the bottom)
 		suitCaseSprite2.scale = new PIXI.Point(0.2, 0.2) // scale/zoom
 		app.stage.addChild(suitCaseSprite2)				// always add it to the scene/stage
 		
@@ -635,7 +642,7 @@
 		screenSprites.BG_start.on('pointerdown', () => {
 			if(gamePhase == "title") {
 				gamePhase = "play"
-				setBGactive("party")
+				setBGactive("pending_play")
 				//setBGactive("BG_start")
 				//initializeGameState()
 				//parseInitialMessage(mockedMessages.initialMessage, true)
@@ -896,9 +903,9 @@
 	}
 	
 	// list of fulscreen backgrounds. only one is visible at a time
-	const BGfiles = {
+	const BGFiles = {
 		"lost and found": 	"images/newPictures/lostAndFound.png",
-		"party": 			"images/newPictures/party.png",
+		"pending_play": 	"images/newPictures/pending_play_BG.png",
 		"accessories": 		"images/newPictures/accessories.png",
 		"trade": 			"images/newPictures/trade.png",
 		"offer trade": 		"images/newPictures/trade.png",
@@ -916,15 +923,15 @@
 	}
 	
 	const BGForEventType = {
-		"boose":"party",
-		"accessories":"accessories",
-		"souvenirs":"souvenirs"
+		"boose":"pending_play",
+		"accessories":"pending_play",
+		"souvenirs":"pending_play"
 	};
 
 	const fetchBackgroundSprites = () => {
-		for (let key of Object.keys(BGfiles)) {
+		for (let key of Object.keys(BGFiles)) {
 			let tmpItem = {};
-			tmpItem = new Sprite(resources[BGfiles[key]].texture)
+			tmpItem = new Sprite(resources[BGFiles[key]].texture)
 			tmpItem.x = 0
 			tmpItem.y = 1080
 			screenSprites[key] = tmpItem
@@ -980,29 +987,40 @@
 	}*/
 
 	const drawInventory = () => {
-		suitCaseSprite.x = 0
-		suitCaseSprite.y = 300
+		/*suitCaseSprite.x = 0
+		suitCaseSprite.y = 300*/
 		
-		/*
-		positionItem("0", 0, 200)
-		positionItem("1", 300, 200)
-		positionItem("2", 600, 200)
-		positionItem("3", 900, 200)
-		positionItem("4", 1200, 200)
-		positionItem("5", 1500, 200)
-		positionItem("6", 0, 500)
-		positionItem("7", 300, 500)
-		positionItem("8", 600, 500)
+		var cptX = 0;
+		var cptY = 0;
+		/*positionItem("0", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("1", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("2", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("3", 90+((cptX++)*500), 90+(cptY*500));
+		cptX = 0;cptY++;
+		positionItem("4", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("5", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("6", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("7", 90+((cptX++)*500), 90+(cptY*500));*/
+		
+		positionItem("8", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("9", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("10", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("11", 90+((cptX++)*500), 90+(cptY*500));
+		cptX = 0;cptY++;
+		positionItem("12", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("13", 90+((cptX++)*500), 90+(cptY*500));
+		positionItem("14", 90+((cptX++)*500), 90+(cptY*500));
+		/*positionItem("8", 600, 500)
 		positionItem("9", 900, 500)
 		positionItem("10", 1200, 500)
-		positionItem("11", 1000, 500)
-		*/
+		positionItem("11", 1000, 500)*/
 		
+		/*
 		hand = gameState.hands[gameState.playerNumber]
 		positionItem(hand[0], suitCaseSprite.x + 100, suitCaseSprite.y + 300)
 		positionItem(hand[1], suitCaseSprite.x + 300, suitCaseSprite.y + 300)
 		positionItem(hand[2], suitCaseSprite.x + 500, suitCaseSprite.y + 300)
-		
+		*/
 	}
 	
 	const fetchItemSprites = () => {
@@ -1010,9 +1028,9 @@
 		for (let key of Object.keys(itemPositions)) {
 			let tmpItem = {};
 			tmpItem = new PIXI.TilingSprite(
-				textureItems,
-				600,
-				600
+				textureItemsTest,
+				360,
+				360
 			);
 			tmpItem.x = 0
 			tmpItem.y = 1080
@@ -1020,11 +1038,30 @@
 			tmpItem.tilePosition.y = itemPositions[key][1]
 			tmpItem.interactive = true;
 			tmpItem.on('pointerdown', onButtonDown)
-			tmpItem.scale = new PIXI.Point(0.3, 0.3)
+			//tmpItem.scale = new PIXI.Point(0.3, 0.3)
 			//console.log("the key for the future: " + key)
 			tmpItem.identifyForClick = () => ({elementType: "item", id: key})
 			itemSprites[key] = tmpItem
 			app.stage.addChild(itemSprites[key]);
+			// border around the item
+			let tmpItemBorder = {};
+			tmpItemBorder = new PIXI.TilingSprite(
+				textureItemsBorders,
+				450,
+				450
+			);
+			
+			tmpItemBorder.x = 0
+			tmpItemBorder.y = 1080
+			tmpItemBorder.tilePosition.x = itemBorderPositions[0][0]
+			tmpItemBorder.tilePosition.y = itemBorderPositions[0][1]
+			tmpItemBorder.interactive = true;
+			tmpItemBorder.on('pointerdown', onButtonDown)
+			//tmpItemBorder.scale = new PIXI.Point(0.3, 0.3)
+			//console.log("the key for the future: " + key)
+			tmpItemBorder.identifyForClick = () => ({elementType: "item", id: key})
+			itemFrameSprites[key] = tmpItemBorder
+			app.stage.addChild(itemFrameSprites[key]);
 		}
 	}
 	
@@ -1131,8 +1168,9 @@
 			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after, null, gameLobbyPlayer.nickname);
 			
 		});
-		if(amountOfPlayers<4) {
-			if(!alreadyJoined){
+		
+		if(!alreadyJoined){
+			if(amountOfPlayers<4) {
 				// show join button
 				positionAvatar('join', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 				() => {
@@ -1140,38 +1178,53 @@
 					joinGame(gameState.playername,gameState.playerid,oneGameId, ()=>{refreshLobbies(0);socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
 					//gameState.gameId = pleaseJoinGameId;
 				});
-			} else if(isCreator && amountOfPlayers>1) { // if logged in user is the creator (first player)
-				// show "add robot" / "kick player"
-				
-			} else {
-				// show exit button
-				positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
-				() => {
-					console.log('clicked exit game '+oneGameId);
-					leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
-					//gameState.gameId = pleaseJoinGameId;
-					
-				});
 			}
 		} else {
-			// show "enter game" button
-			positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
-				gameState.gameId = oneGameId;
-				socketInput.setAttribute('data-lobbyId',gameState.gameId);
-				// TODO clear chat or add a delimiter "entered game XXX"
+			if(isCreator) { // if logged in user is the creator (first player)
+				// show "add robot" / "kick player"
+				// show "start game" button
+				positionAvatar('enter', baseX+getLobbyPlayerxOffset(6), baseY+topMargin, gameGroupId, playerIdx+1, () => {
+					gameState.gameId = oneGameId;
+					socketInput.setAttribute('data-lobbyId',gameState.gameId);
+					// TODO clear chat or add a delimiter "entered game XXX"
+					
+					gamePhase = "play"
+					setBGactive("pending_play")
+					//setBGactive("BG_start")
+					//initializeGameState()
+					//parseInitialMessage(mockedMessages.initialMessage, true)
+					gameRecap();
+					
+					
+					//onStartGame();
+				});
+			}
+			// show exit button
+			positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
+			() => {
+				console.log('clicked exit game '+oneGameId);
+				leaveGame(gameState.playername,gameState.playerid,oneGameId, ()=>{socketInput.jeffSocket.emit('chat message', 'joinevent_0');});
+				//gameState.gameId = pleaseJoinGameId;
 				
-				gamePhase = "play"
-				setBGactive("party")
-				//setBGactive("BG_start")
-				//initializeGameState()
-				//parseInitialMessage(mockedMessages.initialMessage, true)
-				gameRecap();
-				
-				
-				//onStartGame();
 			});
-			
 		}
+		// show "enter game" button
+		positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
+			gameState.gameId = oneGameId;
+			socketInput.setAttribute('data-lobbyId',gameState.gameId);
+			// TODO clear chat or add a delimiter "entered game XXX"
+			
+			gamePhase = "play"
+			setBGactive("pending_play")
+			//setBGactive("BG_start")
+			//initializeGameState()
+			//parseInitialMessage(mockedMessages.initialMessage, true)
+			gameRecap();
+			
+			
+			//onStartGame();
+		});
+		
 	}
 	
 	const fetchAvatarSprites = () => {
@@ -1235,22 +1288,87 @@
 		}
 	}
 
+	const itemBorderPositions = {
+		"0": [-320, -320],
+		"1": [360, 0],
+	}
+	
 	const itemPositions = {
-		"0": [3200, 2580],
-		"1": [2550, 2580],
-		"2": [1920, 2580],
-		"3": [1240, 2580],
-		"4": [600, 2580],
-		"5": [3200, 1200],
-		"6": [2550, 1200],
-		"7": [1920, 1200],
-		"8": [1240, 1200],
-		"9": [600, 1200],
-		"10": [3200, 650],
-		"11": [2550, 650],
-		"12": [1920, 650],
-		"13": [1240, 650],
-		"14": [600, 650],
+		"0": [0, 0],
+		"1": [-360, 0],
+		"2": [-720, 0],
+		"3": [-1080, 0],
+		"4": [-1440, 0],
+		"5": [0, 360],
+		"6": [-360, 360],
+		"7": [-720, 360],
+		"8": [-1080, 360],
+		"9": [-1440, 360],
+		"10": [0, 720],
+		"11": [-360, 720],
+		"12": [-720, 720],
+		"13": [-1080, 720],
+		"14": [-1440, 720],
+		"15": [0, 0],
+		"16": [-360, 0],
+		"17": [-720, 0],
+		"18": [-1080, 0],
+		"19": [-1440, 0],
+		"20": [0, 360],
+		"21": [-360, 360],
+		"22": [-720, 360],
+		"23": [-1080, 360],
+		"24": [-1440, 360],
+		"25": [0, 720],
+		"26": [-360, 720],
+		"27": [-720, 720],
+		"28": [-1080, 720],
+		"29": [-1440, 720],
+		"30": [0, 0],
+		"31": [-360, 0],
+		"32": [-720, 0],
+		"33": [-1080, 0],
+		"34": [-1440, 0],
+		"35": [0, 360],
+		"36": [-360, 360],
+		"37": [-720, 360],
+		"38": [-1080, 360],
+		"39": [-1440, 360],
+		"40": [0, 720],
+		"41": [-360, 720],
+		"42": [-720, 720],
+		"43": [-1080, 720],
+		"44": [-1440, 720],
+		"45": [0, 0],
+		"46": [-360, 0],
+		"47": [-720, 0],
+		"48": [-1080, 0],
+		"49": [-1440, 0],
+		"50": [0, 360],
+		"51": [-360, 360],
+		"52": [-720, 360],
+		"53": [-1080, 360],
+		"54": [-1440, 360],
+		"55": [0, 720],
+		"56": [-360, 720],
+		"57": [-720, 720],
+		"58": [-1080, 720],
+		"59": [-1440, 720],
+		"60": [0, 0],
+		"61": [-360, 0],
+		"62": [-720, 0],
+		"63": [-1080, 0],
+		"64": [-1440, 0],
+		"65": [0, 360],
+		"66": [-360, 360],
+		"67": [-720, 360],
+		"68": [-1080, 360],
+		"69": [-1440, 360],
+		"70": [0, 720],
+		"71": [-360, 720],
+		"72": [-720, 720],
+		"73": [-1080, 720],
+		"74": [-1440, 720],
 	}
 	
 	const avatarPositions = {
@@ -1285,9 +1403,13 @@
 	const positionItem = (itemId, newX, newY, doNotBringToFront) => {
 		itemSprites[itemId].x = newX
 		itemSprites[itemId].y = newY
+		itemFrameSprites[itemId].x = newX-40
+		itemFrameSprites[itemId].y = newY-40
 		if(!doNotBringToFront) {
 			app.stage.removeChild(itemSprites[itemId]);
 			app.stage.addChild(itemSprites[itemId]);
+			app.stage.removeChild(itemFrameSprites[itemId]);
+			app.stage.addChild(itemFrameSprites[itemId]);
 		}
 	}
 	
@@ -1825,6 +1947,13 @@
 				elementSprites[key].y = 1080;
 			} 
 		}
+		for (let key of Object.keys(lobbyLegend)) {
+			if(!elementType || key === elementType || (lobbyLegend[key].identifyForClick && lobbyLegend[key].identifyForClick().elementType && 
+				lobbyLegend[key].identifyForClick().elementType == elementType)) {
+					
+				lobbyLegend[key].y = 1080;
+			} 
+		}
 	}
 	
 	const refreshLobbies = (gameIdStart) => { // id of the first game to be shown
@@ -1841,16 +1970,18 @@
 				resetElementSprites();
 				var isCanCreateMoreGames = true;
 				lobbyData.forEach((oneGameInfo) => {
-					if(!gameLobbyIds.includes(oneGameInfo.id)) {
-						gameLobbies[oneGameInfo.id] = [];
-						gameLobbyIds.push(oneGameInfo.id);
-					}
-					gameLobbies[oneGameInfo.id].push(oneGameInfo);
-					if(oneGameInfo.player == gameState.playerid) {
-						if(oneGameInfo.phase_after == 1){
-							isCanCreateMoreGames = false;
+					if(oneGameInfo.gametype == gameType) {
+						if(!gameLobbyIds.includes(oneGameInfo.id)) {
+							gameLobbies[oneGameInfo.id] = [];
+							gameLobbyIds.push(oneGameInfo.id);
 						}
-						array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
+						gameLobbies[oneGameInfo.id].push(oneGameInfo);
+						if(oneGameInfo.player == gameState.playerid) {
+							if(oneGameInfo.phase_after == 1){
+								isCanCreateMoreGames = false;
+							}
+							array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
+						}
 					}
 				});
 				
