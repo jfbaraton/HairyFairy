@@ -252,6 +252,8 @@
 		lobbyFirstGameId : 0, // for pagination
 		badItems : [9,10,11,12,13],
 		goodItem : 8,
+		usedBadItems : [],
+		usedGoodItems : [],
 		}; 
 	let waitingForEndOfRound = true;
 	let roundCouldBeConsideredOver = false;
@@ -1402,6 +1404,14 @@
 		"1": [360, 0],
 	}
 	
+	const pending_items = [
+		0,1,2,4,5,6,7,8,9,10,11,12,13,14
+	];
+	
+	const non_pending_items = [
+		15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,34,35,36,37,38,39,40,41,42,43,44
+	];
+	
 	const itemPositions = {
 		"0": [0, 0],
 		"1": [-360, 0],
@@ -1705,8 +1715,38 @@
 		
 	}
 
+	const useItem = (randNum, alreadyUsedItems, fromPool) => {
+		var badItemIndex =  Math.floor(randNum* fromPool.length /1000);
+		while(alreadyUsedItems.includes(fromPool[badItemIndex])){
+			badItemIndex = (badItemIndex+1)% fromPool.length;
+		}
+		alreadyUsedItems.push(fromPool[badItemIndex]);
+		return fromPool[badItemIndex];
+	}
+
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage, isRender, isLatestState) => {
+		
+		// read items
+		gameState.badItems = []
+		gameState.goodItem = useItem(newRoundMessage.action_parameters.rand1 ? newRoundMessage.action_parameters.rand1 : 0, gameState.usedGoodItems, pending_items);
+		gameState.badItems.push(useItem(newRoundMessage.action_parameters.rand2 ? newRoundMessage.action_parameters.rand2 : 0, gameState.usedBadItems, non_pending_items));
+		gameState.badItems.push(useItem(newRoundMessage.action_parameters.rand3 ? newRoundMessage.action_parameters.rand3 : 0, gameState.usedBadItems, non_pending_items));
+		gameState.badItems.push(useItem(newRoundMessage.action_parameters.rand4 ? newRoundMessage.action_parameters.rand4 : 0, gameState.usedBadItems, non_pending_items));
+		gameState.badItems.push(useItem(newRoundMessage.action_parameters.rand5 ? newRoundMessage.action_parameters.rand5 : 0, gameState.usedBadItems, non_pending_items));
+		gameState.badItems.push(useItem(newRoundMessage.action_parameters.rand6 ? newRoundMessage.action_parameters.rand6 : 0, gameState.usedBadItems, non_pending_items));
+		
+		console.log('parseNewRoundMessage items: ',gameState.badItems);
+		console.log('parseNewRoundMessage good: ',gameState.goodItem);
+		
+		// clear used items if not enough remaining
+		if(gameState.usedBadItems.length > non_pending_items.length -8){
+			gameState.usedBadItems = [];
+		}
+		if(gameState.usedGoodItems.length > pending_items.length -8){
+			gameState.usedGoodItems = [];
+		}
+		
 		//console.log('parseNewRoundMessage');
 		if(isRender && newRoundMessage.description != "game over") {
 			console.log('parseNewRoundMessage isRender');
