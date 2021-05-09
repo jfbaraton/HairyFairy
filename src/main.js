@@ -763,11 +763,11 @@
         msg_status.on('pointerdown', onStartGame)
         app.stage.addChild(msg_status);
 		*/
-        msg_menu_1 = new Text("Jeff Text", style4);
+        msg_menu_1 = new Text("", style4);
         msg_menu_1.position.set(10,80);
         msg_menu_1.interactive = true;
         msg_menu_1.isJeff = true;
-        msg_menu_1.on('pointerdown', onButtonDown)
+        //msg_menu_1.on('pointerdown', onButtonDown)
         app.stage.addChild(msg_menu_1);
 		
 		debugButton = new Text("debug", style4);
@@ -1074,7 +1074,7 @@
 		positionItem(hand[1], suitCaseSprite.x + 300, suitCaseSprite.y + 300)
 		positionItem(hand[2], suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 		*/
-		showGameRecapSheet();
+		showGameRecapSheet(true);
 	}
 	
 	const shuffleArray = (array) => {
@@ -1241,7 +1241,7 @@
 			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after, null, gameLobbyPlayer.nickname);
 			
 		});
-		createOrUpdatePhaseText("1-4 players. The game starts when the creator enters the game");
+		createOrUpdatePhaseText("1-4 players. Game starts when the creator enters the game");
 		if(!alreadyJoined){
 			if(amountOfPlayers<4) {
 				// show join button
@@ -1283,6 +1283,7 @@
 			});
 			// show "enter game" button
 			positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
+				createOrUpdatePhaseText("");
 				if(rulesAlreadySeen) {
 					gameState.gameId = oneGameId;
 					socketInput.setAttribute('data-lobbyId',gameState.gameId);
@@ -1642,6 +1643,17 @@
     }
     // success action. nothing to do except mark it as done
     const parseSuccessMessage = (joinMessage, isRender) => {
+		if(gameState.players && gameState.players.length){
+			gameState.players.forEach(onePlayer => {
+				if(onePlayer.playerid == joinMessage.player){
+					if(onePlayer.score) {
+						onePlayer.score += 3;
+					} else {
+						onePlayer.score = 3;
+					}
+				}
+			});
+		}
 		if(isRender) {
 			debugButton.text ='Round '+((getCurrentActionId()-(getCurrentActionId()%10))/10)+'/10\nsomeone found before you';
 			if(player != gameState.playerid) {
@@ -1657,6 +1669,17 @@
     }
     // fail action. nothing to do except mark it as done
     const parseFailMessage = (joinMessage, isRender) => {
+		if(gameState.players && gameState.players.length){
+			gameState.players.forEach(onePlayer => {
+				if(onePlayer.playerid == joinMessage.player){
+					if(onePlayer.score) {
+						onePlayer.score -= 1;
+					} else {
+						onePlayer.score = -1;
+					}
+				}
+			});
+		}
 		if(isRender) {
 			if(joinMessage.player === gameState.playerid){
 				waitingForEndOfRound = true;
@@ -1781,6 +1804,7 @@
 					waitingForEndOfRound = true;
 					window.setTimeout(()=>{
 						gamePhase = 'play';
+						gameState.currentRound = 'play';
 						setBGactive("pending_play");
 						drawInventory();
 						
@@ -2401,7 +2425,26 @@
 						if(oneRecord.description == "game over"){
 							waitingForEndOfRound = true;
 							gamePhase = "game over";
-							setBGactive("pending_play");
+							showGameRecapSheet(true);
+							setBGactive("pending_play", () => {
+								gameState = { 
+									history : [], gameId : -1, 
+								
+									// user properties
+									playerid : -1, // server side id, this is not the player position in this game
+									lobbyData : [],
+									lobbyFirstGameId : 0, // for pagination
+									badItems : [9,10,11,12,13],
+									goodItem : 8,
+									usedBadItems : [],
+									usedGoodItems : [],
+								}; 
+								gamePhase = "lobby";
+								setBGactive("BG_lobby");
+								onPlayVideo('intro_music', true);
+								hideGameRecapSheet();
+								refreshLobbies();
+							});
 						}
 					}
                 });
@@ -2610,11 +2653,16 @@
         }
     }
 	
-	function showGameRecapSheet() {
+	function showGameRecapSheet(bringToFront) {
 		let sheetMoveSpeed = 15;
 		if(recap_BG.y != 0 && (gamePhase == 'play' || gamePhase == 'game over')) {
 			recap_BG.y = 0;
 			console.log('bring to front showGameRecapSheet');
+			app.stage.removeChild(recap_BG);
+			app.stage.addChild(recap_BG);
+			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
+		}
+		if(bringToFront) {
 			app.stage.removeChild(recap_BG);
 			app.stage.addChild(recap_BG);
 			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
@@ -2647,11 +2695,11 @@
 		//console.log('---- ',gameState.players);
 		gameState.players && gameState.players.forEach((onePlayer) => {
 			//console.log('score of ',onePlayer.playerid);
-			positionAvatar(onePlayer.avatar, baseX, baseY, 1000, onePlayer.playerid, null, onePlayer.playername);
+			positionAvatar(onePlayer.avatar, baseX, baseY, 1000, onePlayer.playerid, null, (onePlayer.nickname + "    "+(onePlayer.score || 0)+" Pts"));
 			baseY = baseY +200;
 			
 		});
-		
+		// calculate score
 	}
 
     function play(delta) {
