@@ -176,6 +176,8 @@
 	.add("images/newPictures/trade.png")		// place to trade (half blind draft)
 	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
 	.add("images/newPictures/pending_play_BG.png")		// background for pending gamme play phase
+	.add("images/newPictures/Redder_bg.png")		// generic background for avatar choice, lobby...
+	.add("images/newPictures/Rules_bg.png")		// background for rules explanation
 	.add("images/newPictures/BG_321_Go.png")		// background countdown before play phase
 	.add("images/newPictures/suitCase2.png")	
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
@@ -188,7 +190,7 @@
 	.add("images/newPictures/recap_BG.png")	
 	.add("images/newPictures/avatars.png")	
 	.add("images/newPictures/startScreen.png")
-	.add("images/newPictures/BG_lobby.png")
+	//.add("images/newPictures/BG_lobby.png")
 
     .load(setup);
 
@@ -642,7 +644,7 @@
 		app.stage.addChild(phaseText)
 			
         //Create the `BG_start` sprite
-        screenSprites.BG_start = new Sprite(resources["images/newPictures/BG_lobby.png"].texture);
+        screenSprites.BG_start = new Sprite(resources["images/newPictures/Redder_bg.png"].texture);
         screenSprites.BG_start.x = 0;
         screenSprites.BG_start.y = 0;
 		screenSprites.BG_start.interactive = true;
@@ -924,7 +926,8 @@
 		"BG_start": 		"images/newPictures/startScreen.png",
 		"BG_win": 			"images/BG_win.png",
 		"BG_lose": 			"images/BG_lose.png",
-		"BG_lobby": 		"images/newPictures/BG_lobby.png",
+		"BG_lobby": 		"images/newPictures/Redder_bg.png",
+		"rules": 		    "images/newPictures/Rules_bg.png",
 	}
 	
 	// repeatable elements
@@ -1295,12 +1298,14 @@
 	}
 	
 	const hideItemsNotInHand = () => {
-		for (let key of Object.keys(itemPositions)) {
-			if(!gameState.hands[gameState.playerNumber].some(oneItemInHand => oneItemInHand == key)) {
-				//console.log("hideItemsNotInHand: hides" + key)
-				positionItem(key, 0, 1380);
-			} else {
-				//console.log("hideItemsNotInHand: KEEP" + key)
+		if(gameState.hands && gameState.hands.length) {
+			for (let key of Object.keys(itemPositions)) {
+				if(!gameState.hands[gameState.playerNumber].some(oneItemInHand => oneItemInHand == key)) {
+					//console.log("hideItemsNotInHand: hides" + key)
+					positionItem(key, 0, 1380);
+				} else {
+					//console.log("hideItemsNotInHand: KEEP" + key)
+				}
 			}
 		}
 	}
@@ -1633,7 +1638,7 @@
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage, isRender, isLatestState) => {
 		//console.log('parseNewRoundMessage');
-		if(isRender) {
+		if(isRender && newRoundMessage.description != "game over") {
 			console.log('parseNewRoundMessage isRender');
 			const countdownInSeconds = 10;
 			gameState.currentRound = newRoundMessage.action_parameters.new_round;
@@ -1648,20 +1653,28 @@
 				var newRoundTimeSeconds = newRoundTime % 100;
 				var newRoundTimeMinutes = ((newRoundTime % 10000)-newRoundTimeSeconds)/100;
 				var deltaSecondsModuloHour = ((newRoundTimeMinutes>currentMinutes ? 60 :0 )+currentMinutes-newRoundTimeMinutes)*60+(currentSeconds-newRoundTimeSeconds);
-				if(deltaSecondsModuloHour < 0)
 				var isCountDownOver = deltaSecondsModuloHour < 0 || deltaSecondsModuloHour >= countdownInSeconds;
+				console.log('parseNewRoundMessage deltaSecondsModuloHour '+currentMinutes+':'+currentSeconds+' - '+newRoundTimeMinutes+':'+newRoundTimeMinutes+' = ',deltaSecondsModuloHour);
 				if(isCountDownOver) {
+					console.log('parseNewRoundMessage go straight to play ',isCountDownOver);
 					gamePhase = 'play';
 					setBGactive("pending_play");
 					drawInventory();
 					waitingForEndOfRound = false;
 					roundCouldBeConsideredOver = false;
 				} else { // go to coutdown
+					console.log('parseNewRoundMessage gp to countdown before play ',isCountDownOver);
 					setBGactive("countdown");
+					gamePhase = 'play'; // TODO extrga phase?
+					waitingForEndOfRound = true;
 					window.setTimeout(()=>{
 						gamePhase = 'play';
 						setBGactive("pending_play");
-					},countdownInSeconds*1000);
+						drawInventory();
+						
+						waitingForEndOfRound = false;
+						roundCouldBeConsideredOver = false;
+					},(countdownInSeconds-deltaSecondsModuloHour)*1000);
 				}
 			} else { // draw inventory ?
 				gamePhase = 'play';
@@ -2273,7 +2286,11 @@
 							// if an action is expected and as not already been made
 							waitingForEndOfRound = false;
 						}
-						
+						if(oneRecord.description == "game over"){
+							waitingForEndOfRound = true;
+							gamePhase = "game over";
+							setBGactive("pending_play");
+						}
 					}
                 });
 				if( isCreator() && (roundCouldBeConsideredOver || getCurrentActionId() <10)) { // next phase in 5 seconds
@@ -2555,6 +2572,7 @@
 				}
 				break;
 			case 'gameRecap': // show the score sheet on the right and prevent game actions
+			case 'game over': // show the score sheet on the right and prevent game actions
 				showGameRecapSheet();
 				break;
 		}

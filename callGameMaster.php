@@ -271,26 +271,34 @@ if(!empty($playerid) && !empty($playername) && !empty($gametype) && !empty($game
 							$return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
 						}
 					} else if ($gametype == "pending"){
-						// pending game
-						// open the next one
-						// generate 8 random numbers
 						$actionParameter['is_new_round'] = true;
-						$actionParameter['rand1'] = rand ( 0 , 1000 );
-						$actionParameter['rand2'] = rand ( 0 , 1000 );
-						$actionParameter['rand3'] = rand ( 0 , 1000 );
-						$actionParameter['rand4'] = rand ( 0 , 1000 );
-						$actionParameter['rand5'] = rand ( 0 , 1000 );
-						$actionParameter['rand6'] = rand ( 0 , 1000 );
-						$actionParameter['rand7'] = rand ( 0 , 1000 );
-						$actionParameter['rand8'] = rand ( 0 , 1000 );
-						
+						if($phase_after <110) {
+							// pending game
+							// open the next one
+							// generate 8 random numbers
+							$actionParameter['rand1'] = rand ( 0 , 1000 );
+							$actionParameter['rand2'] = rand ( 0 , 1000 );
+							$actionParameter['rand3'] = rand ( 0 , 1000 );
+							$actionParameter['rand4'] = rand ( 0 , 1000 );
+							$actionParameter['rand5'] = rand ( 0 , 1000 );
+							$actionParameter['rand6'] = rand ( 0 , 1000 );
+							$actionParameter['rand7'] = rand ( 0 , 1000 );
+							$actionParameter['rand8'] = rand ( 0 , 1000 );
+							
+							$sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),0,".$gameid.",'new round',".$phase_before.",".$phase_after.",'".json_encode($actionParameter,JSON_UNESCAPED_SLASHES)."') ";
+						} else {
+							$game_is_now_over = true;
+							$phase_after = 2000000;
+							$sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),0,".$gameid.",'game over',".$phase_before.",".$phase_after.",'".json_encode($actionParameter,JSON_UNESCAPED_SLASHES)."') ";
+						}
 						$return = [ 'action' => 'accepted OK', 'phase' => $phase_after, 'transition' => $transition ];
-						$sql = "INSERT INTO player_game_action (recordtime,player,game,description,phase_before,phase_after,action_parameters) VALUES (CURRENT_TIMESTAMP(),0,".$gameid.",'new round',".$phase_before.",".$phase_after.",'".json_encode($actionParameter,JSON_UNESCAPED_SLASHES)."') ";
+						
 						if(mysqli_query($conn,$sql)) {
 
 						} else {
 							$return = [ 'action' => 'FAILED to write 1##'.$sql.'##', 'id' => -1 ];
 						}
+						
 					}
                 } else {
                     if($granted) {
