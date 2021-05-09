@@ -1,6 +1,7 @@
 // server url
     //let serverURL = '82.181.24.9:81'; // raspberry
-    let serverURL = 'localhost:3000';
+    //let serverURL = 'localhost:3000';
+    let serverURL = '82.181.24.9:3000';
 
 //Aliases
     let Application = PIXI.Application,

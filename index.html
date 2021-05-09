@@ -17,7 +17,7 @@
 		</style>
 	</head>
 	<body>
-		<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+		<script src="http://82.181.24.9:3000/socket.io/socket.io.js"></script>
 		<script src="pixi/pixi.min.js"></script>
 		<script src="build/main.js"></script>
 		<div id="locatorJeff" style="border-style: solid; position: fixed; bottom: 5%; top:0; right: 0; width: 15%;overflow: scroll; " height="100%">
@@ -29,7 +29,7 @@
 		  <input id="socketInput" data-lobbyId="0" data-playername="" autocomplete="off" /><button>Send</button>
 		</form>
 		 <script>
-		  var socket = io('ws://localhost:3000');
+		  var socket = io('ws://82.181.24.9:3000');
 
 		  var messages = document.getElementById('messages');
 		  var form = document.getElementById('form');
