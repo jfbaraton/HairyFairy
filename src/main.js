@@ -103,7 +103,7 @@
         'Cross_finish_line' : 'Cross_finish_line.mp4',
         'Shot_Deagle_Weapon_1' : 'Shot_Deagle_Weapon_1.mp4',
         'when_lose_because_no_time' : 'when_lose_because_no_time.mp4',
-        'ending' : 'ending.mp4',
+        //'ending' : 'ending.mp4',
         'slingshot_charging' : 'slingshot_charging.mp4',
         'gun_charging' : 'gun_charging.mp4',
         'shot_no_weapon' : 'shot_no_weapon.mp4',
@@ -115,65 +115,66 @@
 
     loader
     .add("images/BG_empty.png")
-    .add("images/FlagsSolo1.3.png")
-    .add("images/FlagsSolo2.3.png")
-    .add("images/Hotairbaloon2SOLO.png")
-    .add("images/HotairbaloonSOLO.png")
+    //.add("images/FlagsSolo1.3.png")
+    //.add("images/FlagsSolo2.3.png")
+    //.add("images/Hotairbaloon2SOLO.png")
+    //.add("images/HotairbaloonSOLO.png")
     .add("images/BG_win.png")
     .add("images/BG_lose.png")
     .add("images/BG_start2.png")
     //.add("images/comb_again.png")
     //.add("images/messy_hair.png")
     //.add("images/nice_hair.png")
-    .add("images/rollerCoaster1.png")
+    //.add("images/rollerCoaster1.png")
     //.add("images/blob.png")
     //.add("images/wand.png")
     .add("images/Crosshair_lazer_weaponQUARTER-NO-BG.png")
-    .add("images/Note_1.png")
-    .add("images/Note_2.png")
-    .add("images/Note_3.png")
-    .add("images/Note_4.png")
-    .add("images/Note_5.png")
-    .add("images/Badnote_1.png")
-    .add("images/Badnote_2.png")
-    .add("images/Badnote_3.png")
-    .add("images/gum2.png")
-    .add("images/static_ham_wheel.png")
-    .add("images/dynamic_ham_wheel.png")
-    .add("images/curseur_Menu.png")
-    .add("images/BG_2ndloop.png")
-    .add("images/OuterMagicGates.png")
-    .add("images/Weapons/Weapon1 - Peanut1.3.png")
-    .add("images/Weapons/Weapon2 - Lazer3.3.png")
-    .add("images/portee vide3.png")
-    .add("images/Weapons/slingshot charged 1.png")
-    .add("images/Weapons/Weapon2.png")
-    .add("images/Weapons/Weapon3.png")
-    .add("images/Weapons/Weapon2 - Lazer 123 .png")
-    .add("images/Weapons/Weapon3 - Bullet1.png")
+    //.add("images/Note_1.png")
+    //.add("images/Note_2.png")
+    //.add("images/Note_3.png")
+    //.add("images/Note_4.png")
+    //.add("images/Note_5.png")
+    //.add("images/Badnote_1.png")
+    //.add("images/Badnote_2.png")
+    //.add("images/Badnote_3.png")
+    //.add("images/gum2.png")
+    //.add("images/static_ham_wheel.png")
+    //.add("images/dynamic_ham_wheel.png")
+    //.add("images/curseur_Menu.png")
+    //.add("images/BG_2ndloop.png")
+    //.add("images/OuterMagicGates.png")
+    //.add("images/Weapons/Weapon1 - Peanut1.3.png")
+    //.add("images/Weapons/Weapon2 - Lazer3.3.png")
+    //.add("images/portee vide3.png")
+    //.add("images/Weapons/slingshot charged 1.png")
+    //.add("images/Weapons/Weapon2.png")
+    //.add("images/Weapons/Weapon3.png")
+    //.add("images/Weapons/Weapon2 - Lazer 123 .png")
+    //.add("images/Weapons/Weapon3 - Bullet1.png")
     //.add("sounds/"+sound_bank["Catch_gold"])
     //.add("sounds/"+sound_bank["Gun_switch"])
     //.add("sounds/"+sound_bank["signal_10sec_left"])
     .add("sounds/"+sound_bank["claps_end_of_level"])
     //.add("sounds/"+sound_bank["Menu_musique"])
     //.add("sounds/"+sound_bank["take_a_bonus"])
-    .add("sounds/"+sound_bank["Countdown_Start_Race"])
-    .add("sounds/"+sound_bank["musique_game"])
+    //.add("sounds/"+sound_bank["Countdown_Start_Race"])
+    //.add("sounds/"+sound_bank["musique_game"])
     .add("sounds/"+sound_bank["tool_select"])
     //.add("sounds/"+sound_bank["Crash_on_the_roller_coaster"])
-    .add("sounds/"+sound_bank["oh_no"])
+    //.add("sounds/"+sound_bank["oh_no"])
     //.add("sounds/"+sound_bank["upgrade_weapon"])
     //.add("sounds/"+sound_bank["Cross_finish_line"])
-    .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
+    //.add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
     .add("sounds/"+sound_bank["item_choice_music"])
+    //.add("sounds/"+sound_bank["intro_music"])
     //.add("sounds/"+sound_bank["when_lose_because_no_time"])
-    .add("sounds/"+sound_bank["ending"])
-    .add("sounds/"+sound_bank["slingshot_charging"])
-    .add("sounds/"+sound_bank["shot_no_weapon"])
-    .add("sounds/"+sound_bank["gun_charging"])
-    .add("sounds/"+sound_bank["short_slingshot_sound"])
-    .add("sounds/"+sound_bank["shot_lazer_weapon_2"])
-	.add("images/TESTBG.png")
+    //.add("sounds/"+sound_bank["ending"])
+    //.add("sounds/"+sound_bank["slingshot_charging"])
+    //.add("sounds/"+sound_bank["shot_no_weapon"])
+    //.add("sounds/"+sound_bank["gun_charging"])
+    //.add("sounds/"+sound_bank["short_slingshot_sound"])
+    //.add("sounds/"+sound_bank["shot_lazer_weapon_2"])
+	//.add("images/TESTBG.png")
 	.add("images/newPictures/lobby_one_game.png")  // one game background in the lobby
 	.add("images/newPictures/accessories.png")  // place to brag about accessories
 	.add("images/newPictures/souvenirs.png")  	// place to brag about souvenirs
@@ -200,6 +201,8 @@
 
     .load(setup);
 
+	const GAME_RECAP_X_MIN = 1200;
+	const GAME_RECAP_X_MAX = 1800;
     //Define any variables that are used in more than one function
     let timeInSec = 0;
     let mode, tool, music, sound, BGmusicSprite, musicSprite, progress;
@@ -265,10 +268,10 @@
 
     // create a texture from an image path
     //const textureMessyHair = PIXI.Texture.from('images/messy_hair.png');
-    const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
-    const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
-    const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
-	const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
+    //const textureHamster = PIXI.Texture.from('images/dynamic_ham_wheel.png');
+    //const textureLazer = PIXI.Texture.from('images/Weapons/Weapon2 - Lazer 123 .png');
+    //const textureGun = PIXI.Texture.from('images/Weapons/Weapon3 - Bullet1.png');
+	//const textureItems = PIXI.Texture.from('images/newPictures/template_grid_transparent.png');
 	const textureItems1 = PIXI.Texture.from('images/newPictures/item_set_1.png');
 	const textureItems2 = PIXI.Texture.from('images/newPictures/item_set_2.png');
 	const textureItems3 = PIXI.Texture.from('images/newPictures/item_set_3.png');
@@ -387,6 +390,7 @@
 			// show avatar choice screen
             console.log('show avatar choice screen, '+gameState.playername );
 			gamePhase ='avatar_choice';
+			setBGactive("BG_lobby");
 			resetAvatarSprites();
 			placeAvatarChoices();
 			
@@ -460,7 +464,7 @@
 
         var WEAPON_SCALE = 0.5;
         var WEAPON_MENU_SCALE = 0.8;
-        weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
+        /*weapon1 = new Sprite(resources["images/Weapons/slingshot charged 1.png"].texture);
         weapon1.x = 160+580;
         weapon1.y = 920+15;
         weapon1.vx = 0;
@@ -474,12 +478,12 @@
         weapon1.interactive = true;
         weapon1.available = true;
         weapon1.on('pointerdown', onButtonDown);
-        weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);
+        weapon1.scale = new PIXI.ObservablePoint(()=>{},weapon1,WEAPON_SCALE,WEAPON_SCALE);*/
         //app.stage.addChild(weapon1);
 
         var WEAPON_SPACING = 190;
 
-        weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
+        /*weapon2 = new Sprite(resources["images/Weapons/Weapon2.png"].texture);
         weapon2.x = weapon1.x+ WEAPON_SPACING -5;
         weapon2.y = 3000; // 920+15
         weapon2.vx = 0;
@@ -493,10 +497,10 @@
         weapon2.interactive = true;
         weapon2.available = true;
         weapon2.on('pointerdown', onButtonDown);
-        weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);
+        weapon2.scale = new PIXI.ObservablePoint(()=>{},weapon2,WEAPON_SCALE,WEAPON_SCALE);*/
         //app.stage.addChild(weapon2);
 
-        weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
+       /* weapon3 = new Sprite(resources["images/Weapons/Weapon3.png"].texture);
         weapon3.x = weapon2.x+ WEAPON_SPACING - 30;
         weapon3.y = 3000// 915
         weapon3.vx = 0;
@@ -511,18 +515,18 @@
         weapon3.interactive = true;
         weapon3.available = true;
         weapon3.on('pointerdown', onButtonDown);
-        weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE*1.5,WEAPON_SCALE*1.5);
+        weapon3.scale = new PIXI.ObservablePoint(()=>{},weapon3,WEAPON_SCALE*1.5,WEAPON_SCALE*1.5);*/
         //app.stage.addChild(weapon3);
 
         //Create the `rollerCoaster1` sprite
-        rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
+        /*rollerCoaster1 = new Sprite(resources["images/rollerCoaster1.png"].texture);
         rollerCoaster1.x = 521;
         rollerCoaster1.y = 650;
         rollerCoaster1.vx = 0;
         rollerCoaster1.vy = 0;
         rollerCoaster1.interactive = true;
         rollerCoaster1.on('pointerdown', onButtonDown);
-        rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);
+        rollerCoaster1.scale = new PIXI.ObservablePoint(()=>{},rollerCoaster1,0.3,0.3);*/
         //app.stage.addChild(rollerCoaster1);
 
         //text for progression
@@ -546,7 +550,7 @@
         var NOTE_SCALE = 0.7;
         instructions = [];
         //Create the `instrunote1` sprite
-        instrunote1 = new Sprite(resources["images/Note_1.png"].texture);
+        /*instrunote1 = new Sprite(resources["images/Note_1.png"].texture);
         instrunote1.x = 700;
         instrunote1.y = 1080;
         instrunote1.vx = 0;
@@ -557,12 +561,12 @@
         instrunote1.scale = new PIXI.ObservablePoint(()=>{},instrunote1,NOTE_SCALE,NOTE_SCALE);
         instrunote1.on('pointerdown', onButtonDown);
         app.stage.addChild(instrunote1);
-        instructions.push(instrunote1);
+        instructions.push(instrunote1);*/
 
 
         jammers = [];
         //Create the `note1` sprite
-        note1 = new Sprite(resources["images/Note_1.png"].texture);
+        /*note1 = new Sprite(resources["images/Note_1.png"].texture);
         note1.x = 700;
         note1.y = 1080;
         note1.instru = instrunote1;
@@ -573,12 +577,12 @@
         note1.scale = new PIXI.ObservablePoint(()=>{},note1,NOTE_SCALE,NOTE_SCALE);
         note1.on('pointerdown', onButtonDown);
         app.stage.addChild(note1);
-        jammers.push(note1);
+        jammers.push(note1);*/
 
 
         bullets = [];
         //Create the `bullet` sprite
-        bullet_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
+       /* bullet_peanut1 = new Sprite(resources["images/Weapons/Weapon1 - Peanut1.3.png"].texture);
         bullet_peanut1.x = 950;
         bullet_peanut1.y = 1280;
         bullet_peanut1.vx = 0;
@@ -588,13 +592,13 @@
         bullet_peanut1.interactive = true;
         bullet_peanut1.on('pointerdown', onButtonDown);
         app.stage.addChild(bullet_peanut1);
-        bullets.push(bullet_peanut1);
+        bullets.push(bullet_peanut1);*/
 
 
         //Create the `hamster` sprite
         //hamster = new Sprite(resources["images/dynamic_ham_wheel.png"].texture);
 
-        hamster = new PIXI.TilingSprite(
+        /*hamster = new PIXI.TilingSprite(
             textureHamster,
             500,
             459
@@ -617,13 +621,13 @@
             .on('pointerupoutside', onButtonUp)
             .on('pointerover', onButtonOver)
             .on('pointerout', onButtonOut);*/
-        app.stage.addChild(hamster);
+        //app.stage.addChild(hamster);
 		
-		suitCaseSprite = new Sprite(resources["images/newPictures/suitCase2.png"].texture)
+		/*suitCaseSprite = new Sprite(resources["images/newPictures/suitCase2.png"].texture)
 		suitCaseSprite.x = 0
 		suitCaseSprite.y = 1080
 		suitCaseSprite.scale = new PIXI.Point(0.5, 0.5)
-		app.stage.addChild(suitCaseSprite)
+		app.stage.addChild(suitCaseSprite)*/
 		
 		
 		// STEP 3 add the texture to the variable
@@ -642,7 +646,7 @@
 		
 		
 		recap_BG = new Sprite(resources["images/newPictures/recap_BG.png"].texture) // file
-		recap_BG.x = 0 // horizontal (0 is the left of the screen, 1900 is the right)
+		recap_BG.x = GAME_RECAP_X_MIN // horizontal (0 is the left of the screen, 1900 is the right)
 		recap_BG.y = 0 // vertical (0 is the top of the screen, 1080 is the bottom)
 		recap_BG.scale = new PIXI.Point(1.0, 1.0) // scale/zoom
         recap_BG.interactive = true;				// make clickable
@@ -772,7 +776,7 @@
         app.stage.addChild(msg_menu_1);
 		
 		debugButton = new Text("debug", style4);
-		debugButton.position.set(1100, 0)
+		debugButton.position.set(2100, 0)
 		//debugButton.interactive = true
 		//debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg, true)})
 		app.stage.addChild(debugButton)
@@ -1170,14 +1174,32 @@
 			"ostrich",
 			"bunbun",
 			"wolf",
-			"hen"];
+			"hen",
+			"devil",
+			"deer"];
+		const availablePlayerAvatars2 = [
+			"forest",
+			"cry",
+			"minou",
+			"posh",
+			];
 		console.log('available avatars');
 		debugButton.x = 300;
-		debugButton.y = 100;
+		debugButton.y = 2000;
 		debugButton.text = 'Choose an avatar';
 		placeElementSprite('lobby_one_game',  0, null, baseX, baseY);
 			availablePlayerAvatars.forEach(avatarId=> {
-				positionAvatar(avatarId, baseX, baseY, 1, cpt++, () => {
+				positionAvatar(avatarId, baseX+50, baseY+50, 1, cpt++, () => {
+				window.localStorage.setItem('playeravatar',avatarId);
+				window.location = rootURL+"index.html";
+			});
+			baseX = baseX + 110;
+		});
+		baseX = 200;
+		baseY = baseY +300;
+		placeElementSprite('lobby_one_game',  1, null, baseX, baseY);
+			availablePlayerAvatars2.forEach(avatarId=> {
+				positionAvatar(avatarId, baseX+50, baseY+50, 2, cpt++, () => {
 				window.localStorage.setItem('playeravatar',avatarId);
 				window.location = rootURL+"index.html";
 			});
@@ -1380,7 +1402,7 @@
 
 	const fetchItemMiniatureSprites = () => {
 		
-		for (let key of Object.keys(itemPositions)) {
+		/*for (let key of Object.keys(itemPositions)) {
 			let tmpItem = {};
 			tmpItem = new PIXI.TilingSprite(
 				textureItems,
@@ -1398,7 +1420,7 @@
 			tmpItem.identifyForClick = () => ({elementType: "miniatureitem", id: key})
 			itemMiniatureSprites[key] = tmpItem
 			app.stage.addChild(itemMiniatureSprites[key]);
-		}
+		}*/
 	}
 
 	const itemBorderPositions = {
@@ -1499,6 +1521,18 @@
 		"bunbun": [-223, 0],
 		"wolf": [-447, 0],
 		"hen": [-670, 0],
+		
+		"devil": [0, 695],
+		"deer": [-223, 695],
+		"forest": [-447, 695],
+		"cry": [-670, 695],
+		
+		
+		
+		
+		"minou": [-899, 695],
+		"posh": [-1124, 695],
+		
 		"join": [-899, 0],
 		"exit": [-1124, 0],
 		"enter": [-1349, 0],
@@ -1657,9 +1691,11 @@
 		}
 		if(isRender) {
 			debugButton.text ='Round '+((getCurrentActionId()-(getCurrentActionId()%10))/10)+'/10\nsomeone found before you';
-			if(player != gameState.playerid) {
+			if(joinMessage.player != gameState.playerid) {
 				// blur pictures
-				createOrUpdatePhaseText("Someone found before you")
+				createOrUpdatePhaseText("Someone found before you");
+			} else {
+				createOrUpdatePhaseText("Well done!");
 			}
 			waitingForEndOfRound = true;
 			roundCouldBeConsideredOver = true;
@@ -1688,6 +1724,7 @@
 				if(gamePhase != 'countdown') {
 					gamePhase = 'played';
 				}
+				createOrUpdatePhaseText("Sorry! That word is not 'P'-ending");
 			} else {
 				createOrUpdatePhaseText("Which item is p-ending? You can still be the first to find!");
 			}
@@ -1914,8 +1951,8 @@
         msg_status.y = 850;
         msg_status.x = 200;
 
-        hamster.moving = false;
-        hamster.vx = 0;
+        /*hamster.moving = false;
+        hamster.vx = 0;*/
 
 
         //msg_menu_1.y = msg_menu_1.y - 1080;
@@ -1932,16 +1969,16 @@
             if(BGmusicSprite && BGmusicSprite.baseTexture && BGmusicSprite.baseTexture.source && BGmusicSprite.baseTexture.source.pause){
                 BGmusicSprite.baseTexture.source.pause();
             }
-            onPlayVideo('oh_no', false);
-            onPlayVideo('ending', true);
+            //onPlayVideo('oh_no', false);
+            //onPlayVideo('ending', true);
             msg_status.text =
             '             don\'t miss notes \n'+
             '       don\'t hit black notes \n';
             msg_status.y = 700;
             msg_status.x = 40;
 
-            hamster.moving = false;
-            hamster.vx = 0;
+            /*hamster.moving = false;
+            hamster.vx = 0;*/
 
 
             //msg_menu_1.y = msg_menu_1.y - 1080;
@@ -1986,16 +2023,20 @@
 				
 				waitingForEndOfRound = true;
 				gamePhase == 'played';
-				if(clickIdentifier.id == '8') {
+				if(clickIdentifier.id == gameState.goodItem) {
+					roundCouldBeConsideredOver = true;
+					createOrUpdatePhaseText("Well done!");
+					//onPlayVideo('tool_select', false);
 					playItem('success',clickIdentifier.id,targetPlayer,()=>{
 						socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
 					});
-					setBGactive("BG_win");
+					//setBGactive("BG_win");
 				} else {
+					createOrUpdatePhaseText("Sorry! That word is not 'P'-ending");
 					playItem('fail',clickIdentifier.id,targetPlayer, ()=>{
 						socketInput.jeffSocket.emit('game event', 'gameevent_'+gameState.gameId);
 					});
-					setBGactive("BG_lose");
+					//setBGactive("BG_lose");
 				}
 				
 				/*switch(gameState.currentRound){
@@ -2574,7 +2615,7 @@
 
     function placeNewJammers(){
         if(0 == CURRENT_LVL++){
-            hamster.vx = 0.35;
+            //hamster.vx = 0.35;
             onPlayVideo('musique_game', true);
         }
 
@@ -2658,23 +2699,24 @@
 		let sheetMoveSpeed = 15;
 		if(recap_BG.y != 0 && (gamePhase == 'play' || gamePhase == 'game over')) {
 			recap_BG.y = 0;
-			console.log('bring to front showGameRecapSheet');
+			console.log('bring to front showGameRecapSheet1');
 			app.stage.removeChild(recap_BG);
 			app.stage.addChild(recap_BG);
 			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
 		}
 		if(bringToFront) {
+			console.log('bring to front showGameRecapSheet2');
 			app.stage.removeChild(recap_BG);
 			app.stage.addChild(recap_BG);
 			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
 		}
-		if(recap_BG.x >0) {
+		if(recap_BG.x >GAME_RECAP_X_MIN) {
 			recap_BG.x -= sheetMoveSpeed;
 			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
 		}
 	}
 	function hideGameRecapSheet() {
-		let SHEET_MAX_OFFSET = 500; // part of the sheet that ends up hidden on the right
+		let SHEET_MAX_OFFSET = GAME_RECAP_X_MIN+500; // part of the sheet that ends up hidden on the right
 		let sheetMoveSpeed = 15;
 		
 		if(recap_BG.y != 1080 && !(gamePhase == 'play' || gamePhase == 'game over')) {
@@ -2727,7 +2769,11 @@
 					case 'brag':
 						//setBGactive(BGForEventType[gameState.currentEvent])
 						//drawInventory()
-						createOrUpdatePhaseText("Which item is p-ending?")
+						if(getCurrentActionId() >=10){
+							createOrUpdatePhaseText("Which item is p-ending?");
+						} else {
+							createOrUpdatePhaseText("Next round in a few seconds");
+						}
 						break;
 					case 'lost and found':
 						//setBGactive(gameState.currentRound)
@@ -2759,9 +2805,9 @@
 		
         switch (mode) {
             case 'normal':
-                checkBulletCollision();
+                //checkBulletCollision();
 
-                if(hamster.progress >=  100 && hamster.vx >0) { // touch right
+               /* if(hamster.progress >=  100 && hamster.vx >0) { // touch right
                     // check if there are still notes
 
                     for (var i = 0; i < jammers.length; i++) {
@@ -2781,7 +2827,7 @@
                     }
 
                     placeNewJammers();
-                }
+                }*/
 
                 break;
         }
@@ -2789,15 +2835,15 @@
         // action
         switch (mode) {
             case 'normal':
-                hamster.tilePosition.vy = 500;
-                rollerCoaster1.vy=0;
+                //hamster.tilePosition.vy = 500;
+                //rollerCoaster1.vy=0;
                 progress++;
                 break;
 
              default:
                 moveSpeed =0;
                 recoverSpeed =0;
-                rollerCoaster1.vy=0;
+                //rollerCoaster1.vy=0;
                 //rollerCoaster1.y=176;
 
         }
@@ -2807,11 +2853,11 @@
         /*hamster.x += hamster.vx;
         hamster.y += hamster.vy;*/
         //hamster.tilePosition.x += hamster.tilePosition.vy;
-        hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
+        //hamster.tilePosition.x += (timeInSec % 4 == 0 ) ? 500 : 0;
 
-        hamster.progress = 10 ;
+        //hamster.progress = 10 ;
 
-        moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
+        //moveJammers(mode === 'recover' ? moveSpeed-recoverSpeed : moveSpeed);
 
     }
 
@@ -2858,7 +2904,7 @@
                                 if(jammers[j].isBad){
                                     onLoseGame();
                                 } else {
-                                    onPlayVideo('tool_select',false);
+                                    //onPlayVideo('tool_select',false);
                                 }
                             }
                         }
