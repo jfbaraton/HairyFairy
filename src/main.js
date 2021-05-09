@@ -750,8 +750,8 @@
 		
 		debugButton = new Text("debug", style4);
 		debugButton.position.set(1100, 0)
-		debugButton.interactive = true
-		debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg, true)})
+		//debugButton.interactive = true
+		//debugButton.on('pointerdown', () => {parseNewRoundMessage(mockedMessages.newTradRoundMsg, true)})
 		app.stage.addChild(debugButton)
 		
 
@@ -1632,14 +1632,24 @@
 
 	// new round:  00 = event, 10 = lost & found, 20 = propose trade, 30 = accept/refuse trade
 	const parseNewRoundMessage = (newRoundMessage, isRender, isLatestState) => {
-		
+		//console.log('parseNewRoundMessage');
 		if(isRender) {
+			console.log('parseNewRoundMessage isRender');
+			const countdownInSeconds = 10;
 			gameState.currentRound = newRoundMessage.action_parameters.new_round;
 			debugButton.text ='Round '+(getCurrentActionId()-(getCurrentActionId()%10))/10+'/10';
 			UiProgress = new Array()
 			hideItemsNotInHand();
 			if(isLatestState) { // go to countdown
-				var isCountDownOver = true;
+				var currentDate = new Date();
+				var currentSeconds = currentDate.getSeconds();
+				var currentMinutes = currentDate.getMinutes();
+				var newRoundTime = newRoundMessage.recordtime;
+				var newRoundTimeSeconds = newRoundTime % 100;
+				var newRoundTimeMinutes = ((newRoundTime % 10000)-newRoundTimeSeconds)/100;
+				var deltaSecondsModuloHour = ((newRoundTimeMinutes>currentMinutes ? 60 :0 )+currentMinutes-newRoundTimeMinutes)*60+(currentSeconds-newRoundTimeSeconds);
+				if(deltaSecondsModuloHour < 0)
+				var isCountDownOver = deltaSecondsModuloHour < 0 || deltaSecondsModuloHour >= countdownInSeconds;
 				if(isCountDownOver) {
 					gamePhase = 'play';
 					setBGactive("pending_play");
@@ -1650,8 +1660,8 @@
 					setBGactive("countdown");
 					window.setTimeout(()=>{
 						gamePhase = 'play';
-						setBGactive("play");
-					},10000);
+						setBGactive("pending_play");
+					},countdownInSeconds*1000);
 				}
 			} else { // draw inventory ?
 				gamePhase = 'play';
@@ -2052,7 +2062,7 @@
     };
 	
 	const resetAvatarSprites = (avatarType) => {
-		console.log('resetAvatarSprites');
+		//console.log('resetAvatarSprites');
 		for (let key of Object.keys(avatarSprites)) {
 			if(!avatarType || key === avatarType || (avatarSprites[key].identifyForClick && avatarSprites[key].identifyForClick().elementType && 
 				avatarSprites[key].identifyForClick().elementType == avatarType)) {
@@ -2068,7 +2078,7 @@
 	}
 	
 	const resetElementSprites = (elementType) => {
-		console.log('resetElementSprites');
+		//console.log('resetElementSprites');
 		for (let key of Object.keys(elementSprites)) {
 			if(!elementType || key === elementType || (elementSprites[key].identifyForClick && elementSprites[key].identifyForClick().elementType && 
 				elementSprites[key].identifyForClick().elementType == elementType)) {
@@ -2086,7 +2096,7 @@
 	}
 	
 	const resetItemSprites = (elementType) => {
-		console.log('resetItemSprites');
+		//console.log('resetItemSprites');
 		for (let key of Object.keys(itemSprites)) {
 			if(!elementType || key === elementType || (itemSprites[key].identifyForClick && itemSprites[key].identifyForClick().elementType && 
 				itemSprites[key].identifyForClick().elementType == elementType)) {
@@ -2248,7 +2258,7 @@
 							case "accept trades": parseAcceptTradesMessage(oneRecord, isRender); break;
 						}
 						if(oneRecord.action_parameters.is_new_round) {
-							parseNewRoundMessage(oneRecord, isRender);
+							parseNewRoundMessage(oneRecord, isRender,isLastKnownAction);
 						}
 						if(oneRecord.action_parameters.is_new_event_type) {
 							parseNewEventTypeMessage(oneRecord, isRender);
