@@ -107,7 +107,9 @@
         'gun_charging' : 'gun_charging.mp4',
         'shot_no_weapon' : 'shot_no_weapon.mp4',
         'shot_lazer_weapon_2' : 'shot_lazer_weapon_2.mp4',
-        'short_slingshot_sound' : 'short_slingshot_sound.mp4'
+        'short_slingshot_sound' : 'short_slingshot_sound.mp4',
+        'item_choice_music' : 'Super_Game_Music_-_A_Walk_in_the_Park_(Demo).mp4',
+        'intro_music' : 'Super_Game_Music_-_A_Walk_in_the_Park_(Demo).mp4'
     };
 
     loader
@@ -162,6 +164,7 @@
     //.add("sounds/"+sound_bank["upgrade_weapon"])
     //.add("sounds/"+sound_bank["Cross_finish_line"])
     .add("sounds/"+sound_bank["Shot_Deagle_Weapon_1"])
+    .add("sounds/"+sound_bank["item_choice_music"])
     //.add("sounds/"+sound_bank["when_lose_because_no_time"])
     .add("sounds/"+sound_bank["ending"])
     .add("sounds/"+sound_bank["slingshot_charging"])
@@ -177,7 +180,9 @@
 	.add("images/newPictures/lostAndFound.png") // place for lost and found (blind draft)
 	.add("images/newPictures/pending_play_BG.png")		// background for pending gamme play phase
 	.add("images/newPictures/Redder_bg.png")		// generic background for avatar choice, lobby...
-	.add("images/newPictures/Rules_bg.png")		// background for rules explanation
+	.add("images/newPictures/Intro1.png")		// background for rules explanation
+	.add("images/newPictures/Intro2.png")		// background for rules explanation
+	.add("images/newPictures/Intro3.png")		// background for rules explanation
 	.add("images/newPictures/BG_321_Go.png")		// background countdown before play phase
 	.add("images/newPictures/suitCase2.png")	
 	//.add("images/newPictures/suitCase2.png")	// STEP 1 add texture file in the loader
@@ -232,7 +237,8 @@
 	let recap_BG;
 	let phaseText;
 	let socketInput;
-	let gamePhase = "lobby";
+	let gamePhase = "splash";
+	let rulesAlreadySeen = false;
 	let UiProgress = new Array();
 	let UiState = {}
 	let gameState = { 
@@ -243,7 +249,9 @@
 		playername : null,
 		playeravatar : null,
 		lobbyData : [],
-		lobbyFirstGameId : 0 // for pagination
+		lobbyFirstGameId : 0, // for pagination
+		badItems : [9,10,11,12,13],
+		goodItem : 8,
 		}; 
 	let waitingForEndOfRound = true;
 	let roundCouldBeConsideredOver = false;
@@ -421,6 +429,10 @@
 		screenSprites = {
 			playScreenBG: {},
 			BG_start: {},
+			countdown: {},
+			Intro1: {},
+			Intro2: {},
+			Intro3: {},
 			BG_lobby: {},
 			BG_win: {},
 			BG_lose: {},
@@ -644,7 +656,7 @@
 		app.stage.addChild(phaseText)
 			
         //Create the `BG_start` sprite
-        screenSprites.BG_start = new Sprite(resources["images/newPictures/Redder_bg.png"].texture);
+        screenSprites.BG_start = new Sprite(resources["images/newPictures/startScreen.png"].texture);
         screenSprites.BG_start.x = 0;
         screenSprites.BG_start.y = 0;
 		screenSprites.BG_start.interactive = true;
@@ -660,6 +672,12 @@
 				console.log("go to game")
 			} else if(gamePhase == "lobby") {
 				console.log("you are still in lobby, need to join a game");
+			} else if(gamePhase == "splash") {
+				gamePhase = "lobby";
+				setBGactive("BG_lobby");
+				onPlayVideo('intro_music', true);
+				hideGameRecapSheet();
+				refreshLobbies();
 			}
 		})
         app.stage.addChild(screenSprites.BG_start);
@@ -720,7 +738,7 @@
         fontFamily: "Bodoni MT", // "chalkduster"
         fontSize: 25,
         //fontStyle: 'underline',
-        fill: "white",
+        fill: "red",
         });
 		/*
         msg_status = new Text(
@@ -927,7 +945,9 @@
 		"BG_win": 			"images/BG_win.png",
 		"BG_lose": 			"images/BG_lose.png",
 		"BG_lobby": 		"images/newPictures/Redder_bg.png",
-		"rules": 		    "images/newPictures/Rules_bg.png",
+		"Intro1": 		    "images/newPictures/Intro1.png",
+		"Intro2": 		    "images/newPictures/Intro2.png",
+		"Intro3": 		    "images/newPictures/Intro3.png",
 	}
 	
 	// repeatable elements
@@ -952,7 +972,7 @@
 		}
 	}
 
-	const setBGactive = (BGtype) => {
+	const setBGactive = (BGtype, onClickAction) => {
 		console.log('change background to '+BGtype);
 		resetElementSprites();
 		resetAvatarSprites();
@@ -960,6 +980,14 @@
 		for (let key of Object.keys(screenSprites)) {
 			if(key === BGtype) {
 				screenSprites[key].y = 0
+				if(onClickAction) {
+					screenSprites[key].removeAllListeners('pointerdown');
+					//console.log('sprites '+spriteUUID+' created with on click action');
+					screenSprites[key].interactive = true;
+					screenSprites[key].on('pointerdown', onClickAction);
+				} else {
+					screenSprites[key].interactive = false;
+				}
 			} else {
 				screenSprites[key].y = 1080
 			}
@@ -1015,13 +1043,15 @@
 		positionItem("5", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("6", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("7", 90+((cptX++)*500), 90+(cptY*500));*/
-		const badItems = [9,10,11];
-		const goodItem = 8;
-		badItems.push(goodItem);
-		const shuffledItems = shuffleArray(badItems);
+		const badItems = gameState.badItems;
+		const goodItem = gameState.goodItem;
+		var shuffledItems = [];
+		badItems.forEach(oneItem => shuffledItems.push(oneItem));
+		shuffledItems.push(goodItem);
+		shuffledItems = shuffleArray(shuffledItems);
 		shuffledItems.forEach(itemId => {
-			positionItem(itemId, 290+((cptX++)*500), 90+(cptY*500));
-			if(cptX >=2) { cptX = 0;cptY++;}
+			positionItem(itemId, 190+((cptX++)*500), 90+(cptY*500));
+			if(cptX >=3) { cptX = 0;cptY++;}
 		});
 		/*positionItem("8", 90+((cptX++)*500), 90+(cptY*500));
 		positionItem("9", 90+((cptX++)*500), 90+(cptY*500));
@@ -1042,6 +1072,7 @@
 		positionItem(hand[1], suitCaseSprite.x + 300, suitCaseSprite.y + 300)
 		positionItem(hand[2], suitCaseSprite.x + 500, suitCaseSprite.y + 300)
 		*/
+		showGameRecapSheet();
 	}
 	
 	const shuffleArray = (array) => {
@@ -1155,12 +1186,12 @@
 	// jSONData: all the games, oneGameId: id of the game to represent, gameGroupId: index/where to represent it
 	// draw one lobby game. group Id represents where in the lobby list
 	const placeLobbyGame = (jSONData, oneGameId, gameGroupId) => {
-		const topMargin = 5;
+		const topMargin = 55;
 		const gamesForColumn = 5; // games per column +1
 		const getLobbyPlayerxOffset = (playerIdx) => {
 			return (150+(playerIdx-1)*90);
 		}
-		var baseX = 190+  (gameGroupId >= gamesForColumn ? 900:0)
+		var baseX = 120+  (gameGroupId >= gamesForColumn ? 900:0)
 		var	baseY = 120+(((gameGroupId-1) % (gamesForColumn-1)))*250;
 		//console.log('placeLobbyGame idx: '+gameGroupId+' game: '+oneGameId+ ' ('+baseX+','+baseY+')');
 		var playerIdx = 1;
@@ -1173,8 +1204,8 @@
 			app.stage.addChild(debugButton2);
 			lobbyLegend[lobbyBGID] = debugButton2;
 		}
-		lobbyLegend[lobbyBGID].x =baseX+6;
-		lobbyLegend[lobbyBGID].y = baseY+54;
+		lobbyLegend[lobbyBGID].x =baseX+56;
+		lobbyLegend[lobbyBGID].y = baseY+104;
 		//lobbyLegend['placeLobbyGame'+oneGameId].position.set(0,0);
 		lobbyLegend[lobbyBGID].text = 'game\n'+'  '+(oneGameId%10000);
 		//positionAvatar('cat', baseX, baseY+305);
@@ -1208,7 +1239,7 @@
 			positionAvatar(gameLobbyPlayer.avatar, baseX+getLobbyPlayerxOffset(gameLobbyPlayer.phase_after), baseY+topMargin, gameGroupId, gameLobbyPlayer.phase_after, null, gameLobbyPlayer.nickname);
 			
 		});
-		
+		createOrUpdatePhaseText("1-4 players. The game starts when the creator enters the game");
 		if(!alreadyJoined){
 			if(amountOfPlayers<4) {
 				// show join button
@@ -1220,7 +1251,7 @@
 				});
 			}
 		} else {
-			if(isCreator) { // if logged in user is the creator (first player)
+			/*if(isCreator) { // if logged in user is the creator (first player)
 				// show "add robot" / "kick player"
 				// show "start game" button
 				positionAvatar('enter', baseX+getLobbyPlayerxOffset(6), baseY+topMargin, gameGroupId, playerIdx+1, () => {
@@ -1239,7 +1270,7 @@
 					
 					//onStartGame();
 				});
-			}
+			}*/
 			// show exit button
 			positionAvatar('exit', baseX+getLobbyPlayerxOffset(4), baseY+topMargin, gameGroupId, playerIdx, 
 			() => {
@@ -1248,25 +1279,58 @@
 				//gameState.gameId = pleaseJoinGameId;
 				
 			});
+			// show "enter game" button
+			positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
+				if(rulesAlreadySeen) {
+					gameState.gameId = oneGameId;
+					socketInput.setAttribute('data-lobbyId',gameState.gameId);
+					// TODO clear chat or add a delimiter "entered game XXX"
+					createOrUpdatePhaseText("")
+					
+					console.log("clicked on enter game button");
+					gamePhase = "play"
+					setBGactive("countdown")
+					gameState.currentRound = "countdown";
+					onPlayVideo('item_choice_music', true);
+					hideGameRecapSheet();
+					//setBGactive("BG_start")
+					//initializeGameState()
+					//parseInitialMessage(mockedMessages.initialMessage, true)
+					gameRecap();
+					
+					//drawInventory();
+					
+					//onStartGame();
+				} else {
+					gamePhase = "rules";
+					setBGactive("Intro1", () => {
+						setBGactive("Intro2", () => {
+							setBGactive("Intro3", () => {
+								rulesAlreadySeen = true;
+								gameState.gameId = oneGameId;
+								socketInput.setAttribute('data-lobbyId',gameState.gameId);
+								// TODO clear chat or add a delimiter "entered game XXX"
+								createOrUpdatePhaseText("")
+								console.log("clicked on enter game button");
+								gamePhase = "play"
+								setBGactive("countdown")
+								gameState.currentRound = "countdown";
+								onPlayVideo('item_choice_music', true);
+								hideGameRecapSheet();
+								//setBGactive("BG_start")
+								//initializeGameState()
+								//parseInitialMessage(mockedMessages.initialMessage, true)
+								gameRecap();
+								
+								//drawInventory();
+								
+								//onStartGame();
+							});
+						});
+					});
+				}
+			});
 		}
-		// show "enter game" button
-		positionAvatar('enter', baseX+getLobbyPlayerxOffset(5), baseY+topMargin, gameGroupId, playerIdx+1, () => {
-			gameState.gameId = oneGameId;
-			socketInput.setAttribute('data-lobbyId',gameState.gameId);
-			// TODO clear chat or add a delimiter "entered game XXX"
-			
-			console.log("clicked on enter game button");
-			gamePhase = "play"
-			setBGactive("pending_play")
-			//setBGactive("BG_start")
-			//initializeGameState()
-			//parseInitialMessage(mockedMessages.initialMessage, true)
-			gameRecap();
-			
-			//drawInventory();
-			
-			//onStartGame();
-		});
 		
 	}
 	
@@ -1518,7 +1582,7 @@
 		} else {
 			phaseText.text = textForPhase
 		}
-		phaseText.position.set(700, 950)
+		phaseText.position.set(450, 1000)
 	}	
 
 
@@ -1570,9 +1634,13 @@
     const parseSuccessMessage = (joinMessage, isRender) => {
 		if(isRender) {
 			debugButton.text ='Round '+((getCurrentActionId()-(getCurrentActionId()%10))/10)+'/10\nsomeone found before you';
+			if(player != gameState.playerid) {
+				// blur pictures
+				createOrUpdatePhaseText("Someone found before you")
+			}
 			waitingForEndOfRound = true;
 			roundCouldBeConsideredOver = true;
-			if(gamePhase != 'synchro321') {
+			if(gamePhase != 'countdown') {
 				gamePhase = 'played';
 			}
 		}
@@ -1583,9 +1651,11 @@
 			if(joinMessage.player === gameState.playerid){
 				waitingForEndOfRound = true;
 				roundCouldBeConsideredOver = true;
-				if(gamePhase != 'synchro321') {
+				if(gamePhase != 'countdown') {
 					gamePhase = 'played';
 				}
+			} else {
+				createOrUpdatePhaseText("Which item is p-ending? You can still be the first to find!");
 			}
 		}
     }
@@ -1662,10 +1732,12 @@
 					drawInventory();
 					waitingForEndOfRound = false;
 					roundCouldBeConsideredOver = false;
+					gameState.currentRound = 'brag';
 				} else { // go to coutdown
 					console.log('parseNewRoundMessage gp to countdown before play ',isCountDownOver);
 					setBGactive("countdown");
 					gamePhase = 'play'; // TODO extrga phase?
+					gameState.currentRound = 'countdown';
 					waitingForEndOfRound = true;
 					window.setTimeout(()=>{
 						gamePhase = 'play';
@@ -2156,7 +2228,7 @@
 							array_move(gameLobbyIds, gameLobbyIds.indexOf(oneGameInfo.id), 0); // put first the games where i am present
 						}
 						if(oneGameInfo.phase_after>=10) {
-							if(!myGameLobbyIds.includes(oneGameInfo.id) || oneGameInfo.phase_after>=1000000) {
+							if(!myGameLobbyIds.includes(oneGameInfo.id) /*|| oneGameInfo.phase_after>=1000000*/) {
 								excludeGameLobbyIds.push(oneGameInfo.id);
 							}
 						} else {
@@ -2200,7 +2272,7 @@
 					console.log('clicked next game page');
 					refreshLobbies(idxEnd+1);
 				});
-				positionAvatar('prev', 75, 475, 1, 3, 
+				positionAvatar('prev', 35, 475, 1, 3, 
 				() => {
 					console.log('clicked prev game page');
 					refreshLobbies(idxStart-8);
@@ -2253,7 +2325,7 @@
 							console.log('isLastKnownAction ',oneRecord);
 						}
 						let isRender = oneRecord.phase_after >= serverPhaseBegin;
-						if(isRender && gamePhase != 'played' && gamePhase != 'synchro321') {
+						if(isRender && gamePhase != 'played' && gamePhase != 'countdown') {
 							gamePhase = 'play';
 						}
 						//result += "\n"+JSON.stringify(oneRecord);
@@ -2500,19 +2572,30 @@
 	
 	function showGameRecapSheet() {
 		let sheetMoveSpeed = 15;
-		
+		if(recap_BG.y != 0 && (gamePhase == 'play' || gamePhase == 'game over')) {
+			recap_BG.y = 0;
+			console.log('bring to front showGameRecapSheet');
+			app.stage.removeChild(recap_BG);
+			app.stage.addChild(recap_BG);
+			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
+		}
 		if(recap_BG.x >0) {
 			recap_BG.x -= sheetMoveSpeed;
-			showScoresInGameRecapSheet(recap_BG.x);
+			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
 		}
 	}
 	function hideGameRecapSheet() {
 		let SHEET_MAX_OFFSET = 500; // part of the sheet that ends up hidden on the right
 		let sheetMoveSpeed = 15;
 		
+		if(recap_BG.y != 1080 && !(gamePhase == 'play' || gamePhase == 'game over')) {
+			recap_BG.y = 1080;
+			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
+		}
+		
 		if(recap_BG.x < SHEET_MAX_OFFSET) {
 			recap_BG.x += sheetMoveSpeed;
-			showScoresInGameRecapSheet(recap_BG.x);
+			showScoresInGameRecapSheet(recap_BG.x,recap_BG.y);
 		}
 		
 	}
@@ -2520,7 +2603,7 @@
 	function showScoresInGameRecapSheet(sheetX) {
 		
 		var baseX = sheetX +1470;
-		var baseY = 130;
+		var baseY = recap_BG.y+130;
 		//console.log('---- ',gameState.players);
 		gameState.players && gameState.players.forEach((onePlayer) => {
 			//console.log('score of ',onePlayer.playerid);
@@ -2551,15 +2634,21 @@
 				hideGameRecapSheet();
 				UiProgress.forEach(f => f())
 				switch (gameState.currentRound){
+					case 'play':
 					case 'brag':
 						//setBGactive(BGForEventType[gameState.currentEvent])
 						//drawInventory()
-						createOrUpdatePhaseText("select an item for the event")
+						createOrUpdatePhaseText("Which item is p-ending?")
 						break;
 					case 'lost and found':
 						//setBGactive(gameState.currentRound)
 						//drawInventory()
-						createOrUpdatePhaseText("select up to two items to send to lost and found")
+						createOrUpdatePhaseText("")
+						break;
+					case 'countdown':
+						//setBGactive(gameState.currentRound)
+						//drawInventory()
+						createOrUpdatePhaseText("Next round in a few seconds")
 						break;
 					case 'declare trade':
 					case 'accept trade':
@@ -2567,7 +2656,7 @@
 						//setBGactive(gameState.currentRound)
 						//drawAvatars()
 						//drawInventory()
-						createOrUpdatePhaseText("offer a trade")
+						createOrUpdatePhaseText("")
 						break;
 				}
 				break;
